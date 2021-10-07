@@ -1,0 +1,13 @@
+{
+    "C_Cpp.errorSquiggles": "Enabled",
+    "files.associations": {
+        "afn.h": "c",
+        "linked_list.h": "c",
+        "cmath": "c",
+        "cstdarg": "c",
+        "cstdio": "c",
+        "cstdlib": "c",
+        "limits": "c",
+        "type_traits": "c"
+    }
+}
