@@ -5,6 +5,8 @@
 #include "../../header/data_structure/structure.h"
 #include "../data_structure/stack.c"
 #include "../data_structure/linked_list.c"
+#include "../../source/algorithm/function.c"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -208,25 +210,7 @@ static boolean search_state_list(void **state_tab, list state, int n, int permut
     return False;
 }
 
-static boolean search_state(void **state_tab, void *state, int n)
-{
-    int i = 0;
-    for (i = 0; i < n; i++)
-    {
-        if (state_tab[i] != NULL && state != NULL)
-        {
-            if (strcmp(state_tab[i], state) == 0)
-            {
-                return True;
-            }
-        }
-        else if (state_tab[i] == state)
-        {
-            return True;
-        }
-    }
-    return False;
-}
+
 
 /*cette fonction permet de faire l'union de deux ensemble sous forme de liste 
 chainé elle prend en paramettre les deux ensembles li1 et li2 ; et une fonction
@@ -283,7 +267,7 @@ static void **delta_global_AFN(AFN afn, list state, boolean equal_value(void *lb
                 {
                     /*dans met le nouvel etat dans le tableau correspondant a l'étiquette lu 
                 chaque etiquette connais son index dans le nouveau tableau de transition*/
-                    if (searh_value(trans_result[et->index], trans[2], equal_value) == False)
+                    if (search_value(trans_result[et->index], trans[2], equal_value) == False)
                     {
                         head_insertion(trans_result[et->index], trans[2]);
                     }

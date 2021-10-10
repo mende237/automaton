@@ -8,7 +8,7 @@
 #include "../data_structure/tree.c"
 #include <string.h>
 
-AFN glushkov_algorithm(char **expression, int length)
+AFN glushkov_algorithm(char **expression, int length , list garbage2)
 {
     int i = 0, j = 0;
     stack pile = new_stack();
@@ -112,13 +112,17 @@ AFN glushkov_algorithm(char **expression, int length)
         {
             linear_element *l_elem = get_element_list(tmp, j);
             char *label = l_elem->value;
-            //***************a free****************
+            /***************a free****************************/
             char *end = malloc(20 * sizeof(char));
+            /***********************************************/
+            queue_insertion(garbage2 , end);
             sprintf(end, "%d", l_elem->index);
             if (elem != NULL)
             {
-                //***************a free***************
+                /***************a free****************************/
                 char *begin = malloc(20 * sizeof(char));
+                /*************************************************/
+                queue_insertion(garbage2, begin);
                 sprintf(begin, "%d", elem->index);
                 add_transition_AFN(afn, begin, label, end);
             }

@@ -10,6 +10,8 @@
 #include "./source/algorithm/glushkov.c"
 #include "./source/algorithm/utilitaire.c"
 #include "./source/algorithm/brzozowski.c"
+#include "./source/algorithm/hopcroft.c"
+
 
 char **add_data(int n, ...);
 void clearScreen();
@@ -349,6 +351,7 @@ MENU:
     switch (user_rep)
     {
     case 1:
+        garbage = new_list();
         expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
 
         reg_expression = malloc(expression_list->length * sizeof(char *));
@@ -358,7 +361,7 @@ MENU:
             reg_expression[i] = get_element_list(expression_list, i);
         }
 
-        afn = glushkov_algorithm(reg_expression, expression_list->length);
+        afn = glushkov_algorithm(reg_expression, expression_list->length , garbage);
         print_info_AFN(afn, print_trans_info);
 
         afd = determinisation(afn, equal_st);
@@ -403,18 +406,38 @@ MENU:
         afd = convert_file_to_AFD(path, garbage);
         brzozowski_AFD_to_REG(afd);
         free_AFD(afd , False);
+
+
         break;
     case 4:
         path = "/home/dimitri/Bureau/afd3.txt";
         garbage = new_list();
         afd = convert_file_to_AFD(path, garbage);
 
-        afd_result = brzozowski_minimisation(afd ,equal_label);
+        hopcroft_minimisation(afd , equal_label , print_element_in_list);
+        // afd_result = brzozowski_minimisation(afd ,equal_label);
 
-        print_info_AFD(afd_result , False , print_element_in_list);
-        print_AFD(afd_result , False , False, print_element_in_list , length_state);
+        // print_info_AFD(afd_result , False , print_element_in_list);
+        // print_AFD(afd_result , False , False, print_element_in_list , length_state);
         free_AFD(afd , False);
-        free_AFD(afd_result , False);
+        // free_AFD(afd_result , False);
+
+        // good_word = new_list();
+        // queue_insertion(good_word, "a");
+        // queue_insertion(good_word, "b");
+        // queue_insertion(good_word, "d");
+        // queue_insertion(good_word, "c");
+        // bad_word = new_list();
+        // // queue_insertion(bad_word, "b");
+        // // queue_insertion(bad_word, "a");
+        // // queue_insertion(bad_word, "e");
+        // // queue_insertion(bad_word, "c");
+        // word_list = intersection_set(good_word, bad_word);
+        // print_list(word_list , print_element_in_list);
+
+        // free_list(good_word);
+        // free_list(bad_word);
+        // free_list(word_list);
         break;
     case 5:
 
@@ -718,11 +741,11 @@ MENU:
 
     }
 
-    for (i = 0; i < garbage->length; i++)
-    {
-        free(get_element_list(garbage, i));
-    }
-    free_list(garbage);
+    // for (i = 0; i < garbage->length; i++)
+    // {
+    //     free(get_element_list(garbage, i));
+    // }
+    // free_list(garbage);
 
     //user_rep = 0;
     // } while (user_rep == 1);

@@ -12,7 +12,7 @@ typedef struct linear_element
     int index;
 } linear_element;
 
-AFN glushkov_algorithm(char **expression, int length);
+AFN glushkov_algorithm(char **expression, int length , list garbage);
 
 list first(tree T, list garbage);
 list last(tree T, list garbage);

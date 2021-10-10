@@ -31,7 +31,6 @@ static boolean equal_state(list st1, list st2, int permut);
 
 static boolean search_state_list(void **state_tab, list state, int n, int permut);
 
-static boolean search_state(void **state_tab, void *state, int n);
 static void **delta_global_AFN(AFN afn, list state, boolean equal_value(void *lb1, void *lb2));
 static void **delta_global_AFD(AFD afd, void *state);
 

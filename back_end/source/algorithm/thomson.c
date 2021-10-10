@@ -17,6 +17,9 @@ REG new_REG()
 
 AFN thomson_algorithm(char **expression, int length, void print_info(void *src, void *lbl, void *dest))
 {
+    /*************a verifier ******************************/
+    /******************************************************/
+    /******************************************************/
     int i = 0;
     list li_result = convert_inf_to_post(expression, length);
 
@@ -39,6 +42,7 @@ AFN thomson_algorithm(char **expression, int length, void print_info(void *src, 
     {
         char **tab = get_element_list(reg->mat_trans, i);
         add_transition_AFN(afn, tab[0], tab[1], tab[2]);
+        free(tab);
     }
 
     afn->initiale_state[0] = reg->initiale_state;
@@ -114,13 +118,13 @@ REG union_reg(REG reg1, REG reg2, char *initial, char *final)
     {
         head_insertion(tmp, get_element_list(reg2->mat_trans, i));
     }
-   
-    //***********a free**************************************
+
+    /***********a free**************************************/
     char **trans1 = malloc(3 * sizeof(char *));
     char **trans2 = malloc(3 * sizeof(char *));
     char **trans3 = malloc(3 * sizeof(char *));
     char **trans4 = malloc(3 * sizeof(char *));
-
+    /********************************************************/
     trans1[0] = initial;
     trans1[1] = "ep";
     trans1[2] = reg1->initiale_state;
@@ -243,8 +247,10 @@ tree convert_post_to_thomson_tree(char **expression, int length)
             nbr_operande++;
         }
     }
+    /************************************************************/
     char *initial_state = malloc(20 * sizeof(char));
     char *final_state = malloc(20 * sizeof(char));
+    /*************************************************************/
     //il s'agit de l'etat initiale et l'etat finale de l'automate de thomson
 
     thomson_node *node = malloc(sizeof(thomson_node));
@@ -295,12 +301,14 @@ tree convert_post_to_thomson_tree(char **expression, int length)
                     //**************a free*********************
                     bg_state = malloc(20 * sizeof(char));
                     fn_state = malloc(20 * sizeof(char));
+                    /********************************************/
                     sprintf(bg_state, "%d", max_state + 1);
                     sprintf(fn_state, "%d", max_state + 2);
                     max_state += 2;
                 }
-                //************a free***********************
+                /************a free dans la fonction construct automate **********/
                 thomson_node *thom_n_tmp = malloc(sizeof(thomson_node));
+                /*****************************************************************/
 
                 thom_n_tmp->value = expression[i];
                 thom_n_tmp->initiale_state = bg_state;
@@ -333,16 +341,16 @@ tree convert_post_to_thomson_tree(char **expression, int length)
         }
         else
         {
-            //************a free**************************
+            //************a free****************************************/
             char *bg_state = malloc(20 * sizeof(char));
             char *fn_state = malloc(20 * sizeof(char));
-
+            /***********************************************************/
             sprintf(bg_state, "%d", max_state + 1);
             sprintf(fn_state, "%d", max_state + 2);
 
-            //*************a free*************************
+            /************a free dans la fonction construct automate **********/
             thomson_node *thom_n_tmp = malloc(sizeof(thomson_node));
-
+            /****************************************************************/
             thom_n_tmp->value = expression[i];
             thom_n_tmp->initiale_state = bg_state;
             thom_n_tmp->end_state = fn_state;

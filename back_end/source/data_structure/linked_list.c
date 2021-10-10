@@ -107,7 +107,7 @@ void *get_element_list(list li , int index){
     }  
 }
 
-boolean searh_value(list li, void *x, boolean equal(void *val1 , void *val2))
+boolean search_value(list li, void *x, boolean equal(void *val1 , void *val2))
 {
     typedef struct element element;
     element *elem = li->head;
@@ -173,18 +173,20 @@ int get_index(list li, void *value, boolean equal(void *val1, void *val2)){
 
 void free_list(list li)
 {
-    if(is_empty_list(li) == False){
-        typedef struct element element;
-        element *elem = li->head;
-        while (elem != NULL)
-        {
-            element *temp = elem;
-            elem = elem->next;
-            free(temp);
-            temp = NULL;
+    if(li != NULL){
+        if(is_empty_list(li) == False){
+            typedef struct element element;
+            element *elem = li->head;
+            while (elem != NULL)
+            {
+                element *temp = elem;
+                elem = elem->next;
+                free(temp);
+                temp = NULL;
+            }
         }
+        free(li);
     }
-    free(li);
 }
 
 #endif

@@ -1,7 +1,7 @@
 final:test.o
 	gcc test.o -o backend
 
-test.o: ../test.c linked_list.o tree.o stack.o AFD.o AFN.o glushkov.o thomson.o utilitaire.o
+test.o: ../test.c linked_list.o tree.o stack.o AFD.o AFN.o glushkov.o thomson.o brzozowski.o utilitaire.o
 	gcc -c ../test.c
 
 #compilation des structures de données
