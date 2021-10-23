@@ -61,7 +61,7 @@ static list *generate_mat_trans(AFD afd)
             /**********************************************/
             et = afd->mat_trans[i][1];
             trans[1] = et->value;
-            index = get_index(state_list, afd->mat_trans[i][0], equal_struct_state);
+            index = get_index_element_list(state_list, afd->mat_trans[i][0], equal_struct_state);
             if (index == -1)
             {
                 /*****************************************/
@@ -82,7 +82,7 @@ static list *generate_mat_trans(AFD afd)
             }
 
             trans[0] = st;
-            index = get_index(state_list, afd->mat_trans[i][2], equal_struct_state);
+            index = get_index_element_list(state_list, afd->mat_trans[i][2], equal_struct_state);
             if (index == -1)
             {
                 /*****************************************/

@@ -3,8 +3,8 @@
 
 #include "../../header/algorithm/AFD.h"
 #include "../../header/data_structure/structure.h"
-#include "../data_structure/stack.c"
-#include "../data_structure/linked_list.c"
+#include "../../source/data_structure/stack.c"
+#include "../../source/data_structure/linked_list.c"
 #include "../../source/algorithm/function.c"
 
 #include <stdlib.h>
@@ -112,11 +112,7 @@ boolean detect(const AFD afd, void *word, int size)
     }
     return False;
 }
-/*cette fonction permet de verifier si deux etats sous forme de liste sont egaux
-elle prend en parametre la fonction equal_value qui permet de dire quand deux elements
-de ces etats la sont egaux.deux etats sont egaux dans ce cas lorsque tous les elements 
-de chaque etats sont egaux . si permut = 1 deux les element constituants ces deux etats doivent 
-etre egaux dans l'ordre*/
+
 static boolean equal_state(list st1, list st2, int permut)
 {
     boolean rep = False;
@@ -192,30 +188,7 @@ static boolean include(void *val, list st2)
 
     return False;
 }
-/*cette fonction permet de rechercher un etat dans la sous forme de liste dans un tableau formé 
-d'etat sous forme de liste et la fonction equal_value permet de dire quand deux elements des listes 
-differentes sont egaux */
 
-static boolean search_state_list(void **state_tab, list state, int n, int permut)
-{
-    int i = 0;
-    for (i = 0; i < n; i++)
-    {
-        if (equal_state(state_tab[i], state, permut) == True)
-        {
-            return True;
-        }
-    }
-
-    return False;
-}
-
-
-
-/*cette fonction permet de faire l'union de deux ensemble sous forme de liste 
-chainé elle prend en paramettre les deux ensembles li1 et li2 ; et une fonction
-permettant de dire quand est ce que deux elements contenu dans les deux listes 
-sont égaux*/
 static list union_set(const list li1, const list li2)
 {
     int i = 0;
@@ -236,47 +209,6 @@ static list union_set(const list li1, const list li2)
     }
 
     return result;
-}
-
-/*cette fonction donne le nouvelle etat ou l'on doit aller quittant d'un etat */
-static void **delta_global_AFN(AFN afn, list state, boolean equal_value(void *lb1, void *lb2))
-{
-    typedef struct etiquette etiquette;
-    int i = 0, j = 0;
-    void **trans;
-    etiquette *et;
-    void **trans_result = malloc(afn->nbre_label * sizeof(void *));
-
-    //on alloue l'espace devant contenir chaque nouveau etat ou
-    //peut aller suivant chaque symbole de l'alphabet
-    for (i = 0; i < afn->nbre_label; i++)
-    {
-        trans_result[i] = new_list();
-    }
-
-    for (i = 0; i < state->length; i++)
-    {
-        for (j = 0; j < afn->mat_trans->length; j++)
-        {
-            //on recupere la transition a la j emme ligne
-            trans = get_element_list(afn->mat_trans, j);
-            if (strcmp(get_element_list(state, i), trans[0]) == 0)
-            {
-                et = trans[1];
-                if (et->index != -1)
-                {
-                    /*dans met le nouvel etat dans le tableau correspondant a l'étiquette lu 
-                chaque etiquette connais son index dans le nouveau tableau de transition*/
-                    if (search_value(trans_result[et->index], trans[2], equal_value) == False)
-                    {
-                        head_insertion(trans_result[et->index], trans[2]);
-                    }
-                }
-            }
-        }
-    }
-
-    return trans_result;
 }
 
 static void **delta_global_AFD(AFD afd, void *state)
@@ -638,7 +570,7 @@ void completer_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, voi
             state = trans[0];
             // char *str = state;
             // printf("etat :%s\n", str);
-            index = get_index(state_list, state, equal_value);
+            index = get_index_element_list(state_list, state, equal_value);
             if (index == -1)
             {
                 trans_temp = calloc(afd->nbre_label, sizeof(void *));
@@ -669,7 +601,7 @@ void completer_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, voi
             state = trans[2];
             // char *str = state;
             // printf("etat :%s\n" ,str);
-            index = get_index(state_list, state, equal_value);
+            index = get_index_element_list(state_list, state, equal_value);
             if (index == -1)
             {
                 trans_temp = calloc(afd->nbre_label, sizeof(void *));
@@ -869,7 +801,7 @@ AFN miroir_AFD(AFD afd)
         if (trans_temp != NULL)
         {
             etiquette *et = trans_temp[1];
-            add_transition_AFN(afn, trans_temp[2], et->value , trans_temp[0]);
+            add_transition_AFN(afn, trans_temp[2], et->value, trans_temp[0]);
         }
     }
 
@@ -882,7 +814,6 @@ AFN miroir_AFD(AFD afd)
     return afn;
 }
 
-/*cette fonction renome tous les etats de l'AFD et supprime l'ancien AFD*/
 AFD rename_states(AFD afd, boolean permut)
 {
     typedef struct etiquette etiquette;
@@ -1056,7 +987,7 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2))
     }
 
     stack pile = new_stack();
-    void **trans = delta_global_AFN(afn, initial_state_list, equal_value);
+    void **trans = delta_global_automate(afn, initial_state_list , False, equal_value);
 
     for (i = 0; i < afn->nbre_label; i++)
     {
@@ -1075,7 +1006,7 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2))
         if (search_state_list(state_tab, state, cmpt_state, 1) == False)
         {
             state_tab[cmpt_state] = state;
-            trans = delta_global_AFN(afn, state, equal_value);
+            trans = delta_global_automate(afn, state , False , equal_value);
             mat_state[cmpt_state] = trans;
             for (i = 0; i < afn->nbre_label; i++)
             {
@@ -1199,7 +1130,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2),
     stack pile = new_stack();
 
     list e_clo = epsilone_closure_set(afn, initiale, print_value);
-    void **trans = delta_global_AFN(afn, e_clo, equal_value);
+    void **trans = delta_global_automate(afn, e_clo , False, equal_value);
 
     list old_list;
     for (i = 0; i < afn->nbre_label; i++)
@@ -1229,7 +1160,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2),
         if (search_state_list(state_tab, state, cmpt_state, 1) == False)
         {
             state_tab[cmpt_state] = state;
-            trans = delta_global_AFN(afn, state, equal_value);
+            trans = delta_global_automate(afn, state , False, equal_value);
 
             for (i = 0; i < afn->nbre_label; i++)
             {
@@ -1599,6 +1530,7 @@ void free_AFD(AFD afd, boolean is_state_list)
                 }
 
                 free_list(afd->initiale_state);
+                //on libere l'etat puit qui est dans le tableau des etats
                 if (is_empty_list(afd->state_tab[afd->nbre_state - 1]) == True)
                 {
                     free_list(afd->state_tab[afd->nbre_state - 1]);

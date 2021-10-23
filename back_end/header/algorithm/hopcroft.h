@@ -1,3 +1,5 @@
+#ifndef HOPCROFT_H
+#define HOPCROFT_H
 #include "../data_structure/linked_list.h"
 #include "../data_structure/stack.h"
 #include "../algorithm/AFD.h"
@@ -25,3 +27,5 @@ static boolean equal_breaker(void *b1, void *b2);
 static boolean equal_string(void *ch1 , void *ch2);
 
 AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), void print_element_in_list(void *x, boolean last));
+
+#endif

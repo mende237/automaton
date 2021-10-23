@@ -4,6 +4,8 @@
 #include "../data_structure/linked_list.c"
 #include "utilitaire.c"
 #include "../data_structure/stack.c"
+#include "../data_structure/tree.c"
+
 #include <stdlib.h>
 #include <math.h>
 

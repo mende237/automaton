@@ -440,7 +440,7 @@ MENU:
         // free_list(word_list);
         break;
     case 5:
-
+    
         break;
     case 6:
     case 7:

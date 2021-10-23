@@ -1,17 +1,18 @@
-#ifndef HOPCROFT_H
-#define HOPCROFT_H
+#ifndef HOPCROFT_C
+#define HOPCROFT_C
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "../../header/algorithm/hopcroft.h"
-#include "../../header/data_structure/linked_list.h"
-#include "../../header/data_structure/stack.h"
-#include "../../header/algorithm/function.h"
+#include "../data_structure/linked_list.c"
+#include "../data_structure/stack.c"
+#include "../algorithm/function.c"
 
 AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), void print_element_in_list(void *x, boolean last))
 {
     typedef struct Breaker Breaker;
+    typedef struct etiquette etiquette;
     int i = 0, j = 0;
     void **data = get_state_tab(afd, equal_value);
     int *nbr_state = data[0];
@@ -27,10 +28,8 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
     {
         queue_insertion(state_list, tab_state[i]);
         char *test = tab_state[i];
-        printf("%s , ", test);
+        // printf("%s , ", test);
     }
-
-    printf("\n");
 
     for (i = 0; i < afd->nbre_finale_state; i++)
     {
@@ -93,7 +92,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
                     breaker_temp->set = B;
                     breaker_temp->label = afd->tab_labels[i];
 
-                    int index = get_index(L, breaker_temp, equal_breaker);
+                    int index = get_index_element_list(L, breaker_temp, equal_breaker);
                     if (index != -1)
                     {
                         delete_element_list(L, index);
@@ -114,7 +113,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
                         Breaker *breaker0 = malloc(sizeof(Breaker));
                         breaker0->set = S0;
                         breaker0->label = afd->tab_labels[i];
-                        queue_insertion(L , breaker0);
+                        queue_insertion(L, breaker0);
                     }
                     free(breaker_temp);
                 }
@@ -128,24 +127,122 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
     printf("{ ");
     for (i = 0; i < pi->length; i++)
     {
-        print_list(get_element_list(pi , i) , print_element_in_list);
+        print_list(get_element_list(pi, i), print_element_in_list);
         printf(" ; ");
     }
-    printf("}");
+    printf("}\n");
+
+    AFD afd_result = new_AFD(state_list->length, final_state_list->length, afd->nbre_label);
+    list initial_state_list;
+    for (i = 0; i < pi->length; i++)
+    {
+        list temp_list = get_element_list(pi, i);
+        if (search_value_in_list(temp_list, afd->initiale_state, equal_value) == True)
+        {
+            initial_state_list = temp_list;
+            break;
+        }
+    }
+
+    int k = 0;
+
+    list *tab_pi = calloc(pi->length, sizeof(void *));
+    for (i = 0; i < pi->length; i++)
+    {
+        tab_pi[i] = get_element_list(pi, i);
+    }
+
+    int cmpt_state = 1;
+    stack pile = new_stack();
+    void **states = calloc(pi->length, sizeof(void *));
+    void ***mat_state = calloc(pi->length , sizeof(void**));
+    states[0] = initial_state_list;
+    push(pile, initial_state_list);
+    boolean is_well = False;
+    boolean first_loop = True;
+
+    while (is_empty_stack(pile) == False)
+    {
+        list state = pop(pile);
+        if (search_state_list(states, state, cmpt_state, 1) == False || first_loop == True)
+        {
+            void **trans_temp = delta_global_automate(afd, state, True, equal_string);
+            void **trans_result = calloc(afd->nbre_label, sizeof(void *));
+            for (j = 0; j < afd->nbre_label; j++)
+            {
+                for (k = 0; k < pi->length; k++)
+                {
+                    if (include_value_list(tab_pi[k], trans_temp[j], equal_value) == True)
+                    {
+                        //cette liste ne sert plus a rien elle sera remplace par sa correspondante dans
+                        //l'ensemble des classes d'equivalences
+                        free_list(trans_temp[j]);
+                        trans_result[j] = copy_element_list(tab_pi[k]);
+                        push(pile, trans_result[j]);
+                        break;
+                    }
+                }
+                push(pile, trans_result[j]);
+            }
+
+            if(first_loop == True){
+                cmpt_state--;
+            }
+
+            states[cmpt_state] = state;
+            mat_state[cmpt_state] = trans_result;
+
+            // for (i = 0; i < afd->nbre_label; i++)
+            // {
+            //     if (is_empty_list(trans_result[i]) == False)
+            //     {
+            //         push(pile, trans_result[i]);
+            //     }
+            //     else
+            //     {
+            //         is_well = True;
+            //     }
+            // }
+            cmpt_state++;
+            free(trans_temp);
+        }
+
+        first_loop = False;
+    }
+
+    free_stack(pile);
+
+    for (i = 0; i < pi->length; i++)
+    {
+        print_list(states[i], print_element_in_list);
+        void **aux = mat_state[i];
+        printf("\t");
+        for (j = 0; j < afd->nbre_label; j++)
+        {
+            print_list(aux[j] , print_element_in_list);
+            printf("\t");
+        }
+        printf("\n");
+    }
+    
 
     free_list(final_state_list);
     free_list(non_final_state_list);
     free_list(state_list);
     free_list(pi);
+    free(tab_pi);
     free_list(L);
+    free(tab_state);
     free(nbr_state);
     free(data);
+
+    // return afd_result;
 }
 
 static list *break_block(list B, struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2), void print_element_in_list(void *x, boolean last))
 {
     list *data = calloc(2, sizeof(list));
-    list temp1 = left_quotient(breaker , afd, equal_value);
+    list temp1 = left_quotient(breaker, afd, equal_value);
     //free dans la fonction hopcroft_minimisation
     /*******************************************************/
     list B1 = intersection_set(B, temp1);
@@ -158,7 +255,7 @@ static list *break_block(list B, struct Breaker *breaker, AFD afd, boolean equal
     return data;
 }
 
-list left_quotient(struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2))
+static list left_quotient(struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2))
 {
     typedef struct etiquette etiquette;
     int i = 0, j = 0;
@@ -170,7 +267,7 @@ list left_quotient(struct Breaker *breaker, AFD afd, boolean equal_value(void *l
         if (trans_temp != NULL)
         {
             etiquette *et_temp = trans_temp[1];
-            if (strcmp(et_temp->value, breaker->label) == 0 && search_value(breaker->set, trans_temp[2], equal_value) == True)
+            if (strcmp(et_temp->value, breaker->label) == 0 && search_value_in_list(breaker->set, trans_temp[2], equal_value) == True)
             {
                 queue_insertion(state_list, trans_temp[0]);
             }
@@ -190,12 +287,12 @@ static void **get_state_tab(AFD afd, boolean equal_value(void *lb1, void *lb2))
         void **trans_temp = afd->mat_trans[i];
         if (trans_temp != NULL)
         {
-            if (search_value(state_list, trans_temp[0], equal_value) == False)
+            if (search_value_in_list(state_list, trans_temp[0], equal_value) == False)
             {
                 queue_insertion(state_list, trans_temp[0]);
             }
 
-            if (search_value(state_list, trans_temp[2], equal_value) == False)
+            if (search_value_in_list(state_list, trans_temp[2], equal_value) == False)
             {
                 queue_insertion(state_list, trans_temp[2]);
             }
@@ -208,9 +305,7 @@ static void **get_state_tab(AFD afd, boolean equal_value(void *lb1, void *lb2))
     for (i = 0; i < state_list->length; i++)
     {
         tab_state[i] = get_element_list(state_list, i);
-        //printf("%s , ", tab_state[i]);
     }
-    //printf("\n");
 
     free_list(state_list);
     //free dans la fonction hopcroft_minimisation
@@ -307,7 +402,7 @@ static boolean equal_breaker(void *b1, void *b2)
     {
         for (i = 0; i < set1->length; i++)
         {
-            if (search_value(set2, get_element_list(set1, i), equal_string) == False)
+            if (search_value_in_list(set2, get_element_list(set1, i), equal_string) == False)
             {
                 equal = False;
             }

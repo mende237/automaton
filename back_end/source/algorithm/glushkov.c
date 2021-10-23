@@ -4,7 +4,7 @@
 #include "../../header/algorithm/glushkov.h"
 #include "utilitaire.c"
 #include "../data_structure/linked_list.c"
-#include "../../header/data_structure/stack.h"
+#include "../data_structure/stack.c"
 #include "../data_structure/tree.c"
 #include <string.h>
 
