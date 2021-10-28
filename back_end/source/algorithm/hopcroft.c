@@ -132,7 +132,6 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
     }
     printf("}\n");
 
-    AFD afd_result = new_AFD(state_list->length, final_state_list->length, afd->nbre_label);
     list initial_state_list;
     for (i = 0; i < pi->length; i++)
     {
@@ -155,9 +154,11 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
     int cmpt_state = 1;
     stack pile = new_stack();
     void **states = calloc(pi->length, sizeof(void *));
-    void ***mat_state = calloc(pi->length , sizeof(void**));
-    states[0] = initial_state_list;
-    push(pile, initial_state_list);
+    void ***mat_state = calloc(pi->length, sizeof(void **));
+
+    states[0] = copy_element_list(initial_state_list);
+
+    push(pile, states[0]);
     boolean is_well = False;
     boolean first_loop = True;
 
@@ -182,27 +183,16 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
                         break;
                     }
                 }
-                push(pile, trans_result[j]);
             }
 
-            if(first_loop == True){
+            if (first_loop == True)
+            {
                 cmpt_state--;
             }
 
             states[cmpt_state] = state;
             mat_state[cmpt_state] = trans_result;
 
-            // for (i = 0; i < afd->nbre_label; i++)
-            // {
-            //     if (is_empty_list(trans_result[i]) == False)
-            //     {
-            //         push(pile, trans_result[i]);
-            //     }
-            //     else
-            //     {
-            //         is_well = True;
-            //     }
-            // }
             cmpt_state++;
             free(trans_temp);
         }
@@ -212,20 +202,55 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
 
     free_stack(pile);
 
+    int cmpt_final_state = 0;
+    list final_state_result = new_list();
+
+    for (i = 0; i < afd->nbre_finale_state; i++)
+    {
+        for (j = 0; j < pi->length; j++)
+        {
+            if (search_value_in_list(states[j], afd->finale_state[i], equal_value) == True)
+            {
+                queue_insertion(final_state_result, copy_element_list(states[j]));
+                break;
+            }
+        }
+    }
+
+    AFD afd_result = new_AFD(pi->length, final_state_result->length, afd->nbre_label);
+    for (i = 0; i < final_state_result->length; i++)
+    {
+        afd_result->finale_state[i] = get_element_list(final_state_result, i);
+    }
+
+    afd_result->initiale_state = states[0];
+    afd_result->state_tab = states;
+    afd_result->mat_state = mat_state;
+
+    int cmpt = 0;
     for (i = 0; i < pi->length; i++)
     {
-        print_list(states[i], print_element_in_list);
-        void **aux = mat_state[i];
-        printf("\t");
         for (j = 0; j < afd->nbre_label; j++)
         {
-            print_list(aux[j] , print_element_in_list);
-            printf("\t");
+            add_transition_AFD(afd_result, states[i], afd->tab_labels[j], mat_state[i][j], cmpt);
+            cmpt++;
         }
-        printf("\n");
     }
-    
 
+    // for (i = 0; i < pi->length; i++)
+    // {
+    //     print_list(states[i], print_element_in_list);
+    //     void **aux = mat_state[i];
+    //     printf("\t");
+    //     for (j = 0; j < afd->nbre_label; j++)
+    //     {
+    //         print_list(aux[j] , print_element_in_list);
+    //         printf("\t");
+    //     }
+    //     printf("\n");
+    // }
+
+    free_list(final_state_result);
     free_list(final_state_list);
     free_list(non_final_state_list);
     free_list(state_list);
@@ -236,7 +261,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
     free(nbr_state);
     free(data);
 
-    // return afd_result;
+    return afd_result;
 }
 
 static list *break_block(list B, struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2), void print_element_in_list(void *x, boolean last))

@@ -410,16 +410,19 @@ MENU:
 
         break;
     case 4:
-        path = "/home/dimitri/Bureau/afd3.txt";
+        path = "/home/dimitri/Bureau/afd4.txt";
         garbage = new_list();
         afd = convert_file_to_AFD(path, garbage);
 
-        hopcroft_minimisation(afd , equal_label , print_element_in_list);
+        afd_result = hopcroft_minimisation(afd , equal_label , print_element_in_list);
         // afd_result = brzozowski_minimisation(afd ,equal_label);
 
-        // print_info_AFD(afd_result , False , print_element_in_list);
-        // print_AFD(afd_result , False , False, print_element_in_list , length_state);
+        print_info_AFD(afd_result , True , print_element_in_list);
+        print_AFD(afd_result , True , False, print_element_in_list , length_state);
+        
+        
         free_AFD(afd , False);
+        free_AFD(afd_result , True);
         // free_AFD(afd_result , False);
 
         // good_word = new_list();

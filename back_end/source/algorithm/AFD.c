@@ -996,6 +996,7 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2))
             push(pile, trans[i]);
         }
     }
+    
     state_tab[0] = initial_state_list;
     mat_state[0] = trans;
 
