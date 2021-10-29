@@ -16,9 +16,9 @@ struct pseudo_transition
     char *lbl;
 };
 
-AFD brzozowski_minimisation(AFD afd, boolean equal_value(void *st1, void *st2));
+AFD brzozowski_minimisation(AFD afd, boolean equal_value(void *st1, void *st2 , ...));
 
-static boolean equal_struct_state(void *st1, void *value_st2);
+static boolean equal_struct_state(void *st1, void *value_st2 ,...);
 
 static list *generate_mat_trans(AFD afd);
 

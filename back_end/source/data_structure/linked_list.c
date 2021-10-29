@@ -116,7 +116,7 @@ void *get_element_list(list li, int index)
     }
 }
 
-boolean search_value_in_list(list li, void *x, boolean equal(void *val1, void *val2))
+boolean search_value_in_list(list li, void *x, boolean equal(void *val1, void *val2 , ...))
 {
     typedef struct element element;
     element *elem = li->head;
@@ -189,7 +189,7 @@ list copy_element_list(list li)
     return list_result;
 }
 
-boolean include_value_list(list li1, list li2, boolean equal(void *val1, void *val2))
+boolean include_value_list(list li1, list li2, boolean equal(void *val1, void *val2 , ...))
 {
     typedef struct element element;
     int i = 0, j = 0;
@@ -218,7 +218,7 @@ boolean include_value_list(list li1, list li2, boolean equal(void *val1, void *v
     return True;
 }
 
-int get_index_element_list(list li, void *value, boolean equal(void *val1, void *val2))
+int get_index_element_list(list li, void *value, boolean equal(void *val1, void *val2 , ...))
 {
     typedef struct element element;
     element *elem = li->head;

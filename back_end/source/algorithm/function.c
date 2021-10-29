@@ -4,8 +4,10 @@
 #include "../../header/algorithm/function.h"
 #include "../../header/algorithm/AFD.h"
 #include <stdlib.h>
+#include <stdarg.h>
 
-boolean search_state(void **state_tab, void *state, int n){
+boolean search_state(void **state_tab, void *state, int n)
+{
     int i = 0;
     for (i = 0; i < n; i++)
     {
@@ -24,7 +26,76 @@ boolean search_state(void **state_tab, void *state, int n){
     return False;
 }
 
-static boolean search_state_list(void **state_tab, list state, int n, int permut)
+boolean equal_state(void  *state1, void *state2, ...)
+{
+    list st1 = state1;
+    list st2 = state2;
+
+    va_list lst;
+    va_start(lst, state2);
+    int permut = va_arg(lst, int);
+    va_end(lst);
+
+    boolean rep = False;
+    int i = 0, j = 0;
+    if (st1->length != st2->length)
+    {
+        return False;
+    }
+    else if (is_empty_list(st1) == False && is_empty_list(st2) == False)
+    {
+        if (permut == 1)
+        {
+
+            for (i = 0; i < st1->length; i++)
+            {
+                rep = False;
+                for (j = 0; j < st2->length; j++)
+                {
+                    if (strcmp(get_element_list(st1, i), get_element_list(st2, j)) == 0)
+                    {
+                        rep = True;
+                    }
+                }
+                if (rep == False)
+                {
+                    return False;
+                }
+            }
+            return True;
+        }
+        else
+        {
+            for (i = 0; i < st1->length; i++)
+            {
+                char *ch1 = get_element_list(st1, i);
+                char *ch2 = get_element_list(st2, i);
+                if (ch1 != NULL && ch2 != NULL)
+                {
+                    if (strcmp(ch1, ch2) != 0)
+                    {
+                        return False;
+                    }
+                }
+                else if (ch1 != ch2)
+                {
+                    return False;
+                }
+            }
+            return True;
+        }
+    }
+    else if (is_empty_list(st1) == True && is_empty_list(st2) == True)
+    {
+        return True;
+    }
+    else
+    {
+        return False;
+    }
+}
+
+boolean search_state_list(void **state_tab, list state, int n, int permut)
 {
     int i = 0;
     for (i = 0; i < n; i++)
@@ -38,7 +109,11 @@ static boolean search_state_list(void **state_tab, list state, int n, int permut
     return False;
 }
 
-void **delta_global_automate(void *automate, list state, boolean is_AFD, boolean equal_label(void *lb1, void *lb2))
+boolean search_state_list_in_list(list list_state, list state, int permut)
+{
+}
+
+void **delta_global_automate(void *automate, list state, boolean is_AFD, boolean equal_label(void *lb1, void *lb2 , ...))
 {
     typedef struct etiquette etiquette;
     int i = 0, j = 0;

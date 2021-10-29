@@ -12,7 +12,6 @@
 #include "./source/algorithm/brzozowski.c"
 #include "./source/algorithm/hopcroft.c"
 
-
 char **add_data(int n, ...);
 void clearScreen();
 void print_label(void *val);
@@ -26,7 +25,8 @@ int length_label(void *c);
 boolean confirm_expression(char **reg_expression, int length);
 boolean confirm(int user_rep);
 boolean equal_special_state(void *st1, void *st2);
-boolean equal_st(void *st1, void *st2);
+boolean equal_label(void *lbl1, void *lbl2, ...);
+boolean equal_st(void *st1, void *st2, ...);
 
 void clearScreen()
 {
@@ -179,7 +179,7 @@ void print_tree_info(void *x)
     }
 }
 
-boolean equal_st(void *st1, void *st2)
+boolean equal_st(void *st1, void *st2, ...)
 {
     char *ch1 = st1;
     char *ch2 = st2;
@@ -224,7 +224,7 @@ boolean equal_special_state(void *li1, void *li2)
     }
 }
 
-boolean equal_label(void *lbl1, void *lbl2)
+boolean equal_label(void *lbl1, void *lbl2, ...)
 {
     char *ch1 = lbl1;
     char *ch2 = lbl2;
@@ -285,7 +285,7 @@ MENU:
     // printf("*******                                                                           *********\n");
     // printf("**********                          13-RECONNAISSANCE D'UN MOT                       *********\n");
     // printf("*********                                                                           *********\n");
-      // printf("*******************************************************************************************\n");
+    // printf("*******************************************************************************************\n");
     //    char *tata = NULL;
     //     printf("la taille est %d\n" , strlen(tata));
     //    if(tata != NULL){
@@ -345,7 +345,7 @@ MENU:
         printf("QUE VOULEZ EXECUTER : ");
         scanf("%d", &user_rep);
     } while (user_rep < 1 && user_rep > 5);
-
+    void **test;
     // do
     // {
     switch (user_rep)
@@ -361,15 +361,16 @@ MENU:
             reg_expression[i] = get_element_list(expression_list, i);
         }
 
-        afn = glushkov_algorithm(reg_expression, expression_list->length , garbage);
+        afn = glushkov_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
 
         afd = determinisation(afn, equal_st);
 
         afd = rename_states(afd, True);
+
         print_info_AFD(afd, False, print_element_in_list);
         print_AFD(afd, False, False, print_element_in_list, length_state);
-        free_AFD(afd , False);
+        free_AFD(afd, False);
 
         // print_info_AFD(afd, True, print_element_in_list);
         // print_AFD(afd, True, False, print_element_in_list, length_state);
@@ -388,7 +389,6 @@ MENU:
         afn = thomson_algorithm(reg_expression, expression_list->length, print_trans_info);
         print_info_AFN(afn, print_trans_info);
 
-       
         afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
 
         afd = rename_states(afd, True);
@@ -405,24 +405,22 @@ MENU:
         garbage = new_list();
         afd = convert_file_to_AFD(path, garbage);
         brzozowski_AFD_to_REG(afd);
-        free_AFD(afd , False);
-
+        free_AFD(afd, False);
 
         break;
     case 4:
-        path = "/home/dimitri/Bureau/afd4.txt";
+        path = "/home/dimitri/Bureau/afd3.txt";
         garbage = new_list();
         afd = convert_file_to_AFD(path, garbage);
 
-        afd_result = hopcroft_minimisation(afd , equal_label , print_element_in_list);
+        afd_result = hopcroft_minimisation(afd, equal_label, print_element_in_list);
         // afd_result = brzozowski_minimisation(afd ,equal_label);
 
-        print_info_AFD(afd_result , True , print_element_in_list);
-        print_AFD(afd_result , True , False, print_element_in_list , length_state);
-        
-        
-        free_AFD(afd , False);
-        free_AFD(afd_result , True);
+        print_info_AFD(afd_result, True, print_element_in_list);
+        print_AFD(afd_result, True, False, print_element_in_list, length_state);
+
+        free_AFD(afd, False);
+        free_AFD(afd_result, True);
         // free_AFD(afd_result , False);
 
         // good_word = new_list();
@@ -443,7 +441,7 @@ MENU:
         // free_list(word_list);
         break;
     case 5:
-    
+
         break;
     case 6:
     case 7:
@@ -597,20 +595,23 @@ MENU:
     case 12:
         garbage = new_list();
         is_afd = False;
-        if(is_afd == True){
+        if (is_afd == True)
+        {
             path = "/home/dimitri/Bureau/afd_test.txt";
             afd = convert_file_to_AFD(path, garbage);
             afn_result = miroir_AFD(afd);
             free_AFD(afd, False);
-        }else{
+        }
+        else
+        {
             path = "/home/dimitri/Bureau/automate_test.txt";
-            afn = convert_file_to_AFN(path ,garbage);
+            afn = convert_file_to_AFN(path, garbage);
             print_info_AFN(afn, print_trans_info);
             afn_result = miroir_AFN(afn);
             free_AFN(afn);
         }
 
-        print_info_AFN(afn_result , print_trans_info);
+        print_info_AFN(afn_result, print_trans_info);
         free_AFN(afn_result);
         break;
     default:
@@ -696,7 +697,7 @@ MENU:
             }
         } while (strcmp(exp, "end") != 0);
 
-        result = detect_word(afd, False, equal_st, equal_label, word_list, print_element_in_list);
+        result = detect_word(afd, False, word_list, print_element_in_list);
         printf("\nL'ENSEMBLE DES MOTS RECONNU PAR CET AUTOMATE SONT :\n");
         print_result(result[0]);
         printf("L'ENSEMBLE DES MOTS QUI NE SONT PAS RECONNUS SONT :\n");
@@ -741,7 +742,6 @@ MENU:
             goto READ_WORD4;
         }
         break;
-
     }
 
     // for (i = 0; i < garbage->length; i++)

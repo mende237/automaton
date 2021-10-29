@@ -26,7 +26,7 @@ fichier et le stocké en memoire dans une structure AFN*/
 AFN convert_file_to_AFN(char *path , list garbage);
 AFD convert_file_to_AFD(char *path, list garbage);
 
-list *detect_word(AFD afd, boolean sp_st , boolean equal_state(void *st1, void *st2), boolean equal_label(void *lb1, void *lb2), list word_list, void print_state(void *x, boolean l));
+list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void *x, boolean l));
 int calculate_length(char **word);
 char** convert_to_transition(char* exp);
 char** convert_to_word(char *word);

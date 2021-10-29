@@ -9,7 +9,7 @@
 #include "../data_structure/stack.c"
 #include "../algorithm/function.c"
 
-AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), void print_element_in_list(void *x, boolean last))
+AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ...), void print_element_in_list(void *x, boolean last))
 {
     typedef struct Breaker Breaker;
     typedef struct etiquette etiquette;
@@ -264,7 +264,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2), vo
     return afd_result;
 }
 
-static list *break_block(list B, struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2), void print_element_in_list(void *x, boolean last))
+static list *break_block(list B, struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2 , ...), void print_element_in_list(void *x, boolean last))
 {
     list *data = calloc(2, sizeof(list));
     list temp1 = left_quotient(breaker, afd, equal_value);
@@ -280,7 +280,7 @@ static list *break_block(list B, struct Breaker *breaker, AFD afd, boolean equal
     return data;
 }
 
-static list left_quotient(struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2))
+static list left_quotient(struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2 ,...))
 {
     typedef struct etiquette etiquette;
     int i = 0, j = 0;
@@ -302,7 +302,7 @@ static list left_quotient(struct Breaker *breaker, AFD afd, boolean equal_value(
     return state_list;
 }
 
-static void **get_state_tab(AFD afd, boolean equal_value(void *lb1, void *lb2))
+static void **get_state_tab(AFD afd, boolean equal_value(void *lb1, void *lb2 , ...))
 {
     list state_list = new_list();
     void **data = calloc(2, sizeof(void *));
@@ -403,7 +403,7 @@ static list smallest_set(list set1, list set2)
     return set2;
 }
 
-static boolean equal_breaker(void *b1, void *b2)
+static boolean equal_breaker(void *b1, void *b2 , ...)
 {
     typedef struct Breaker Breacker;
 
@@ -442,7 +442,7 @@ static boolean equal_breaker(void *b1, void *b2)
     return True;
 }
 
-static boolean equal_string(void *ch1, void *ch2)
+static boolean equal_string(void *ch1, void *ch2 , ...)
 {
     char *val1 = ch1;
     char *val2 = ch2;

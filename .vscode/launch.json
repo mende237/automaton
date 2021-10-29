@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "automate_manip_c1622e5c"
+        },
+        {
             "name": "gcc-9 - Générer et déboguer le fichier actif",
             "type": "cppdbg",
             "request": "launch",

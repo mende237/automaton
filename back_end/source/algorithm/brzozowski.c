@@ -7,7 +7,7 @@
 
 #include "../../header/algorithm/brzozowski.h"
 
-AFD brzozowski_minimisation(AFD afd, boolean equal_value(void *st1, void *st2))
+AFD brzozowski_minimisation(AFD afd, boolean equal_value(void *st1, void *st2 , ...))
 {
     AFN afn_temp1 = miroir_AFD(afd);
 
@@ -28,7 +28,7 @@ AFD brzozowski_minimisation(AFD afd, boolean equal_value(void *st1, void *st2))
     return afd_result;
 }
 
-static boolean equal_struct_state(void *st1, void *value_st2)
+static boolean equal_struct_state(void *st1, void *value_st2 , ...)
 {
     struct state *st = st1;
     char *ch = value_st2;

@@ -52,7 +52,7 @@ AFN thomson_algorithm(char **expression, int length, void print_info(void *src, 
     afn->nbre_initiale_state = 1;
     afn->nbre_finale_state = 1;
 
-    free_REG(reg);
+//    free_REG(reg);
     return afn;
 }
 

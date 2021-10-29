@@ -25,16 +25,6 @@ sont egaux , la fonction equal_lable qui joue presque le meme role que la foncti
 permet de dire lorsque deux ettiquettes sont egaux*/
 boolean detect(AFD afd, void *word, int size);
 
-static boolean equal_state(list st1, list st2, int permut);
-
-
-/*cette fonction permet de verifier si deux etats sous forme de liste sont egaux
-elle prend en parametre la fonction equal_value qui permet de dire quand deux elements
-de ces etats la sont egaux.deux etats sont egaux dans ce cas lorsque tous les elements 
-de chaque etats sont egaux . si permut = 1 deux les element constituants ces deux etats doivent 
-etre egaux dans l'ordre*/
-static boolean equal_state(list st1, list st2, int permut);
-
 // static void **delta_global_AFN(AFN afn, list state, boolean equal_value(void *lb1, void *lb2));
 
 static void **delta_global_AFD(AFD afd, void *state);
@@ -53,9 +43,9 @@ AFD union_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last));
 
 AFD intersection_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last));
 
-void completer_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, void *lb2));
+void completer_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, void *lb2 , ...));
 
-AFD complementaire_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, void *lb2));
+AFD complementaire_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, void *lb2 , ...));
 
 AFN miroir_AFD(AFD afd);
 /*cette fonction renome tous les etats de l'AFD et supprime l'ancien AFD*/
@@ -73,13 +63,13 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
 elle prend aussi en paremettre d'autres fonctions comme equal_state qui permet de dire quand deux etats de
 sont egaux , la fonction equal_lable qui joue presque le meme role que la fonction equal_state , elle
 permet de dire lorsque deux ettiquettes sont egaux*/
-AFD determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2));
+AFD determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2 , ...));
 /*cette fonction prend en paramettre un automate non-deterministe avec epsilone transition
 , avec un unique etat initiale retourne un automate deterministe 
 elle prend aussi en paremettre d'autres fonctions comme equal_state qui permet de dire quand deux etats de
 sont egaux , la fonction equal_lable qui joue presque le meme role que la fonction equal_state , elle
 permet de dire lorsque deux ettiquettes sont egaux*/
-AFD epsilone_determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2), void print_value(void *x, boolean last));
+AFD epsilone_determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2 , ...), void print_value(void *x, boolean last));
 /*cette fonction permet de donner tous les etats partant d'un etat donné que l'on peut atteindre en ne lisant que 
 les epsilone*/
 list epsilone_transition(AFN afn, void *state, void print_value(void *x, boolean last));
@@ -87,8 +77,6 @@ list epsilone_transition(AFN afn, void *state, void print_value(void *x, boolean
 list epsilone_closure(AFN afn, void *state, void print_value(void *x, boolean last));
 /*cette fonction retourne l'epsilone fermerture d'un ensemble d'etat donné*/
 list epsilone_closure_set(AFN afn, list set_state, void print_value(void *x, boolean last));
-
-static boolean equal_state(list st1, list st2, int permut);
 
 void print_transitions_AFD(AFD afd, void print_elem(void *begin, void *label, void *end));
 /*cette fonction permet d'afficher la table de transition d'un afd elle prend en parametre une fonction print_state

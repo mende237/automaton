@@ -164,7 +164,7 @@ int get_nbre_label(char **expression, int length)
     return cmpt;
 }
 
-list *detect_word(AFD afd, boolean sp_st, boolean equal_state(void *st1, void *st2), boolean equal_label(void *lb1, void *lb2), list word_list, void print_state(void *x, boolean l))
+list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void *x, boolean l))
 {
     int i = 0, length = 0;
     boolean verdit;
