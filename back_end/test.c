@@ -377,6 +377,7 @@ MENU:
         // free_AFD(afd, True);
         break;
     case 2:
+        garbage = new_list();
         expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
 
         reg_expression = malloc(expression_list->length * sizeof(char *));
@@ -386,7 +387,7 @@ MENU:
             reg_expression[i] = get_element_list(expression_list, i);
         }
 
-        afn = thomson_algorithm(reg_expression, expression_list->length, print_trans_info);
+        afn = thomson_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
 
         afd = epsilone_determinisation(afn, equal_st, print_element_in_list);

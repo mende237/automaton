@@ -9,15 +9,15 @@
 #include <stdlib.h>
 #include <math.h>
 
-REG new_REG()
+pseudo_AFN new_pseudo_AFN()
 {
-    REG reg = malloc(sizeof(REG_elem));
-    reg->end_state = NULL;
-    reg->initiale_state = NULL;
-    //reg->mat_trans = new_list();
+    pseudo_AFN p_afn = malloc(sizeof(pseudo_AFN_elem));
+    p_afn->end_state = NULL;
+    p_afn->initiale_state = NULL;
+    return p_afn;
 }
 
-AFN thomson_algorithm(char **expression, int length, void print_info(void *src, void *lbl, void *dest))
+AFN thomson_algorithm(char **expression, int length, list garbage)
 {
     /*************a verifier ******************************/
     /******************************************************/
@@ -30,33 +30,34 @@ AFN thomson_algorithm(char **expression, int length, void print_info(void *src, 
     for (i = 0; i < li_result->length; i++)
     {
         result[i] = get_element_list(li_result, i);
+
     }
 
-    tree t = convert_post_to_thomson_tree(result, li_result->length);
-    REG reg = construct_automate(t);
+    tree t = convert_post_to_thomson_tree(result, li_result->length , garbage);
+    pseudo_AFN p_afn = construct_automate(t);
 
     int nbr_state = get_nbre_state(result, li_result->length);
     int nbr_label = get_nbre_label(result, li_result->length);
 
     AFN afn = new_AFN(nbr_state, 1, 1, nbr_label, "ep");
 
-    for (i = 0; i < reg->mat_trans->length; i++)
+    for (i = 0; i < p_afn->mat_trans->length; i++)
     {
-        char **tab = get_element_list(reg->mat_trans, i);
+        char **tab = get_element_list(p_afn->mat_trans, i);
         add_transition_AFN(afn, tab[0], tab[1], tab[2]);
         free(tab);
     }
 
-    afn->initiale_state[0] = reg->initiale_state;
-    afn->finale_state[0] = reg->end_state;
+    afn->initiale_state[0] = p_afn->initiale_state;
+    afn->finale_state[0] = p_afn->end_state;
     afn->nbre_initiale_state = 1;
     afn->nbre_finale_state = 1;
 
-//    free_REG(reg);
+    //free_REG(p_afn);
     return afn;
 }
 
-REG construct_automate(tree t)
+pseudo_AFN construct_automate(tree t)
 {
     if (t == NULL)
     {
@@ -67,32 +68,32 @@ REG construct_automate(tree t)
         thomson_node *thom_n = t->info;
         if (t->left_child == NULL && t->right_child == NULL)
         {
-            REG reg = new_REG();
+            pseudo_AFN p_afn = new_pseudo_AFN();
             char **trans = malloc(3 * sizeof(char *));
             trans[0] = thom_n->initiale_state;
             trans[1] = thom_n->value;
             trans[2] = thom_n->end_state;
 
-            reg->initiale_state = thom_n->initiale_state;
-            reg->end_state = thom_n->end_state;
+            p_afn->initiale_state = thom_n->initiale_state;
+            p_afn->end_state = thom_n->end_state;
             list li = new_list();
 
             head_insertion(li, trans);
-            reg->mat_trans = li;
+            p_afn->mat_trans = li;
             free(thom_n);
-            return reg;
+            return p_afn;
         }
         else if (strcmp("+", thom_n->value) == 0)
         {
             char *end_state = thom_n->end_state;
             char *initial_state = thom_n->initiale_state;
             free(thom_n);
-            return union_reg(construct_automate(t->left_child), construct_automate(t->right_child), initial_state, end_state);
+            return union_p_AFN(construct_automate(t->left_child), construct_automate(t->right_child), initial_state, end_state);
         }
         else if (strcmp(".", thom_n->value) == 0)
         {
             free(thom_n);
-            return concat_reg(construct_automate(t->left_child), construct_automate(t->right_child));
+            return concat_p_AFN(construct_automate(t->left_child), construct_automate(t->right_child));
         }
         else
         {
@@ -100,25 +101,25 @@ REG construct_automate(tree t)
             char *initial_state = thom_n->initiale_state;
             free(thom_n);
 
-            return start_reg(construct_automate(t->left_child), initial_state, end_state);
+            return start_p_AFN(construct_automate(t->left_child), initial_state, end_state);
         }
     }
 }
 
-REG union_reg(REG reg1, REG reg2, char *initial, char *final)
+pseudo_AFN union_p_AFN(pseudo_AFN p_afn1, pseudo_AFN p_afn2, char *initial, char *final)
 {
     int i = 0;
-    REG reg_result = new_REG();
+    pseudo_AFN p_afn_result = new_pseudo_AFN();
     list tmp = new_list();
-    //if()
-    for (i = 0; i < reg1->mat_trans->length; i++)
+
+    for (i = 0; i < p_afn1->mat_trans->length; i++)
     {
-        head_insertion(tmp, get_element_list(reg1->mat_trans, i));
+        head_insertion(tmp, get_element_list(p_afn1->mat_trans, i));
     }
 
-    for (i = 0; i < reg2->mat_trans->length; i++)
+    for (i = 0; i < p_afn2->mat_trans->length; i++)
     {
-        head_insertion(tmp, get_element_list(reg2->mat_trans, i));
+        head_insertion(tmp, get_element_list(p_afn2->mat_trans, i));
     }
 
     /***********a free**************************************/
@@ -129,17 +130,17 @@ REG union_reg(REG reg1, REG reg2, char *initial, char *final)
     /********************************************************/
     trans1[0] = initial;
     trans1[1] = "ep";
-    trans1[2] = reg1->initiale_state;
+    trans1[2] = p_afn1->initiale_state;
 
     trans2[0] = initial;
     trans2[1] = "ep";
-    trans2[2] = reg2->initiale_state;
+    trans2[2] = p_afn2->initiale_state;
 
-    trans3[0] = reg1->end_state;
+    trans3[0] = p_afn1->end_state;
     trans3[1] = "ep";
     trans3[2] = final;
 
-    trans4[0] = reg2->end_state;
+    trans4[0] = p_afn2->end_state;
     trans4[1] = "ep";
     trans4[2] = final;
 
@@ -148,55 +149,55 @@ REG union_reg(REG reg1, REG reg2, char *initial, char *final)
     head_insertion(tmp, trans3);
     head_insertion(tmp, trans4);
 
-    reg_result->initiale_state = initial;
-    reg_result->end_state = final;
-    reg_result->mat_trans = tmp;
+    p_afn_result->initiale_state = initial;
+    p_afn_result->end_state = final;
+    p_afn_result->mat_trans = tmp;
 
-    free(reg1);
-    free(reg2);
-    return reg_result;
+    free(p_afn1);
+    free(p_afn2);
+    return p_afn_result;
 }
 
-REG concat_reg(REG reg1, REG reg2)
+pseudo_AFN concat_p_AFN(pseudo_AFN p_afn1, pseudo_AFN p_afn2)
 {
     int i = 0;
-    REG reg_result = new_REG();
+    pseudo_AFN p_afn_result = new_pseudo_AFN();
     list tmp = new_list();
-    for (i = 0; i < reg1->mat_trans->length; i++)
+    for (i = 0; i < p_afn1->mat_trans->length; i++)
     {
-        head_insertion(tmp, get_element_list(reg1->mat_trans, i));
+        head_insertion(tmp, get_element_list(p_afn1->mat_trans, i));
     }
 
-    for (i = 0; i < reg2->mat_trans->length; i++)
+    for (i = 0; i < p_afn2->mat_trans->length; i++)
     {
-        head_insertion(tmp, get_element_list(reg2->mat_trans, i));
+        head_insertion(tmp, get_element_list(p_afn2->mat_trans, i));
     }
 
     char **trans = malloc(3 * sizeof(char *));
 
-    trans[0] = reg1->end_state;
+    trans[0] = p_afn1->end_state;
     trans[1] = "ep";
-    trans[2] = reg2->initiale_state;
+    trans[2] = p_afn2->initiale_state;
     head_insertion(tmp, trans);
 
-    reg_result->initiale_state = reg1->initiale_state;
-    reg_result->end_state = reg2->end_state;
-    reg_result->mat_trans = tmp;
+    p_afn_result->initiale_state = p_afn1->initiale_state;
+    p_afn_result->end_state = p_afn2->end_state;
+    p_afn_result->mat_trans = tmp;
 
-    free(reg1);
-    free(reg2);
-    return reg_result;
+    free(p_afn1);
+    free(p_afn2);
+    return p_afn_result;
 }
 
-REG start_reg(REG reg, char *initial, char *final)
+pseudo_AFN start_p_AFN(pseudo_AFN p_afn, char *initial, char *final)
 {
     int i = 0;
-    REG reg_result = new_REG();
+    pseudo_AFN p_afn_result = new_pseudo_AFN();
     list tmp = new_list();
 
-    for (i = 0; i < reg->mat_trans->length; i++)
+    for (i = 0; i < p_afn->mat_trans->length; i++)
     {
-        head_insertion(tmp, get_element_list(reg->mat_trans, i));
+        head_insertion(tmp, get_element_list(p_afn->mat_trans, i));
     }
 
     //**************************a free************************
@@ -209,17 +210,17 @@ REG start_reg(REG reg, char *initial, char *final)
 
     trans1[0] = initial;
     trans1[1] = "ep";
-    trans1[2] = reg->initiale_state;
+    trans1[2] = p_afn->initiale_state;
 
     trans2[0] = initial;
     trans2[1] = "ep";
     trans2[2] = final;
 
-    trans3[0] = reg->end_state;
+    trans3[0] = p_afn->end_state;
     trans3[1] = "ep";
-    trans3[2] = reg->initiale_state;
+    trans3[2] = p_afn->initiale_state;
 
-    trans4[0] = reg->end_state;
+    trans4[0] = p_afn->end_state;
     trans4[1] = "ep";
     trans4[2] = final;
 
@@ -228,15 +229,15 @@ REG start_reg(REG reg, char *initial, char *final)
     head_insertion(tmp, trans3);
     head_insertion(tmp, trans4);
 
-    reg_result->initiale_state = initial;
-    reg_result->end_state = final;
+    p_afn_result->initiale_state = initial;
+    p_afn_result->end_state = final;
 
-    reg_result->mat_trans = tmp;
-    free(reg);
-    return reg_result;
+    p_afn_result->mat_trans = tmp;
+    free(p_afn);
+    return p_afn_result;
 }
 
-tree convert_post_to_thomson_tree(char **expression, int length)
+tree convert_post_to_thomson_tree(char **expression, int length , list garbage)
 {
     int max_state = 0;
     stack pile = new_stack();
@@ -303,6 +304,8 @@ tree convert_post_to_thomson_tree(char **expression, int length)
                     //**************a free*********************
                     bg_state = malloc(20 * sizeof(char));
                     fn_state = malloc(20 * sizeof(char));
+                    queue_insertion(garbage , bg_state);
+                    queue_insertion(garbage, fn_state);
                     /********************************************/
                     sprintf(bg_state, "%d", max_state + 1);
                     sprintf(fn_state, "%d", max_state + 2);
@@ -346,6 +349,8 @@ tree convert_post_to_thomson_tree(char **expression, int length)
             //************a free****************************************/
             char *bg_state = malloc(20 * sizeof(char));
             char *fn_state = malloc(20 * sizeof(char));
+            queue_insertion(garbage, bg_state);
+            queue_insertion(garbage, fn_state);
             /***********************************************************/
             sprintf(bg_state, "%d", max_state + 1);
             sprintf(fn_state, "%d", max_state + 2);
@@ -385,14 +390,14 @@ tree convert_post_to_thomson_tree(char **expression, int length)
     return root;
 }
 
-void free_REG(REG reg)
+void free_p_AFN(pseudo_AFN p_afn)
 {
     int i = 0;
-    for (i = 0; i < reg->mat_trans->length; i++)
+    for (i = 0; i < p_afn->mat_trans->length; i++)
     {
-        free(get_element_list(reg->mat_trans, i));
+        free(get_element_list(p_afn->mat_trans, i));
     }
-    free(reg);
+    free(p_afn);
 }
 
 #endif

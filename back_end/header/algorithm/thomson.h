@@ -4,13 +4,12 @@
 #include "../data_structure/linked_list.h"
 #include "AFN.h"
 
-typedef struct REG{
+typedef struct pseudo_AFN{
     char *initiale_state;
     int a;
     char *end_state;
     list mat_trans;
-}*REG , REG_elem;
-
+} * pseudo_AFN, pseudo_AFN_elem;
 
 typedef struct thomson_node{
     char *value;
@@ -18,15 +17,15 @@ typedef struct thomson_node{
     char *end_state;
 }thomson_node;
 
-REG new_REG();
-AFN thomson_algorithm(char **expression, int length, void print_info(void *src, void *lbl, void *dest));
-REG construct_automate(tree t);
+pseudo_AFN new_pseudo_AFN();
+AFN thomson_algorithm(char **expression, int length, list garbage);
+pseudo_AFN construct_automate(tree t);
 
-tree convert_post_to_thomson_tree(char **expression, int length);
+tree convert_post_to_thomson_tree(char **expression, int length , list garbage);
 
-REG union_reg(REG reg1, REG reg2 , char *initial , char *final);
-REG concat_reg(REG reg1, REG reg2);
-REG start_reg(REG reg, char *initial, char *finallist);
+pseudo_AFN union_p_AFN(pseudo_AFN p_afn1, pseudo_AFN p_afn2, char *initial, char *final);
+pseudo_AFN concat_p_AFN(pseudo_AFN p_afn1, pseudo_AFN p_afn2);
+pseudo_AFN start_p_AFN(pseudo_AFN p_afn, char *initial, char *finallist);
 
-void free_REG(REG reg);
+void free_REG(pseudo_AFN reg);
 #endif

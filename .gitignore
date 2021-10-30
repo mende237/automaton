@@ -1,2 +1,3 @@
 .vscode
-./.vscode
+./back_end/.vscode
+./front_end/.vscode
