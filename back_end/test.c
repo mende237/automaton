@@ -371,10 +371,10 @@ MENU:
         print_info_AFD(afd, False, print_element_in_list);
         print_AFD(afd, False, False, print_element_in_list, length_state);
         free_AFD(afd, False);
-
-        // print_info_AFD(afd, True, print_element_in_list);
-        // print_AFD(afd, True, False, print_element_in_list, length_state);
-        // free_AFD(afd, True);
+        free_elem_in_list(expression_list);
+        free_list(expression_list);
+        free(reg_expression);
+        free_AFN(afn);
         break;
     case 2:
         garbage = new_list();
@@ -396,10 +396,10 @@ MENU:
         print_info_AFD(afd, False, print_element_in_list);
         print_AFD(afd, False, False, print_element_in_list, length_state);
         free_AFD(afd, False);
-
-        // print_info_AFD(afd, True, print_element_in_list);
-        // print_AFD(afd, True, False, print_element_in_list, length_state);
-        // free_AFD(afd, True);
+        free_elem_in_list(expression_list);
+        free_list(expression_list);
+        free(reg_expression);
+        free_AFN(afn);
         break;
     case 3:
         path = "/home/dimitri/Bureau/afd_test.txt";
@@ -616,140 +616,27 @@ MENU:
         free_AFN(afn_result);
         break;
     default:
-    READ_AFD:
-        cmpt = 0;
         garbage = new_list();
-        printf("ENTRER LE NOMBRE D'ETAT : ");
-        scanf("%d", &nbr_state);
-        printf("ENTRER LE NOMBRE D'ETAT FINAUX : ");
-        scanf("%d", &nbr_finale_state);
-        printf("ENTRER LE NOMBRE D'ETIQUETTES DIFFERENTS : ");
-        scanf("%d", &nbr_label);
-
-        printf("\nENTRER VOS TRANSITIONS EXEMPLE 0,a,1 OU 0 ET 1 SONT DES ETATS ET A UN SYMBOLE\n");
-        printf("ENTRER end QUAND VOUS NE VOULEZ ARRETER\n");
-
-        afd = new_AFD(nbr_state, nbr_label, nbr_finale_state);
-
-        do
-        {
-            exp = calloc(25, sizeof(char));
-            scanf("%s", exp);
-            if (strcmp(exp, "end") != 0)
-            {
-                trans = convert_to_transition(exp);
-
-                head_insertion(garbage, trans[0]);
-                head_insertion(garbage, trans[1]);
-                head_insertion(garbage, trans[2]);
-                add_transition_AFD(afd, trans[0], trans[1], trans[2], cmpt);
-                cmpt++;
-            }
-        } while (strcmp(exp, "end") != 0 && cmpt < nbr_label * nbr_state);
-
-        state = calloc(25, sizeof(char));
-        printf("ENTRER L'ETAT INTITIALE : ");
-        scanf("%s", state);
-        afd->initiale_state = state;
-        head_insertion(garbage, state);
-
-        for (i = 0; i < nbr_finale_state; i++)
-        {
-            state = calloc(25, sizeof(char));
-            printf("ENTRER L'ETAT FINALE : ");
-            scanf("%s", state);
-            afd->finale_state[i] = state;
-            head_insertion(garbage, state);
-        }
-        printf("\n");
-        print_info_AFD(afd, False, print_element_in_list);
-        printf("CONFIRMER QU'IL S'AGI BIEN DE VOTRE AUTOMATE OUI = 1 NON = 0 : ");
-        scanf("%d", &user_rep);
-
-        // miroir_AFD(afd);
-        // print_transitions_AFD(afd , print_trans_info);
-
-        // if (confirm(user_rep) == False)
-        // {
-        //     for (i = 0; i < garbage->length; i++)
-        //     {
-        //         free(get_element_list(garbage, i));
-        //     }
-
-        //     free_list(garbage);
-        //     free_AFD(afd);
-        //     clearScreen();
-        //     goto READ_AFD;
-        // }
-
-    READ_WORD4:
-        word_list = new_list();
-        printf("ENTRER UNE LISTE DE MOTS DONT VOUS VOULEZ RECONNAITRE ENTRER end POUR ARRETER:\n");
-        do
-        {
-
-            exp = calloc(255, sizeof(char));
-            scanf("%s", exp);
-            if (strcmp(exp, "end") != 0)
-            {
-                //on doit free chaque element de ce tableau
-                word = convert_to_word(exp);
-                head_insertion(word_list, word);
-            }
-        } while (strcmp(exp, "end") != 0);
-
-        result = detect_word(afd, False, word_list, print_element_in_list);
-        printf("\nL'ENSEMBLE DES MOTS RECONNU PAR CET AUTOMATE SONT :\n");
-        print_result(result[0]);
-        printf("L'ENSEMBLE DES MOTS QUI NE SONT PAS RECONNUS SONT :\n");
-        print_result(result[1]);
-        printf("VOULEZ VOUS RECONNAITRE D'AUTRE MOTS ? OUI = 1 NON = 0 ? : ");
-
-        // scanf("%d", &user_rep);
-        // if (confirm(user_rep) == False)
-        // {
-        //     restart = True;
-        // }
-        // else
-        // {
-        //     restart = False;
-        // }
-
-        goto FREE_ALL3;
-        //avant de faire ca il faut free tout les elements de cette liste
-    FREE_ALL3:
-        for (i = 0; i < word_list->length; i++)
-        {
-            free_word(get_element_list(word_list, i));
-        }
-
-        free_list(word_list);
-        free(result[0]);
-        free(result[1]);
-        if (restart == True)
-        {
-            clearScreen();
-            for (i = 0; i < garbage->length; i++)
-            {
-                free(get_element_list(garbage, i));
-            }
-            free_list(garbage);
-            free(afd);
-            goto MENU;
-        }
-        else
-        {
-            clearScreen();
-            goto READ_WORD4;
+        path = "/home/dimitri/Bureau/automate_test.txt";
+        afn = convert_file_to_AFN(path, garbage);
+        print_info_AFN(afn, print_trans_info);
+        exp = calloc(255, sizeof(char));
+        scanf("%s", exp);
+        word = convert_to_word(exp);
+        boolean verdic = detect_AFN(afn , word , strlen(exp));
+        if(verdic == True){
+            printf("reconnu!!!!!!\n");
+        }else{
+            printf("non reconnu!!!!!!\n");
         }
         break;
     }
 
-    // for (i = 0; i < garbage->length; i++)
-    // {
-    //     free(get_element_list(garbage, i));
-    // }
-    // free_list(garbage);
+    for (i = 0; i < garbage->length; i++)
+    {
+        free(get_element_list(garbage, i));
+    }
+    free_list(garbage);
 
     //user_rep = 0;
     // } while (user_rep == 1);

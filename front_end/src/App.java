@@ -29,7 +29,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        AnchorPane root = FXMLLoader.load(getClass().getResource("/home/dimitri/automate_manip/front_end/src/ressource/window/mainView.fxml"));
+        AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

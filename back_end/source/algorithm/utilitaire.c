@@ -177,7 +177,7 @@ list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void
         length = calculate_length(word);
 
         //if(sp_state == False){
-        verdit = detect(afd, word, length);
+        verdit = detect_AFD(afd, word, length);
         // }else{
         //     verdit = detect(afd, word, length, equal_special_state, equal_label);
         // }
@@ -526,7 +526,6 @@ list read_expression(int length ,char *path, boolean from_file)
 
     queue_insertion(expression_list, tmp);
     free(exp);
-    exp = NULL;
     free_list(operande);
     return expression_list;
 }

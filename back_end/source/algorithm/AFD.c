@@ -62,7 +62,7 @@ void add_transition_AFD(AFD afd, void *begin, void *label, void *end, int index)
     afd->mat_trans[index] = trans;
 }
 
-void *delta(AFD afd, void *state, void *symbole)
+void *delta_AFD(AFD afd, void *state, void *symbole)
 {
     typedef struct etiquette etiquette;
     int i = 0;
@@ -85,7 +85,7 @@ void *delta(AFD afd, void *state, void *symbole)
 
 /*cette fonction teste si un mot donné est reconnu par un AFD (automate
 fini deterministe)*/
-boolean detect(const AFD afd, void *word, int size)
+boolean detect_AFD(const AFD afd, void *word, int size)
 {
     void **mot = word;
     void *q0 = afd->initiale_state;
@@ -95,7 +95,7 @@ boolean detect(const AFD afd, void *word, int size)
     for (i = 0; i < size; i++)
     {
         void *symbole = mot[i];
-        q = delta(afd, q, symbole);
+        q = delta_AFD(afd, q, symbole);
 
         if (q == NULL)
         {

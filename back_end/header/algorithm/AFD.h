@@ -23,13 +23,13 @@ AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label);
 elle prend en paramettre la fonction  equal_state qui permet de dire quand deux etats
 sont egaux , la fonction equal_lable qui joue presque le meme role que la fonction equal_state , elle
 permet de dire lorsque deux ettiquettes sont egaux*/
-boolean detect(AFD afd, void *word, int size);
+boolean detect_AFD(AFD afd, void *word, int size);
 
 // static void **delta_global_AFN(AFN afn, list state, boolean equal_value(void *lb1, void *lb2));
 
 static void **delta_global_AFD(AFD afd, void *state);
 
-void *delta(AFD afd, void *state, void *symbole);
+void *delta_AFD(AFD afd, void *state, void *symbole);
 /*cette fonction permet d'ajouter une transition a l'automate elle prend en paramettre l'automate 
 sur lequel on veut ajouter la transition la source l'etiquette la destination 
 et la fonction equal_label qui permet de dire lorsque deux etiquettes sont egales*/

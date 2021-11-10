@@ -51,24 +51,6 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
         }
     }
 
-    // printf("%d" , mat_succ->length);
-    // printf("%d" , state_list->length);
-    // list test = new_list();
-    // for (i = 0; i < mat_succ->length; i++)
-    // {
-
-    //     list tmp = get_element_list(mat_succ , i);
-    //     linear_element *elem = get_element_list(state_list , i);
-    //     if(elem != NULL){
-
-    //         printf("%s%d--->" , elem->value , elem->index);
-    //     }else{
-    //         printf("0---->");
-    //     }
-    //     print_list(tmp , print_tree_info);
-    //     printf("\n");
-
-    // }
 
     list last_state = last(t, garbage);
     int nbre_label = get_nbre_label(result, li_result->length);
@@ -99,10 +81,6 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
         sprintf(state, "%d", elem->index);
         afn->finale_state[i] = state;
     }
-    // printf("%d", last_state->length);
-    // char *state = malloc(20 * sizeof(char));
-    // sprintf(state, "%d", 0);
-    afn->finale_state[last_state->length] = initiale;
 
     for (i = 0; i < mat_succ->length; i++)
     {
@@ -135,7 +113,7 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
             }
         }
     }
-    //print_transitions_AFN(afn , print_info);
+    
     for (i = 0; i < state_list->length; i++)
     {
         linear_element *val = get_element_list(state_list, i);
