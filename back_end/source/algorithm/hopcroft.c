@@ -136,7 +136,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
     for (i = 0; i < pi->length; i++)
     {
         list temp_list = get_element_list(pi, i);
-        if (search_value_in_list(temp_list, afd->initiale_state, equal_value) == True)
+        if (search_value_in_list(temp_list, afd->initiale_state, equal_value , 1) == True)
         {
             initial_state_list = temp_list;
             break;
@@ -209,7 +209,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
     {
         for (j = 0; j < pi->length; j++)
         {
-            if (search_value_in_list(states[j], afd->finale_state[i], equal_value) == True)
+            if (search_value_in_list(states[j], afd->finale_state[i], equal_value , 1) == True)
             {
                 queue_insertion(final_state_result, copy_element_list(states[j]));
                 break;
@@ -312,12 +312,12 @@ static void **get_state_tab(AFD afd, boolean equal_value(void *lb1, void *lb2 , 
         void **trans_temp = afd->mat_trans[i];
         if (trans_temp != NULL)
         {
-            if (search_value_in_list(state_list, trans_temp[0], equal_value) == False)
+            if (search_value_in_list(state_list, trans_temp[0], equal_value , 1) == False)
             {
                 queue_insertion(state_list, trans_temp[0]);
             }
 
-            if (search_value_in_list(state_list, trans_temp[2], equal_value) == False)
+            if (search_value_in_list(state_list, trans_temp[2], equal_value , 1) == False)
             {
                 queue_insertion(state_list, trans_temp[2]);
             }

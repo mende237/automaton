@@ -23,7 +23,7 @@ AFN miroir_AFN(AFN afn);
 void add_transition_AFN(AFN afn, void *begin, void *label, void *end);
 void print_transitions_AFN(AFN afn, void print_elem(void *begin, void *label, void *end));
 list delta_AFN(AFN afn, void *state, void *symbole);
-boolean detect_AFN(AFN afn, void *word, int size);
+list detect_AFN(AFN afn, void *word, int size);
 void free_AFN(AFN afn);
 
 #endif

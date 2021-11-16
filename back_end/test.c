@@ -329,8 +329,7 @@ MENU:
     list garbage = NULL;
     list word_list = NULL;
     list *result = NULL;
-    list good_word = NULL;
-    list bad_word = NULL;
+    list mat_path = NULL;
     boolean is_afd = True;
 
     AFD afd = NULL;
@@ -488,19 +487,25 @@ MENU:
         {
             afd_result = union_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
 
-            afd_result = rename_states(afd_result, False);
+            // print_info_AFD(afd_result, True, print_element_in_list);
+            // print_AFD(afd_result, True, True, print_element_in_list, length_state);
 
-            for (i = 0; i < afd_result->nbre_state + 1; i++)
+            afd_result = rename_states(afd_result, False);
+            // print_info_AFD(afd_result, False, print_element_in_list);
+            // print_AFD(afd_result, False, False, print_element_in_list, length_state);
+
+            for (i = 0; i < afd_result->nbre_state; i++)
             {
                 queue_insertion(garbage, afd_result->state_tab[i]);
             }
 
             old_afd = afd_result;
+
+
             for (i = 2; i < nbr_automate; i++)
             {
                 afd_result = union_AFD(old_afd, afd_tab[i], print_element_in_list);
                 afd_result = rename_states(afd_result, False);
-
                 for (i = 0; i < afd_result->nbre_state + 1; i++)
                 {
                     queue_insertion(garbage, afd_result->state_tab[i]);
@@ -517,7 +522,7 @@ MENU:
             {
                 afd_result = rename_states(afd_result, False);
 
-                for (i = 0; i < afd_result->nbre_state + 1; i++)
+                for (i = 0; i < afd_result->nbre_state; i++)
                 {
                     queue_insertion(garbage, afd_result->state_tab[i]);
                 }
@@ -623,12 +628,24 @@ MENU:
         exp = calloc(255, sizeof(char));
         scanf("%s", exp);
         word = convert_to_word(exp);
-        boolean verdic = detect_AFN(afn , word , strlen(exp));
-        if(verdic == True){
-            printf("reconnu!!!!!!\n");
-        }else{
-            printf("non reconnu!!!!!!\n");
+        mat_path = detect_AFN(afn , word , strlen(exp));
+        // if(verdic == True){
+        //     printf("reconnu!!!!!!\n");
+        // }else{
+        //     printf("non reconnu!!!!!!\n");
+        // }
+
+        for ( i = 0; i < mat_path->length; i++)
+        {
+            list temp_list = get_element_list(mat_path, i);
+            print_list(temp_list, print_element_in_list);
+            free_list(temp_list);
+            printf("\n");
         }
+        
+        free_list(mat_path);
+        free(exp);
+        free_word(word);
         break;
     }
 

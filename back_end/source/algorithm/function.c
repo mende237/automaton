@@ -35,7 +35,7 @@ boolean equal_state(void  *state1, void *state2, ...)
     va_start(lst, state2);
     int permut = va_arg(lst, int);
     va_end(lst);
-
+    
     boolean rep = False;
     int i = 0, j = 0;
     if (st1->length != st2->length)
@@ -46,7 +46,6 @@ boolean equal_state(void  *state1, void *state2, ...)
     {
         if (permut == 1)
         {
-
             for (i = 0; i < st1->length; i++)
             {
                 rep = False;
@@ -169,7 +168,7 @@ void **delta_global_automate(void *automate, list state, boolean is_AFD, boolean
                     {
                         /*dans met le nouvel etat dans le tableau correspondant a l'étiquette lu 
                     chaque etiquette connais son index dans le nouveau tableau de transition*/
-                        if (search_value_in_list(trans_result[et->index], trans[2], equal_label) == False)
+                        if (search_value_in_list(trans_result[et->index], trans[2], equal_label , 1) == False)
                         {
                             head_insertion(trans_result[et->index], trans[2]);
                         }

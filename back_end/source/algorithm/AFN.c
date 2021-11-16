@@ -65,10 +65,6 @@ void add_transition_AFN(AFN afn, void *begin, void *label, void *end)
     trans[0] = begin;
     trans[1] = lbl;
     trans[2] = end;
-    // char *b = begin;
-    // char *l = lbl->value;
-    // char *e = end;
-    // printf("%s --------- %s ------ %s\n", b, l, e);
     head_insertion(afn->mat_trans, trans);
 }
 
@@ -117,6 +113,119 @@ AFN miroir_AFN(AFN afn)
     return afn_result;
 }
 
+list delta_AFN(AFN afn, void *state, void *symbole)
+{
+    typedef struct etiquette etiquette;
+    int i = 0;
+    void **transition;
+    list result = new_list();
+
+    for (i = 0; i < afn->mat_trans->length; i++)
+    {
+        transition = get_element_list(afn->mat_trans, i);
+        etiquette *lbl = transition[1];
+        if (strcmp(transition[0], state) == 0 && strcmp(lbl->value, symbole) == 0)
+        {
+            queue_insertion(result, transition[2]);
+        }
+    }
+
+    return result;
+}
+
+list detect_AFN(const AFN afn, void *word, int size)
+{
+    typedef struct container
+    {
+        int index;
+        void *state;
+        list path;
+    } container;
+
+    stack pile = new_stack();
+    void **mot = word;
+    int i = 0, cmpt = 0;
+
+    list mat_path = new_list();
+
+    for (i = 0; i < afn->nbre_initiale_state; i++)
+    {
+        container *c = calloc(1, sizeof(container));
+        c->index = 0;
+        c->state = afn->initiale_state[i];
+        c->path = new_list();
+        queue_insertion(c->path , c->state);
+        push(pile, c);
+    }
+
+    boolean rep = True;
+    while (is_empty_stack(pile) == False)
+    {
+        list state_list;
+        container *c = pop(pile);
+        rep = True;
+        cmpt = c->index;
+
+        void *state = c->state;
+        list temp_list = c->path;
+        while (cmpt < size)
+        {
+            void *symbole = mot[cmpt];
+            queue_insertion(temp_list , symbole);
+
+            state_list = delta_AFN(afn, state, symbole);
+            if(is_empty_list(state_list) == True){
+                printf("enter!!\n");
+                queue_insertion(mat_path , temp_list);
+                rep = False;
+                break;
+            }
+            cmpt++;
+            for (i = 0; i < state_list->length; i++)
+            {
+                container *temp = calloc(1, sizeof(container));
+                temp->index = cmpt;
+                temp->state = get_element_list(state_list, i);
+
+                temp->path = copy_element_list(temp_list);
+                queue_insertion(temp->path , temp->state);
+
+                push(pile, temp);
+            }
+
+            container *temp = pop(pile);
+            if(cmpt >= size){
+                queue_insertion(temp_list , temp->state);
+                queue_insertion(mat_path , temp_list);
+                free_list(temp->path);
+            }else{
+                //on supprime l'ancienne liste
+                free_list(temp_list);
+                temp_list = temp->path;
+                state = temp->state;
+                free(temp);
+            }
+
+        }
+        
+        // if(rep == True){
+        //     for (i = 0; i < afn->nbre_finale_state; i++)
+        //     {
+        //         if (strcmp(state, afn->finale_state[i]) == 0)
+        //         {
+        //             return True;
+        //         }
+        //     }
+
+        // }
+
+        free(c);
+    }
+    
+    free_stack(pile);
+    return mat_path;
+}
+
 void free_AFN(AFN afn)
 {
     if (afn != NULL)
@@ -138,89 +247,6 @@ void free_AFN(AFN afn)
         free(afn->finale_state);
         free(afn);
     }
-}
-
-list delta_AFN(AFN afn, void *state, void *symbole)
-{
-    typedef struct etiquette etiquette;
-    int i = 0;
-    void **transition;
-    list result = new_list();
-
-    for (i = 0; i < afn->mat_trans->length; i++)
-    {
-        transition = get_element_list(afn->mat_trans, i);
-        etiquette *lbl = transition[1];
-        if (strcmp(transition[0], state) == 0 && strcmp(lbl->value, symbole) == 0)
-        {
-            queue_insertion(result, transition[2]);
-        }
-    }
-
-    return result;
-}
-
-boolean detect_AFN(const AFN afn, void *word, int size)
-{
-
-    typedef struct container
-    {
-        int index;
-        void *state;
-    } container;
-
-    stack pile = new_stack();
-    void **mot = word;
-    int i = 0, cmpt = 0;
-
-    for (i = 0; i < afn->nbre_initiale_state; i++)
-    {
-        container *c = calloc(1, sizeof(container));
-        c->index = 0;
-        c->state = afn->initiale_state[i];
-        push(pile, c);
-    }
-
-    while (is_empty_stack(pile) == False)
-    {
-        list state_list;
-        container *c = pop(pile);
-        cmpt = c->index;
-        void *state = c->state;
-
-        while (cmpt < size)
-        {
-            void *symbole = mot[cmpt];
-            state_list = delta_AFN(afn, state, symbole);
-            if(is_empty_list(state_list) == True){
-                break;
-            }
-            cmpt++;
-            for (i = 0; i < state_list->length; i++)
-            {
-                container *temp = calloc(1, sizeof(container));
-                temp->index = cmpt;
-                temp->state = get_element_list(state_list, i);
-                push(pile, temp);
-            }
-            container *temp = pop(pile);
-            state = temp->state;
-            free(temp);
-        }
-
-        for (i = 0; i < afn->nbre_finale_state; i++)
-        {
-            if (strcmp(state, afn->finale_state[i]) == 0)
-            {
-                return True;
-            }
-        }
-
-        free(c);
-    }
-    
-    free_stack(pile);
-    return False;
 }
 
 #endif

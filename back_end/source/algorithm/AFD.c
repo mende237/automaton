@@ -256,13 +256,6 @@ static list *union_trans(AFD afd1, AFD afd2, void **trans1, void **trans2, void 
         }
     }
 
-    // for (i = 0; i < nbre_label; i++)
-    // {
-    //     print_list(trans_result[i], print_value);
-    //     printf(" | ");
-    // }
-    // printf("\n");
-
     free(trans1);
     free(trans2);
     return trans_result;
@@ -272,11 +265,11 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
 {
     void **result = calloc(6, sizeof(void *));
     int i = 0, j = 0, cmpt_state = 1;
+    boolean well_state = False;
     list label_list = new_list();
-    /*****************************************************************************************/
-    void **state_tab = malloc(afd1->nbre_state * afd2->nbre_state * sizeof(void *));
-    void **mat_state = malloc(afd1->nbre_state * afd2->nbre_state * sizeof(void *));
-    /*****************************************************************************************/
+
+    list state_list = new_list();
+    list mat_state_list = new_list();
     stack pile = new_stack();
 
     for (i = 0; i < afd1->nbre_label; i++)
@@ -304,39 +297,50 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
     for (i = 0; i < label_list->length; i++)
     {
         tab_label[i] = get_element_list(label_list, i);
-        //char *lbl = tab_label[i];
-        //printf("%s ", lbl);
     }
 
     list initial_state_list = new_list();
     queue_insertion(initial_state_list, afd1->initiale_state);
     queue_insertion(initial_state_list, afd2->initiale_state);
 
-    state_tab[0] = initial_state_list;
+    // state_tab[0] = initial_state_list;
+    queue_insertion(state_list, initial_state_list);
+
     list *trans = union_trans(afd1, afd2, delta_global_AFD(afd1, afd1->initiale_state), delta_global_AFD(afd2, afd2->initiale_state), tab_label, label_list->length, print_value);
-    mat_state[0] = trans;
+    queue_insertion(mat_state_list, trans);
+    // mat_state[0] = trans;
     for (i = 0; i < label_list->length; i++)
     {
         if (get_element_list(trans[i], 0) != NULL || get_element_list(trans[i], 1) != NULL)
         {
             push(pile, trans[i]);
         }
+        else
+        {
+            well_state = True;
+        }
     }
 
     while (is_empty_stack(pile) == False)
     {
         list state = pop(pile);
-        if (search_state_list(state_tab, state, cmpt_state, 0) == False)
+        if (search_value_in_list(state_list, state, equal_state, 0) == False)
         {
-            state_tab[cmpt_state] = state;
+            queue_insertion(state_list, state);
+            //state_tab[cmpt_state] = state;
             trans = union_trans(afd1, afd2, delta_global_AFD(afd1, get_element_list(state, 0)), delta_global_AFD(afd2, get_element_list(state, 1)), tab_label, label_list->length, print_value);
-            mat_state[cmpt_state] = trans;
+            queue_insertion(mat_state_list, trans);
+            //mat_state[cmpt_state] = trans;
 
             for (i = 0; i < label_list->length; i++)
             {
                 if (get_element_list(trans[i], 0) != NULL || get_element_list(trans[i], 1) != NULL)
                 {
                     push(pile, trans[i]);
+                }
+                else
+                {
+                    well_state = True;
                 }
             }
 
@@ -345,12 +349,46 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
     }
 
     free_stack(pile);
+
     /*************************************************/
     int *nbr_state = calloc(1, sizeof(int));
     int *nbr_label = calloc(1, sizeof(int));
     /************************************************/
     *nbr_label = label_list->length;
-    *nbr_state = cmpt_state;
+    if (well_state == True)
+    {
+        *nbr_state = state_list->length + 1;
+        list temp1_list = new_list();
+        queue_insertion(temp1_list, NULL);
+        queue_insertion(temp1_list, NULL);
+        queue_insertion(state_list, temp1_list);
+
+        list *temp_trans = calloc(*nbr_label, sizeof(list));
+        for (i = 0; i < *nbr_label; i++)
+        {
+            list temp2_list = new_list();
+            queue_insertion(temp2_list, NULL);
+            queue_insertion(temp2_list, NULL);
+            temp_trans[i] = temp2_list;
+        }
+        queue_insertion(mat_state_list, temp_trans);
+    }
+    else
+    {
+        *nbr_state = state_list->length;
+    }
+
+    /*****************************************************************************************/
+    void **state_tab = malloc(*nbr_state * sizeof(void *));
+    void **mat_state = malloc(*nbr_state * sizeof(void *));
+    /*****************************************************************************************/
+
+    for (i = 0; i < *nbr_state; i++)
+    {
+        state_tab[i] = get_element_list(state_list, i);
+        mat_state[i] = get_element_list(mat_state_list, i);
+    }
+
     result[0] = state_tab;
     result[1] = nbr_state;
     result[2] = mat_state;
@@ -358,6 +396,8 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
     result[4] = initial_state_list;
     result[5] = tab_label;
 
+    free_list(state_list);
+    free_list(mat_state_list);
     free_list(label_list);
     return result;
 }
@@ -937,9 +977,6 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2, ...))
             push(pile, trans[i]);
         }
     }
-    
-    boolean (*pointeur_fonction)(void * , void * , int);
-    pointeur_fonction = equal_state;
 
     queue_insertion(state_tab_list, initial_state_list);
     queue_insertion(mat_state_list, trans);
@@ -948,7 +985,7 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2, ...))
     {
 
         list state = pop(pile);
-        if (search_value_in_list(state_tab_list, state, equal_state) == False)
+        if (search_value_in_list(state_tab_list, state, equal_state, 1) == False)
         {
             queue_insertion(state_tab_list, state);
             trans = delta_global_automate(afn, state, False, equal_value);
@@ -989,7 +1026,7 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2, ...))
         for (j = 0; j < state_tab_list->length; j++)
         {
             list temp_list = get_element_list(state_tab_list, j);
-            if (search_value_in_list(temp_list, afn->finale_state[i], equal_value) == True)
+            if (search_value_in_list(temp_list, afn->finale_state[i], equal_value, 1) == True)
             {
                 head_insertion(list_finale_state, temp_list);
                 delete_element_list(state_tab_list, j);
@@ -1063,7 +1100,6 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
     list state_tab_list = new_list();
     list mat_state_list = new_list();
 
-
     list garbage = new_list();
 
     stack pile = new_stack();
@@ -1089,7 +1125,6 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
         }
     }
 
-
     queue_insertion(state_tab_list, e_clo);
     queue_insertion(mat_state_list, trans);
 
@@ -1097,7 +1132,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
     {
 
         list state = pop(pile);
-        if (search_value_in_list(state_tab_list, state, equal_state) == False)
+        if (search_value_in_list(state_tab_list, state, equal_state, 1) == False)
         {
             queue_insertion(state_tab_list, state);
             trans = delta_global_automate(afn, state, False, equal_value);
@@ -1137,9 +1172,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
         mat_state[i] = get_element_list(mat_state_list, i);
     }
 
-
-
-   int j = 0, nbre_finale_state = 0, k = 0;
+    int j = 0, nbre_finale_state = 0, k = 0;
     int cmpt = 0, cmpt_finale_state = 0;
     list list_finale_state = new_list();
     boolean in = False;
@@ -1149,7 +1182,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
         for (j = 0; j < state_tab_list->length; j++)
         {
             list temp_list = get_element_list(state_tab_list, j);
-            if (search_value_in_list(temp_list, afn->finale_state[i], equal_value) == True)
+            if (search_value_in_list(temp_list, afn->finale_state[i], equal_value, 1) == True)
             {
                 head_insertion(list_finale_state, temp_list);
                 delete_element_list(state_tab_list, j);
@@ -1467,8 +1500,9 @@ void free_AFD(AFD afd, boolean is_state_list)
                 }
 
                 free_list(afd->initiale_state);
+                list temp_list = afd->state_tab[afd->nbre_state - 1];
                 //on libere l'etat puit qui est dans le tableau des etats
-                if (is_empty_list(afd->state_tab[afd->nbre_state - 1]) == True)
+                if (is_empty_list(temp_list) == True || (get_element_list(temp_list, 0) == NULL && get_element_list(temp_list, 1) == NULL))
                 {
                     free_list(afd->state_tab[afd->nbre_state - 1]);
                 }

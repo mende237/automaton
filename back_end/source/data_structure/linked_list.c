@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include "../../header/data_structure/linked_list.h"
 
 list new_list(void)
@@ -116,13 +117,20 @@ void *get_element_list(list li, int index)
     }
 }
 
-boolean search_value_in_list(list li, void *x, boolean equal(void *val1, void *val2 , ...))
+boolean search_value_in_list(list li, void *x, boolean equal(void *val1, void *val2 , ...) , ...)
 {
     typedef struct element element;
     element *elem = li->head;
+
+    va_list lst;
+    va_start(lst, equal);
+    int permut = va_arg(lst, int);
+    va_end(lst);
+
+   
     while (elem != NULL)
     {
-        if (equal(elem->value, x) == 0)
+        if (equal(elem->value, x , permut) == 0)
         {
             return True;
         }
@@ -189,8 +197,9 @@ list copy_element_list(list li)
     return list_result;
 }
 
-boolean include_value_list(list li1, list li2, boolean equal(void *val1, void *val2 , ...))
+boolean include_value_list(list li1, list li2,  boolean equal(void *val1, void *val2 , ...))
 {
+
     typedef struct element element;
     int i = 0, j = 0;
     element *elem2 = li2->head;
