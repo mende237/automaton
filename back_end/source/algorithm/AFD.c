@@ -937,6 +937,9 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2, ...))
             push(pile, trans[i]);
         }
     }
+    
+    boolean (*pointeur_fonction)(void * , void * , int);
+    pointeur_fonction = equal_state;
 
     queue_insertion(state_tab_list, initial_state_list);
     queue_insertion(mat_state_list, trans);
