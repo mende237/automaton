@@ -5,6 +5,7 @@
 #include "../../source/data_structure/stack.c"
 #include <stdlib.h>
 #include <stdio.h>
+#include <cjson/cJSON.h>
 
 AFN new_AFN(int nbre_state, int nbre_initiale_state, int nbre_finale_state, int nbre_label, void *epsilone)
 {
@@ -154,7 +155,7 @@ list detect_AFN(const AFN afn, void *word, int size)
         c->index = 0;
         c->state = afn->initiale_state[i];
         c->path = new_list();
-        queue_insertion(c->path , c->state);
+        queue_insertion(c->path, c->state);
         push(pile, c);
     }
 
@@ -171,12 +172,13 @@ list detect_AFN(const AFN afn, void *word, int size)
         while (cmpt < size)
         {
             void *symbole = mot[cmpt];
-            queue_insertion(temp_list , symbole);
+            queue_insertion(temp_list, symbole);
 
             state_list = delta_AFN(afn, state, symbole);
-            if(is_empty_list(state_list) == True){
+            if (is_empty_list(state_list) == True)
+            {
                 printf("enter!!\n");
-                queue_insertion(mat_path , temp_list);
+                queue_insertion(mat_path, temp_list);
                 rep = False;
                 break;
             }
@@ -188,26 +190,28 @@ list detect_AFN(const AFN afn, void *word, int size)
                 temp->state = get_element_list(state_list, i);
 
                 temp->path = copy_element_list(temp_list);
-                queue_insertion(temp->path , temp->state);
+                queue_insertion(temp->path, temp->state);
 
                 push(pile, temp);
             }
 
             container *temp = pop(pile);
-            if(cmpt >= size){
-                queue_insertion(temp_list , temp->state);
-                queue_insertion(mat_path , temp_list);
+            if (cmpt >= size)
+            {
+                queue_insertion(temp_list, temp->state);
+                queue_insertion(mat_path, temp_list);
                 free_list(temp->path);
-            }else{
+            }
+            else
+            {
                 //on supprime l'ancienne liste
                 free_list(temp_list);
                 temp_list = temp->path;
                 state = temp->state;
                 free(temp);
             }
-
         }
-        
+
         // if(rep == True){
         //     for (i = 0; i < afn->nbre_finale_state; i++)
         //     {
@@ -221,7 +225,7 @@ list detect_AFN(const AFN afn, void *word, int size)
 
         free(c);
     }
-    
+
     free_stack(pile);
     return mat_path;
 }
@@ -247,6 +251,85 @@ void free_AFN(AFN afn)
         free(afn->finale_state);
         free(afn);
     }
+}
+
+void AFN_to_jason(AFN afn , char *path)
+{
+    typedef struct etiquette etiquette;
+    int i = 0 , j = 0;
+    char *result = NULL;
+    cJSON *alphabet = NULL;
+    cJSON *string = NULL;
+    cJSON *initial_states = NULL;
+    cJSON *final_states = NULL;
+    cJSON *transitions = NULL;
+    cJSON *transition = NULL;
+    cJSON *state = NULL;
+    
+    cJSON *automate = cJSON_CreateObject();
+   
+    alphabet = cJSON_CreateArray();
+
+    cJSON_AddItemToObject(automate , "alphabet" , alphabet);
+    for (i = 0; i < afn->nbre_label; i++)
+    {
+        char *c = afn->tab_labels[i];
+        string = cJSON_CreateString(c);
+        cJSON_AddItemToArray(alphabet , string);
+    }
+    
+    initial_states = cJSON_CreateArray();
+    cJSON_AddItemToObject(automate , "initial states" , initial_states);
+    for (i = 0; i < afn->nbre_initiale_state; i++)
+    {
+        char *c = afn->initiale_state[i];
+        string = cJSON_CreateString(c);
+        cJSON_AddItemToArray(initial_states , string);
+    }
+
+    final_states = cJSON_CreateArray();
+    cJSON_AddItemToObject(automate , "final states" , final_states);
+    for (i = 0; i < afn->nbre_finale_state; i++)
+    {
+        char *c = afn->finale_state[i];
+        string = cJSON_CreateString(c);
+        cJSON_AddItemToArray(final_states , string);
+    }
+    
+    transitions = cJSON_CreateArray();
+    cJSON_AddItemToObject(automate , "transitions" , transitions);
+    for (i = 0; i < afn->mat_trans->length; i++)
+    {
+        transition = cJSON_CreateArray();
+        cJSON_AddItemToArray(transitions , transition);
+        void **trans = get_element_list(afn->mat_trans , i);
+
+        char *temp_ch = trans[0];
+        string = cJSON_CreateString(temp_ch);
+        cJSON_AddItemToArray(transition , string);
+
+        etiquette *et = trans[1];
+        temp_ch = et->value;
+        string = cJSON_CreateString(temp_ch);
+        cJSON_AddItemToArray(transition , string);
+
+        temp_ch = trans[2];
+        string = cJSON_CreateString(temp_ch);
+        cJSON_AddItemToArray(transition, string);
+    }
+    
+    
+    result = cJSON_Print(automate);
+    cJSON_Delete(automate);
+    
+    FILE *file = fopen(path , "w");
+
+    if(file == NULL)
+        exit(1);
+
+    fputs(result , file);
+    fclose(file);
+    free(result);
 }
 
 #endif

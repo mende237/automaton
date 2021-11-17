@@ -26,4 +26,6 @@ list delta_AFN(AFN afn, void *state, void *symbole);
 list detect_AFN(AFN afn, void *word, int size);
 void free_AFN(AFN afn);
 
+void AFN_to_jason(AFN afn , char *path);
+
 #endif

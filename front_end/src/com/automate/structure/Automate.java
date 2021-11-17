@@ -1,6 +1,7 @@
 package com.automate.structure;
 
 public abstract class Automate {
+    protected String description;
     protected String stateTab[];
     protected String finalStateTab[];
     protected String tabLabel[];
@@ -8,6 +9,13 @@ public abstract class Automate {
     /*******************************************
      * constructor
      *************************************************/
+    public Automate(String stateTab[], String finalStateTab[], String tabLabel[] , String description) {
+        this.stateTab = stateTab;
+        this.finalStateTab = finalStateTab;
+        this.tabLabel = tabLabel;
+        this.description = description;
+    }
+
     public Automate(String stateTab[], String finalStateTab[], String tabLabel[]) {
         this.stateTab = stateTab;
         this.finalStateTab = finalStateTab;

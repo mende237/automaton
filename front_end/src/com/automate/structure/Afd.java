@@ -8,6 +8,12 @@ public class Afd extends Automate {
     /****************************************
      * constructor
      ************************************/
+    public Afd(String stateTab[], String initialState, String finalStateTab[], String tabLabel[] , String description) {
+        super(stateTab, finalStateTab, tabLabel , description);
+        this.matTrans = new Transition[super.stateTab.length * super.tabLabel.length];
+        this.cmpt = 0;
+    }
+
     public Afd(String stateTab[], String initialState, String finalStateTab[], String tabLabel[]) {
         super(stateTab, finalStateTab, tabLabel);
         this.matTrans = new Transition[super.stateTab.length * super.tabLabel.length];

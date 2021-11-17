@@ -9,7 +9,14 @@ public class Afn extends Automate {
     /**************************************
      * constructor
      *****************************************/
-    public Afn(String stateTab[] , String initialStateTab[] , String finalStateTab[], String tabLabel[]) {
+    public Afn(String stateTab[] , String initialStateTab[] , String finalStateTab[], String tabLabel[] , String description) {
+        super(stateTab, finalStateTab, tabLabel , description);
+        this.matTrans = new LinkedList<>();
+        this.initialStateTab = initialStateTab;
+    }
+
+    public Afn(String stateTab[], String initialStateTab[], String finalStateTab[], String tabLabel[])
+    {
         super(stateTab, finalStateTab, tabLabel);
         this.matTrans = new LinkedList<>();
         this.initialStateTab = initialStateTab;

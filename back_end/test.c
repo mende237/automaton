@@ -362,14 +362,15 @@ MENU:
 
         afn = glushkov_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
+        
+        AFN_to_jason(afn , "test.json");
+        // afd = determinisation(afn, equal_st);
 
-        afd = determinisation(afn, equal_st);
+        // afd = rename_states(afd, True);
 
-        afd = rename_states(afd, True);
-
-        print_info_AFD(afd, False, print_element_in_list);
-        print_AFD(afd, False, False, print_element_in_list, length_state);
-        free_AFD(afd, False);
+        // print_info_AFD(afd, False, print_element_in_list);
+        // print_AFD(afd, False, False, print_element_in_list, length_state);
+        // free_AFD(afd, False);
         free_elem_in_list(expression_list);
         free_list(expression_list);
         free(reg_expression);
