@@ -363,14 +363,16 @@ MENU:
         afn = glushkov_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
         
-        AFN_to_jason(afn , "test.json");
-        // afd = determinisation(afn, equal_st);
+        AFN_to_jason(afn , "afn.json");
+        afd = determinisation(afn, equal_st);
 
-        // afd = rename_states(afd, True);
+        afd = rename_states(afd, True);
 
-        // print_info_AFD(afd, False, print_element_in_list);
-        // print_AFD(afd, False, False, print_element_in_list, length_state);
-        // free_AFD(afd, False);
+        AFD_to_jason(afd , "afd.json");
+
+        print_info_AFD(afd, False, print_element_in_list);
+        print_AFD(afd, False, False, print_element_in_list, length_state);
+        free_AFD(afd, False);
         free_elem_in_list(expression_list);
         free_list(expression_list);
         free(reg_expression);
@@ -389,10 +391,13 @@ MENU:
 
         afn = thomson_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
+        AFN_to_jason(afn, "afn.json");
 
         afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
 
         afd = rename_states(afd, True);
+        AFD_to_jason(afd, "afd.json");
+
         print_info_AFD(afd, False, print_element_in_list);
         print_AFD(afd, False, False, print_element_in_list, length_state);
         free_AFD(afd, False);
@@ -412,34 +417,20 @@ MENU:
     case 4:
         path = "/home/dimitri/Bureau/afd3.txt";
         garbage = new_list();
-        afd = convert_file_to_AFD(path, garbage);
-
+        afd = jason_to_AFD("./afd.json");
+        print_info_AFD(afd, False, print_element_in_list);
+        print_transitions_AFD(afd , print_trans_info);
         afd_result = hopcroft_minimisation(afd, equal_label, print_element_in_list);
+        
+        afd_result = rename_states(afd_result, True);
         // afd_result = brzozowski_minimisation(afd ,equal_label);
 
-        print_info_AFD(afd_result, True, print_element_in_list);
-        print_AFD(afd_result, True, False, print_element_in_list, length_state);
+        print_info_AFD(afd_result, False, print_element_in_list);
+        print_AFD(afd_result, False, False, print_element_in_list, length_state);
+        AFD_to_jason(afd_result, "afd_min.json");
 
         free_AFD(afd, False);
-        free_AFD(afd_result, True);
-        // free_AFD(afd_result , False);
-
-        // good_word = new_list();
-        // queue_insertion(good_word, "a");
-        // queue_insertion(good_word, "b");
-        // queue_insertion(good_word, "d");
-        // queue_insertion(good_word, "c");
-        // bad_word = new_list();
-        // // queue_insertion(bad_word, "b");
-        // // queue_insertion(bad_word, "a");
-        // // queue_insertion(bad_word, "e");
-        // // queue_insertion(bad_word, "c");
-        // word_list = intersection_set(good_word, bad_word);
-        // print_list(word_list , print_element_in_list);
-
-        // free_list(good_word);
-        // free_list(bad_word);
-        // free_list(word_list);
+        free_AFD(afd_result , False);
         break;
     case 5:
 
@@ -448,7 +439,8 @@ MENU:
     case 7:
         path = "/home/dimitri/Bureau/automate_test.txt";
         garbage = new_list();
-        afn = convert_file_to_AFN(path, garbage);
+        //afn = convert_file_to_AFN(path, garbage);
+        afn = jason_to_AFN("./afn.json");
         print_info_AFN(afn, print_trans_info);
         if (user_rep == 6)
         {

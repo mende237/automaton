@@ -2,19 +2,19 @@ package com.automate.structure;
 
 public class Afd extends Automate {
     private Transition matTrans[];
-    private String initialState;
+    private State initialState;
     private int cmpt;
 
     /****************************************
      * constructor
      ************************************/
-    public Afd(String stateTab[], String initialState, String finalStateTab[], String tabLabel[] , String description) {
+    public Afd(State stateTab[], State initialState, State finalStateTab[], String tabLabel[] , String description) {
         super(stateTab, finalStateTab, tabLabel , description);
         this.matTrans = new Transition[super.stateTab.length * super.tabLabel.length];
         this.cmpt = 0;
     }
 
-    public Afd(String stateTab[], String initialState, String finalStateTab[], String tabLabel[]) {
+    public Afd(State stateTab[], State initialState, State finalStateTab[], String tabLabel[]) {
         super(stateTab, finalStateTab, tabLabel);
         this.matTrans = new Transition[super.stateTab.length * super.tabLabel.length];
         this.cmpt = 0;
@@ -39,6 +39,14 @@ public class Afd extends Automate {
     public void save(String path) {
 
     }
+
+    
+
+    @Override
+    public void makeImage(String path) {
+        
+    }
+
 
     @Override
     public String toString() {

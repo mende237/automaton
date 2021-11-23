@@ -84,6 +84,12 @@ qui permet d'afficher un etat sous forme de liste , la fonction print_label perm
 la fonction length_state permet de calculer le nombre de caractere qu'un etat occupe si l'on l'affiche en console et en fin 
 la fonction length_label permet de de calculer le nombre de caractere qu'une etiquette occupe si l'on l'affiche en console*/
 void print_AFD(AFD afd, boolean is_state_list, boolean is_special_state, void print_state(void *x, boolean last), int length_state(void *x, boolean is_state_list));
+
+
+void AFD_to_jason(AFD afd, char *path);
+
+AFD jason_to_AFD(char *path);
+
 /*libere la memoire*/
 void free_AFD(AFD afd, boolean is_state_list);
 

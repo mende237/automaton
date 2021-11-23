@@ -2,21 +2,21 @@ package com.automate.structure;
 
 public abstract class Automate {
     protected String description;
-    protected String stateTab[];
-    protected String finalStateTab[];
+    protected State stateTab[];
+    protected State finalStateTab[];
     protected String tabLabel[];
 
     /*******************************************
      * constructor
      *************************************************/
-    public Automate(String stateTab[], String finalStateTab[], String tabLabel[] , String description) {
+    public Automate(State stateTab[], State finalStateTab[], String tabLabel[] , String description) {
         this.stateTab = stateTab;
         this.finalStateTab = finalStateTab;
         this.tabLabel = tabLabel;
         this.description = description;
     }
 
-    public Automate(String stateTab[], String finalStateTab[], String tabLabel[]) {
+    public Automate(State stateTab[], State finalStateTab[], String tabLabel[]) {
         this.stateTab = stateTab;
         this.finalStateTab = finalStateTab;
         this.tabLabel = tabLabel;
@@ -26,11 +26,11 @@ public abstract class Automate {
      * getter
      **************************************************/
 
-    public String[] getStateTab() {
+    public State[] getStateTab() {
         return this.stateTab;
     }
 
-    public String[] getFinalStateTab() {
+    public State[] getFinalStateTab() {
         return this.finalStateTab;
     }
 
@@ -41,11 +41,11 @@ public abstract class Automate {
     /*********************************************
      * setter
      ***********************************************/
-    public void setStateTab(String stateTab[]) {
+    public void setStateTab(State stateTab[]) {
         this.stateTab = stateTab;
     }
 
-    public void setFinalStateTab(String finalStateTab[]) {
+    public void setFinalStateTab(State finalStateTab[]) {
         this.finalStateTab = finalStateTab;
     }
 
@@ -58,4 +58,6 @@ public abstract class Automate {
      **************************************************/
 
     public abstract void save(String path);
+
+    public abstract void makeImage(String path);
 }

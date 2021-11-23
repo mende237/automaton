@@ -2,20 +2,25 @@ package com.automate.structure;
 
 import java.util.LinkedList;
 
+import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.attribute.Rank.RankDir;
+import guru.nidi.graphviz.model.Factory;
+import guru.nidi.graphviz.model.Graph;
+
 public class Afn extends Automate {
     private LinkedList<Transition> matTrans;
-    private String initialStateTab[];
+    private State initialStateTab[];
 
     /**************************************
      * constructor
      *****************************************/
-    public Afn(String stateTab[] , String initialStateTab[] , String finalStateTab[], String tabLabel[] , String description) {
+    public Afn(State stateTab[] , State initialStateTab[] , State finalStateTab[], String tabLabel[] , String description) {
         super(stateTab, finalStateTab, tabLabel , description);
         this.matTrans = new LinkedList<>();
         this.initialStateTab = initialStateTab;
     }
 
-    public Afn(String stateTab[], String initialStateTab[], String finalStateTab[], String tabLabel[])
+    public Afn(State stateTab[], State initialStateTab[], State finalStateTab[], String tabLabel[])
     {
         super(stateTab, finalStateTab, tabLabel);
         this.matTrans = new LinkedList<>();
@@ -29,7 +34,7 @@ public class Afn extends Automate {
         return this.matTrans;
     }
 
-    public String[] getInitialStateTab() {
+    public State[] getInitialStateTab() {
         return this.initialStateTab;
     }
 
@@ -69,6 +74,15 @@ public class Afn extends Automate {
     @Override
     public void save(String path) {
         
+    }
+
+    @Override
+    public void makeImage(String path) {
+        // Graph g = Factory.graph("afn");
+        // g.directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT));
+        // for (int i = 0; i < matTrans.size(); i++) {
+        //     g.with()
+        // }
     }
 
 }

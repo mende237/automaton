@@ -264,12 +264,16 @@ void AFN_to_jason(AFN afn , char *path)
     cJSON *final_states = NULL;
     cJSON *transitions = NULL;
     cJSON *transition = NULL;
+    cJSON *nbr_state = NULL;
     cJSON *state = NULL;
+    cJSON *epsilone = NULL;
     
     cJSON *automate = cJSON_CreateObject();
+
+    epsilone = cJSON_CreateString(afn->epsilone);
+    cJSON_AddItemToObject(automate , "epsilone" , epsilone);
    
     alphabet = cJSON_CreateArray();
-
     cJSON_AddItemToObject(automate , "alphabet" , alphabet);
     for (i = 0; i < afn->nbre_label; i++)
     {
@@ -277,6 +281,9 @@ void AFN_to_jason(AFN afn , char *path)
         string = cJSON_CreateString(c);
         cJSON_AddItemToArray(alphabet , string);
     }
+
+    nbr_state = cJSON_CreateNumber(afn->nbre_state);
+    cJSON_AddItemToObject(automate , "number state" , nbr_state);
     
     initial_states = cJSON_CreateArray();
     cJSON_AddItemToObject(automate , "initial states" , initial_states);
@@ -330,6 +337,149 @@ void AFN_to_jason(AFN afn , char *path)
     fputs(result , file);
     fclose(file);
     free(result);
+}
+
+AFN jason_to_AFN(char *path)
+{
+    FILE *file = NULL;
+    file = fopen(path, "r");
+    int lettre;
+    int size = 0;
+    if (file == NULL)
+        exit(1);
+
+    while ((lettre = fgetc(file)) != EOF)
+        size++;
+    fclose(file);
+
+    file = fopen(path, "r");
+    char *buffer = calloc(size, sizeof(char));
+    fread(buffer, size, 1, file);
+
+    fclose(file);
+
+    int i = 0;
+    cJSON *epsilone = NULL;
+    cJSON *alphabet = NULL;
+    cJSON *numbre_state = NULL;
+    cJSON *initial_states = NULL;
+    cJSON *final_states = NULL;
+    cJSON *transitions = NULL;
+    cJSON *transition = NULL;
+    cJSON *string = NULL;
+    cJSON *state = NULL;
+
+    list mat_trans = new_list();
+    list final_state_list = new_list();
+    list initial_states_list = new_list();
+    char *ep = NULL;
+
+    cJSON *automate = cJSON_Parse(buffer);
+    if (automate == NULL)
+    {
+        goto end;
+    }
+
+    epsilone = cJSON_GetObjectItemCaseSensitive(automate , "epsilone");
+    if(cJSON_IsString(epsilone)){
+        ep = epsilone->valuestring;
+    }
+
+    int nbre_label;
+    alphabet = cJSON_GetObjectItemCaseSensitive(automate, "alphabet");
+    if (cJSON_IsArray(alphabet))
+    {
+        nbre_label = cJSON_GetArraySize(alphabet);
+    }
+    else
+    {
+        goto end;
+    }
+
+    int nbr_state;
+    numbre_state = cJSON_GetObjectItemCaseSensitive(automate, "number state");
+    if (cJSON_IsNumber(numbre_state))
+    {
+        nbr_state = numbre_state->valueint;
+    }
+
+    int nbr_initial_state;
+    initial_states = cJSON_GetObjectItemCaseSensitive(automate, "initial states");
+    if (cJSON_IsArray(initial_states))
+    {
+       cJSON_ArrayForEach(string , initial_states){
+           queue_insertion(initial_states_list, string->valuestring);
+       }
+       nbr_initial_state = cJSON_GetArraySize(initial_states);
+    }
+    else
+    {
+        goto end;
+    }
+
+    final_states = cJSON_GetObjectItemCaseSensitive(automate, "final states");
+    if (cJSON_IsArray(final_states))
+    {
+        cJSON_ArrayForEach(string, final_states)
+        {
+            queue_insertion(final_state_list, string->valuestring);
+        }
+    }
+    else
+    {
+        goto end;
+    }
+
+    transitions = cJSON_GetObjectItemCaseSensitive(automate, "transitions");
+    if (cJSON_IsArray(transitions))
+    {
+        cJSON_ArrayForEach(transition, transitions)
+        {
+            if (cJSON_IsArray(transition))
+            {
+                void **trans = malloc(3 * sizeof(void *));
+                trans[0] = cJSON_GetArrayItem(transition, 0)->valuestring;
+                trans[1] = cJSON_GetArrayItem(transition, 1)->valuestring;
+                trans[2] = cJSON_GetArrayItem(transition, 2)->valuestring;
+                queue_insertion(mat_trans, trans);
+            }
+            else
+            {
+                goto end;
+            }
+        }
+    }
+    else
+    {
+        goto end;
+    }
+
+    AFN afn = new_AFN(nbr_state , nbr_initial_state , final_state_list->length , nbre_label , ep);
+    for (i = 0; i < initial_states_list->length; i++)
+    {
+        afn->initiale_state[i] = get_element_list(initial_states_list , i);
+    }
+    
+    for (i = 0; i < final_state_list->length; i++)
+    {
+        char *temp = get_element_list(final_state_list, i);
+        afn->finale_state[i] = temp;
+    }
+
+    for (i = 0; i < mat_trans->length; i++)
+    {
+        void **trans = get_element_list(mat_trans, i);
+        add_transition_AFN(afn, trans[0], trans[1], trans[2]);
+    }
+
+end:
+    // cJSON_Delete(automate);
+    // free(buffer);
+    // free_list(final_state_list);
+    // free_list(mat_trans);
+    // exit(1);
+
+    return afn;
 }
 
 #endif

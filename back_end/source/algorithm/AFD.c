@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
+#include <cjson/cJSON.h>
 
 AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label)
 {
@@ -1470,6 +1470,215 @@ void print_AFD(AFD afd, boolean is_state_list, boolean is_special_state, void pr
         }
         printf("\n");
     }
+}
+
+
+void AFD_to_jason(AFD afd, char *path)
+{
+    typedef struct etiquette etiquette;
+    int i = 0, j = 0;
+    char *result = NULL;
+    cJSON *alphabet = NULL;
+    cJSON *string = NULL;
+    cJSON *initial_state = NULL;
+    cJSON *final_states = NULL;
+    cJSON *transitions = NULL;
+    cJSON *transition = NULL;
+    cJSON *state = NULL;
+    cJSON *nbr_state = NULL;
+
+        cJSON *automate = cJSON_CreateObject();
+
+    alphabet = cJSON_CreateArray();
+
+    cJSON_AddItemToObject(automate, "alphabet", alphabet);
+    for (i = 0; i < afd->nbre_label; i++)
+    {
+        char *c = afd->tab_labels[i];
+        string = cJSON_CreateString(c);
+        cJSON_AddItemToArray(alphabet, string);
+    }
+
+    nbr_state = cJSON_CreateNumber(afd->nbre_state);
+    cJSON_AddItemToObject(automate, "number state", nbr_state);
+
+    initial_state = cJSON_CreateString(afd->initiale_state);
+    cJSON_AddItemToObject(automate, "initial state", initial_state);
+
+    final_states = cJSON_CreateArray();
+    cJSON_AddItemToObject(automate, "final states", final_states);
+    for (i = 0; i < afd->nbre_finale_state; i++)
+    {
+        char *c = afd->finale_state[i];
+        string = cJSON_CreateString(c);
+        cJSON_AddItemToArray(final_states, string);
+    }
+
+    transitions = cJSON_CreateArray();
+    cJSON_AddItemToObject(automate, "transitions", transitions);
+    for (i = 0; i < afd->nbre_state * afd->nbre_label; i++)
+    {
+        void **trans = afd->mat_trans[i];
+        if (trans != NULL)
+        {
+            transition = cJSON_CreateArray();
+            cJSON_AddItemToArray(transitions, transition);
+
+            char *temp_ch = trans[0];
+            string = cJSON_CreateString(temp_ch);
+            cJSON_AddItemToArray(transition, string);
+
+            etiquette *et = trans[1];
+            temp_ch = et->value;
+            string = cJSON_CreateString(temp_ch);
+            cJSON_AddItemToArray(transition, string);
+
+            temp_ch = trans[2];
+            string = cJSON_CreateString(temp_ch);
+            cJSON_AddItemToArray(transition, string);
+        }
+    }
+
+    result = cJSON_Print(automate);
+    cJSON_Delete(automate);
+
+    FILE *file = fopen(path, "w");
+
+    if (file == NULL)
+        exit(1);
+
+    fputs(result, file);
+    fclose(file);
+    free(result);
+}
+
+AFD jason_to_AFD(char *path)
+{
+    FILE *file = NULL;
+    file = fopen(path, "r");
+    int lettre;
+    int size = 0;
+    if (file == NULL)
+        exit(1);
+
+    while ((lettre = fgetc(file)) != EOF)
+        size++;
+    fclose(file);
+
+    file = fopen(path , "r");
+    char *buffer = calloc(size, sizeof(char));
+    fread(buffer, size, 1, file);
+
+    fclose(file);
+
+    int i = 0;
+    cJSON *alphabet = NULL;
+    cJSON *numbre_state = NULL;
+    cJSON *initial_state = NULL;
+    cJSON *final_states = NULL;
+    cJSON *transitions = NULL;
+    cJSON *transition = NULL;
+    cJSON *string = NULL;
+    cJSON *state = NULL;
+
+    list mat_trans = new_list();
+    list final_state_list = new_list();
+
+    cJSON *automate = cJSON_Parse(buffer);
+    if (automate == NULL)
+    {
+        goto end;
+    }
+
+    int nbre_label;
+    alphabet = cJSON_GetObjectItemCaseSensitive(automate, "alphabet");
+    if (cJSON_IsArray(alphabet))
+    {
+        nbre_label = cJSON_GetArraySize(alphabet);
+    }
+    else
+    {
+        goto end;
+    }
+
+    int nbr_state;
+    numbre_state = cJSON_GetObjectItemCaseSensitive(automate, "number state");
+    if (cJSON_IsNumber(numbre_state))
+    {
+        nbr_state = numbre_state->valueint;
+    }
+
+    char *init_state = NULL;
+    initial_state = cJSON_GetObjectItemCaseSensitive(automate, "initial state");
+    if (cJSON_IsString(initial_state))
+    {
+        init_state = initial_state->valuestring;
+    }
+    else
+    {
+        goto end;
+    }
+
+    final_states = cJSON_GetObjectItemCaseSensitive(automate, "final states");
+    if (cJSON_IsArray(final_states))
+    {
+        cJSON_ArrayForEach(string, final_states)
+        {
+            queue_insertion(final_state_list, string->valuestring);
+        }
+    }
+    else
+    {
+        goto end;
+    }
+
+    transitions = cJSON_GetObjectItemCaseSensitive(automate, "transitions");
+    if (cJSON_IsArray(transitions))
+    {
+        cJSON_ArrayForEach(transition, transitions)
+        {
+            if (cJSON_IsArray(transition))
+            {
+                void **trans = malloc(3 * sizeof(void *));
+                trans[0] = cJSON_GetArrayItem(transition, 0)->valuestring;
+                trans[1] = cJSON_GetArrayItem(transition, 1)->valuestring;
+                trans[2] = cJSON_GetArrayItem(transition, 2)->valuestring;
+                queue_insertion(mat_trans, trans);
+            }
+            else
+            {
+                goto end;
+            }
+        }
+    }
+    else
+    {
+        goto end;
+    }
+
+    AFD afd = new_AFD(nbr_state, final_state_list->length, nbre_label);
+    afd->initiale_state = init_state;
+
+    for (i = 0; i < final_state_list->length; i++)
+    {
+        char *temp = get_element_list(final_state_list, i);
+        afd->finale_state[i] = temp;
+    }
+    
+    for (i = 0; i < mat_trans->length; i++)
+    {
+        void **trans = get_element_list(mat_trans, i);
+        add_transition_AFD(afd, trans[0], trans[1], trans[2], i);
+    }
+
+end:
+    // cJSON_Delete(automate);
+    // free(buffer);
+    // free_list(final_state_list);
+    // free_list(mat_trans);
+    // exit(1);
+
+    return afd;
 }
 
 void free_transition(void **trans, int nbre_label)

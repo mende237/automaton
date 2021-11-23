@@ -202,7 +202,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
 
     free_stack(pile);
 
-    int cmpt_final_state = 0;
+    int cmpt_final_state = 0 , q;
     list final_state_result = new_list();
 
     for (i = 0; i < afd->nbre_finale_state; i++)
@@ -211,8 +211,11 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         {
             if (search_value_in_list(states[j], afd->finale_state[i], equal_value , 1) == True)
             {
-                queue_insertion(final_state_result, copy_element_list(states[j]));
-                break;
+                if (search_value_in_list(final_state_result, states[j], equal_state, 1) == False)
+                {
+                    queue_insertion(final_state_result, states[j]);
+                    break;
+                }
             }
         }
     }
