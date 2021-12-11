@@ -21,18 +21,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.MainController">
    <children>
       <BorderPane layoutX="87.0" layoutY="73.0" prefHeight="520.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <SplitPane dividerPositions="0.19756838905775076" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <SplitPane dividerPositions="0.19756838905775076">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                <AnchorPane minHeight="200.0" minWidth="50.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <TreeView fx:id="treeView" prefHeight="371.0" prefWidth="175.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TreeView fx:id="treeView" prefHeight="273.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity" />
               </items>
             </SplitPane>
          </center>
@@ -77,7 +77,7 @@
                                                    <children>
                                                       <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <GridPane alignment="CENTER" prefHeight="138.0" prefWidth="250.0">
+                                                            <GridPane alignment="CENTER" hgap="5.0" prefHeight="138.0" prefWidth="250.0" vgap="5.0">
                                                               <columnConstraints>
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="155.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
@@ -88,7 +88,7 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                               </rowConstraints>
                                                                <children>
-                                                                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="36.0" prefWidth="148.0" text="determinisation" textAlignment="CENTER">
+                                                                  <Button id="btnDeterminisation" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeterminisationView" prefHeight="12.0" prefWidth="152.0" text="determinisation" textAlignment="CENTER">
                                                                      <graphic>
                                                                         <ImageView fitHeight="28.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -97,7 +97,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="121.0" text="glushkov" GridPane.columnIndex="1">
+                                                                  <Button id="btnGlushkov" fx:id="btnGlushkov" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="glushkov" GridPane.columnIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -106,7 +106,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="121.0" text="thomson" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                  <Button id="btnThomson" mnemonicParsing="false" prefHeight="40.0" prefWidth="148.0" text="thomson" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="31.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -115,7 +115,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="17.0" prefWidth="148.0" text="minimisation" GridPane.rowIndex="2">
+                                                                  <Button mnemonicParsing="false" prefHeight="53.0" prefWidth="187.0" text="minimisation" GridPane.rowIndex="2">
                                                                      <graphic>
                                                                         <ImageView fitHeight="32.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -124,7 +124,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="0.0" prefWidth="122.0" text="brozzoski" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="214.0" text="brozzoski" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                      <graphic>
                                                                         <ImageView fitHeight="30.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -133,7 +133,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="148.0" text="determinisation" GridPane.rowIndex="1">
+                                                                  <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation" mnemonicParsing="false" prefHeight="60.0" prefWidth="158.0" text="determinisation" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="30.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -165,7 +165,7 @@
                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                               </rowConstraints>
                                                                <children>
-                                                                  <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="151.0" text="union">
+                                                                  <Button id="btnUnion" fx:id="btnUnion" mnemonicParsing="false" prefHeight="37.0" prefWidth="151.0" text="union">
                                                                      <graphic>
                                                                         <ImageView fitHeight="41.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -174,7 +174,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" text="intersection" GridPane.columnIndex="1">
+                                                                  <Button id=" btnIntersection" fx:id="btnIntersection" mnemonicParsing="false" text="intersection" GridPane.columnIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="41.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -183,16 +183,16 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" text="complementaire" GridPane.rowIndex="1">
+                                                                  <Button fx:id="btnComplementaire" mnemonicParsing="false" text="complementaire" GridPane.rowIndex="1">
                                                                      <graphic>
-                                                                        <ImageView fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                                                                        <ImageView id="btnComplementaire" fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
                                                                               <Image url="@../icon/complementaire.png" />
                                                                            </image>
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" text="miroir" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                  <Button id="btnMiroir" fx:id="btnMiroire" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" text="miroir" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="30.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -224,7 +224,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Label>
-                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" text="Button">
+                                                                  <Button id="btnAfdReconnaissance" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" text="Button">
                                                                      <graphic>
                                                                         <ImageView fitHeight="38.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -233,9 +233,9 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="191.0" layoutY="59.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="104.0" text="Button">
+                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="90.0" text="Button">
                                                                      <graphic>
-                                                                        <ImageView fitHeight="41.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true">
+                                                                        <ImageView id="btnAfnReconnaissance" fitHeight="42.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
                                                                               <Image url="@../icon/AFN.png" />
                                                                            </image>
@@ -245,7 +245,7 @@
                                                                   <Line endX="31.0" layoutX="90.0" layoutY="26.0" startX="-20.0" />
                                                                   <Line endX="23.0" layoutX="223.0" layoutY="27.0" startX="-34.0" />
                                                                   <Line endX="29.5" endY="25.0" layoutX="40.0" layoutY="36.0" startX="29.5" startY="-10.0" />
-                                                                  <Line endX="-0.5" endY="15.0" layoutX="247.0" layoutY="44.0" startX="-0.5" startY="-16.5" />
+                                                                  <Line endX="-1.0" endY="18.0" layoutX="247.0" layoutY="44.0" startX="-0.5" startY="-16.5" />
                                                                </children>
                                                             </AnchorPane>
                                                             <Label text="reconnaissance" />
@@ -254,26 +254,6 @@
                                                    </children>
                                                 </AnchorPane>
                                                 <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                                   <children>
-                                                      <VBox alignment="BOTTOM_CENTER" prefHeight="104.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                         <children>
-                                                            <Label text="reconnaissance" />
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </AnchorPane>
-                                                <GridPane>
-                                                  <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                  </columnConstraints>
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                </GridPane>
                                              </items>
                                           </ToolBar>
                                        </children>
@@ -297,6 +277,9 @@
                </children>
             </AnchorPane>
          </top>
+         <bottom>
+            <AnchorPane prefHeight="21.0" prefWidth="1042.0" BorderPane.alignment="CENTER" />
+         </bottom>
       </BorderPane>
    </children>
 </AnchorPane>
