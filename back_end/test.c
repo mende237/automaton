@@ -417,7 +417,7 @@ MENU:
     case 4:
         path = "/home/dimitri/Bureau/afd3.txt";
         garbage = new_list();
-        afd = jason_to_AFD("./afd.json");
+        afd = jason_to_AFD("./afd.json" , garbage);
         print_info_AFD(afd, False, print_element_in_list);
         print_transitions_AFD(afd , print_trans_info);
         afd_result = hopcroft_minimisation(afd, equal_label, print_element_in_list);
@@ -440,7 +440,7 @@ MENU:
         path = "/home/dimitri/Bureau/automate_test.txt";
         garbage = new_list();
         //afn = convert_file_to_AFN(path, garbage);
-        afn = jason_to_AFN("./afn.json");
+        afn = jason_to_AFN("./afn.json" , garbage);
         print_info_AFN(afn, print_trans_info);
         if (user_rep == 6)
         {

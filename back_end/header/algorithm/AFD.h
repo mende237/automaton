@@ -88,7 +88,7 @@ void print_AFD(AFD afd, boolean is_state_list, boolean is_special_state, void pr
 
 void AFD_to_jason(AFD afd, char *path);
 
-AFD jason_to_AFD(char *path);
+AFD jason_to_AFD(char *path, list garbage);
 
 /*libere la memoire*/
 void free_AFD(AFD afd, boolean is_state_list);

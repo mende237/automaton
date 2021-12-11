@@ -1552,7 +1552,7 @@ void AFD_to_jason(AFD afd, char *path)
     free(result);
 }
 
-AFD jason_to_AFD(char *path)
+AFD jason_to_AFD(char *path , list garbage)
 {
     FILE *file = NULL;
     file = fopen(path, "r");
@@ -1613,6 +1613,7 @@ AFD jason_to_AFD(char *path)
     if (cJSON_IsString(initial_state))
     {
         init_state = initial_state->valuestring;
+        queue_insertion(garbage , init_state);
     }
     else
     {
@@ -1625,6 +1626,7 @@ AFD jason_to_AFD(char *path)
         cJSON_ArrayForEach(string, final_states)
         {
             queue_insertion(final_state_list, string->valuestring);
+            queue_insertion(garbage, string->valuestring);
         }
     }
     else
@@ -1644,6 +1646,10 @@ AFD jason_to_AFD(char *path)
                 trans[1] = cJSON_GetArrayItem(transition, 1)->valuestring;
                 trans[2] = cJSON_GetArrayItem(transition, 2)->valuestring;
                 queue_insertion(mat_trans, trans);
+
+                 queue_insertion(garbage , trans[0]);
+                queue_insertion(garbage, trans[1]);
+                queue_insertion(garbage, trans[2]);
             }
             else
             {
@@ -1672,10 +1678,10 @@ AFD jason_to_AFD(char *path)
     }
 
 end:
-    // cJSON_Delete(automate);
-    // free(buffer);
-    // free_list(final_state_list);
-    // free_list(mat_trans);
+    cJSON_Delete(automate);
+    free(buffer);
+    free_list(final_state_list);
+    free_list(mat_trans);
     // exit(1);
 
     return afd;

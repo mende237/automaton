@@ -4,6 +4,7 @@
 #include "../../source/data_structure/linked_list.c"
 #include "../../source/data_structure/stack.c"
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <cjson/cJSON.h>
 
@@ -253,10 +254,10 @@ void free_AFN(AFN afn)
     }
 }
 
-void AFN_to_jason(AFN afn , char *path)
+void AFN_to_jason(AFN afn, char *path)
 {
     typedef struct etiquette etiquette;
-    int i = 0 , j = 0;
+    int i = 0, j = 0;
     char *result = NULL;
     cJSON *alphabet = NULL;
     cJSON *string = NULL;
@@ -267,79 +268,78 @@ void AFN_to_jason(AFN afn , char *path)
     cJSON *nbr_state = NULL;
     cJSON *state = NULL;
     cJSON *epsilone = NULL;
-    
+
     cJSON *automate = cJSON_CreateObject();
 
     epsilone = cJSON_CreateString(afn->epsilone);
-    cJSON_AddItemToObject(automate , "epsilone" , epsilone);
-   
+    cJSON_AddItemToObject(automate, "epsilone", epsilone);
+
     alphabet = cJSON_CreateArray();
-    cJSON_AddItemToObject(automate , "alphabet" , alphabet);
+    cJSON_AddItemToObject(automate, "alphabet", alphabet);
     for (i = 0; i < afn->nbre_label; i++)
     {
         char *c = afn->tab_labels[i];
         string = cJSON_CreateString(c);
-        cJSON_AddItemToArray(alphabet , string);
+        cJSON_AddItemToArray(alphabet, string);
     }
 
     nbr_state = cJSON_CreateNumber(afn->nbre_state);
-    cJSON_AddItemToObject(automate , "number state" , nbr_state);
-    
+    cJSON_AddItemToObject(automate, "number state", nbr_state);
+
     initial_states = cJSON_CreateArray();
-    cJSON_AddItemToObject(automate , "initial states" , initial_states);
+    cJSON_AddItemToObject(automate, "initial states", initial_states);
     for (i = 0; i < afn->nbre_initiale_state; i++)
     {
         char *c = afn->initiale_state[i];
         string = cJSON_CreateString(c);
-        cJSON_AddItemToArray(initial_states , string);
+        cJSON_AddItemToArray(initial_states, string);
     }
 
     final_states = cJSON_CreateArray();
-    cJSON_AddItemToObject(automate , "final states" , final_states);
+    cJSON_AddItemToObject(automate, "final states", final_states);
     for (i = 0; i < afn->nbre_finale_state; i++)
     {
         char *c = afn->finale_state[i];
         string = cJSON_CreateString(c);
-        cJSON_AddItemToArray(final_states , string);
+        cJSON_AddItemToArray(final_states, string);
     }
-    
+
     transitions = cJSON_CreateArray();
-    cJSON_AddItemToObject(automate , "transitions" , transitions);
+    cJSON_AddItemToObject(automate, "transitions", transitions);
     for (i = 0; i < afn->mat_trans->length; i++)
     {
         transition = cJSON_CreateArray();
-        cJSON_AddItemToArray(transitions , transition);
-        void **trans = get_element_list(afn->mat_trans , i);
+        cJSON_AddItemToArray(transitions, transition);
+        void **trans = get_element_list(afn->mat_trans, i);
 
         char *temp_ch = trans[0];
         string = cJSON_CreateString(temp_ch);
-        cJSON_AddItemToArray(transition , string);
+        cJSON_AddItemToArray(transition, string);
 
         etiquette *et = trans[1];
         temp_ch = et->value;
         string = cJSON_CreateString(temp_ch);
-        cJSON_AddItemToArray(transition , string);
+        cJSON_AddItemToArray(transition, string);
 
         temp_ch = trans[2];
         string = cJSON_CreateString(temp_ch);
         cJSON_AddItemToArray(transition, string);
     }
-    
-    
+
     result = cJSON_Print(automate);
     cJSON_Delete(automate);
-    
-    FILE *file = fopen(path , "w");
 
-    if(file == NULL)
+    FILE *file = fopen(path, "w");
+
+    if (file == NULL)
         exit(1);
 
-    fputs(result , file);
+    fputs(result, file);
     fclose(file);
     free(result);
 }
 
-AFN jason_to_AFN(char *path)
+AFN jason_to_AFN(char *path, list garbage)
 {
     FILE *file = NULL;
     file = fopen(path, "r");
@@ -380,9 +380,12 @@ AFN jason_to_AFN(char *path)
         goto end;
     }
 
-    epsilone = cJSON_GetObjectItemCaseSensitive(automate , "epsilone");
-    if(cJSON_IsString(epsilone)){
-        ep = epsilone->valuestring;
+    epsilone = cJSON_GetObjectItemCaseSensitive(automate, "epsilone");
+    if (cJSON_IsString(epsilone))
+    {
+        ep = malloc(strlen(epsilone->valuestring) * sizeof(char));
+        strcpy(ep, epsilone->valuestring);
+        queue_insertion(garbage, ep);
     }
 
     int nbre_label;
@@ -407,10 +410,14 @@ AFN jason_to_AFN(char *path)
     initial_states = cJSON_GetObjectItemCaseSensitive(automate, "initial states");
     if (cJSON_IsArray(initial_states))
     {
-       cJSON_ArrayForEach(string , initial_states){
-           queue_insertion(initial_states_list, string->valuestring);
-       }
-       nbr_initial_state = cJSON_GetArraySize(initial_states);
+        cJSON_ArrayForEach(string, initial_states)
+        {
+            char *temp = malloc(strlen(string->valuestring)*sizeof(char));
+            strcpy(temp, string->valuestring);
+            queue_insertion(initial_states_list, temp);
+            queue_insertion(garbage, string->valuestring);
+        }
+        nbr_initial_state = cJSON_GetArraySize(initial_states);
     }
     else
     {
@@ -422,7 +429,9 @@ AFN jason_to_AFN(char *path)
     {
         cJSON_ArrayForEach(string, final_states)
         {
+            
             queue_insertion(final_state_list, string->valuestring);
+            queue_insertion(garbage, string->valuestring);
         }
     }
     else
@@ -442,6 +451,9 @@ AFN jason_to_AFN(char *path)
                 trans[1] = cJSON_GetArrayItem(transition, 1)->valuestring;
                 trans[2] = cJSON_GetArrayItem(transition, 2)->valuestring;
                 queue_insertion(mat_trans, trans);
+                queue_insertion(garbage, trans[0]);
+                queue_insertion(garbage, trans[1]);
+                queue_insertion(garbage, trans[2]);
             }
             else
             {
@@ -454,12 +466,12 @@ AFN jason_to_AFN(char *path)
         goto end;
     }
 
-    AFN afn = new_AFN(nbr_state , nbr_initial_state , final_state_list->length , nbre_label , ep);
+    AFN afn = new_AFN(nbr_state, nbr_initial_state, final_state_list->length, nbre_label, ep);
     for (i = 0; i < initial_states_list->length; i++)
     {
-        afn->initiale_state[i] = get_element_list(initial_states_list , i);
+        afn->initiale_state[i] = get_element_list(initial_states_list, i);
     }
-    
+
     for (i = 0; i < final_state_list->length; i++)
     {
         char *temp = get_element_list(final_state_list, i);
@@ -473,10 +485,10 @@ AFN jason_to_AFN(char *path)
     }
 
 end:
-    // cJSON_Delete(automate);
-    // free(buffer);
-    // free_list(final_state_list);
-    // free_list(mat_trans);
+    cJSON_Delete(automate);
+    free(buffer);
+    free_list(final_state_list);
+    free_list(mat_trans);
     // exit(1);
 
     return afn;
