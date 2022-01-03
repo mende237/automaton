@@ -3,40 +3,37 @@
 // import java.io.BufferedWriter;
 // import java.io.File;
 // import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 
-// import guru.nidi.graphviz.attribute.Color;
-// import guru.nidi.graphviz.attribute.*;
-// import guru.nidi.graphviz.attribute.Label.Justification;
-// import guru.nidi.graphviz.attribute.Rank.RankDir;
-// import guru.nidi.graphviz.engine.Engine;
-// import guru.nidi.graphviz.engine.Format;
-// import guru.nidi.graphviz.engine.Graphviz;
-// import guru.nidi.graphviz.engine.GraphvizCmdLineEngine;
-// import guru.nidi.graphviz.model.Graph;
-// import guru.nidi.graphviz.model.Node;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import guru.nidi.graphviz.attribute.Color;
+import guru.nidi.graphviz.attribute.Label;
+import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.attribute.Rank.RankDir;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import static guru.nidi.graphviz.model.Factory.*;
+import guru.nidi.graphviz.model.Graph;
+// import javafx.application.Application;
+// import javafx.stage.Stage;
 
-public class App extends Application{
+public class App{
 
     public static void main(String args[]) throws IOException {
-        launch();
+        //launch();
         //Graphviz.useEngine(new GraphvizCmdLineEngine());
         //System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
-        // Graph g =
-        // graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
-        // .with(node("a").with(Color.RED).link(node("b")),
-        // node("b").link(node("c")) ,
-        // node("a").link(node("c")),
-        // node("b").link(node("a"))
-        // );
+        Graph g =
+        graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT));
+        
+        g = g.with(node("a").with(Color.RED).link(node("b")),
+        node("b").link(to(node("c")).with(Label.of("test"))),
+        node("a").link(node("c")),
+        node("b").link(node("a"))
+        );
 
-        // Graphviz.fromGraph(g).width(900).render(Format.PNG).toFile(new
-        // File("./ex1.png"));
+        Graphviz.fromGraph(g).width(900).render(Format.PNG).toFile(new File("./ex1.png"));
+        System.out.println("test");
         // Graphviz.fromGraph(g).height(100).render(Format.PNG).toFile(new
         // File("example/ex1.png"));
         
@@ -64,13 +61,15 @@ public class App extends Application{
         // System.out.println("fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-    AnchorPane root =
-    FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
-    Scene scene = new Scene(root);
-    stage.setScene(scene);
-    stage.show();
-    }
+    // @Override
+    // public void start(Stage stage) throws Exception {
+    //     // String css = this.getClass().getResource("ressource/style/caspian.css").toExternalForm();
+    //     // AnchorPane root =
+    //     // FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
+    //     // Scene scene = new Scene(root);
+    //     // scene.getStylesheets().add(css);
+    //     // stage.setScene(scene);
+    //     // stage.show();
+    // }
 
 }

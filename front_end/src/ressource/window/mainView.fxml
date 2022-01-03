@@ -25,9 +25,9 @@
    <children>
       <BorderPane layoutX="87.0" layoutY="73.0" prefHeight="520.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <SplitPane dividerPositions="0.19756838905775076">
+            <SplitPane fx:id="splitPane" dividerPositions="0.10288461538461538">
               <items>
-                <AnchorPane minHeight="200.0" minWidth="50.0" prefHeight="160.0" prefWidth="100.0">
+                <AnchorPane minHeight="200.0" minWidth="50.0" prefHeight="160.0" prefWidth="500.0">
                      <children>
                         <TreeView fx:id="treeView" prefHeight="273.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
@@ -97,7 +97,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button id="btnGlushkov" fx:id="btnGlushkov" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="glushkov" GridPane.columnIndex="1">
+                                                                  <Button id="btnGlushkov" fx:id="btnGlushkov" mnemonicParsing="false" onAction="#handleGlushkovView" prefHeight="25.0" prefWidth="135.0" text="glushkov" GridPane.columnIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -106,7 +106,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button id="btnThomson" mnemonicParsing="false" prefHeight="40.0" prefWidth="148.0" text="thomson" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                  <Button id="btnThomson" mnemonicParsing="false" onAction="#handleThomsonView" prefHeight="40.0" prefWidth="148.0" text="thomson" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="31.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -115,7 +115,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button mnemonicParsing="false" prefHeight="53.0" prefWidth="187.0" text="minimisation" GridPane.rowIndex="2">
+                                                                  <Button mnemonicParsing="false" onAction="#handleMinimisationView" prefHeight="53.0" prefWidth="187.0" text="minimisation" GridPane.rowIndex="2">
                                                                      <graphic>
                                                                         <ImageView fitHeight="32.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -133,7 +133,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation" mnemonicParsing="false" prefHeight="60.0" prefWidth="158.0" text="determinisation" GridPane.rowIndex="1">
+                                                                  <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation" mnemonicParsing="false" onAction="#handleEpDeterminisationView" prefHeight="60.0" prefWidth="158.0" text="determinisation" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="30.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -183,7 +183,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button fx:id="btnComplementaire" mnemonicParsing="false" text="complementaire" GridPane.rowIndex="1">
+                                                                  <Button fx:id="btnComplementaire" mnemonicParsing="false" onAction="#handleComplementaireView" text="complementaire" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView id="btnComplementaire" fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -192,7 +192,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button id="btnMiroir" fx:id="btnMiroire" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" text="miroir" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                  <Button id="btnMiroir" fx:id="btnMiroire" mnemonicParsing="false" onAction="#handleMiroirView" prefHeight="30.0" prefWidth="132.0" text="miroir" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <ImageView fitHeight="30.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -224,7 +224,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Label>
-                                                                  <Button id="btnAfdReconnaissance" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0" text="Button">
+                                                                  <Button id="btnAfdReconnaissance" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0">
                                                                      <graphic>
                                                                         <ImageView fitHeight="38.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -233,7 +233,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="90.0" text="Button">
+                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="90.0">
                                                                      <graphic>
                                                                         <ImageView id="btnAfnReconnaissance" fitHeight="42.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>

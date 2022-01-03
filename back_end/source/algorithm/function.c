@@ -108,6 +108,53 @@ boolean search_state_list(void **state_tab, list state, int n, int permut)
     return False;
 }
 
+boolean is_well_state_in_AFD(AFD afd)
+{
+    if (afd->mat_trans[afd->nbre_label * afd->nbre_state - 1] == NULL)
+    {
+        return False;
+    }
+    else
+    {
+        boolean is_well_state = True;
+        for (int i = afd->nbre_label * afd->nbre_state - afd->nbre_label; i < afd->nbre_label * afd->nbre_state; i++)
+        {
+            if (afd->mat_trans[i] != NULL)
+            {
+                if (strcmp((char *)afd->mat_trans[i][0], (char *)afd->mat_trans[i][2]) != 0)
+                {
+                    is_well_state = False;
+                    break;
+                }
+            }
+            else
+            {
+                return False;
+            }
+        }
+
+        char *well_state = afd->mat_trans[afd->nbre_label * afd->nbre_state - 1][0];
+        if (is_well_state == True)
+        {
+            if (strcmp(well_state, (char *)afd->initiale_state) == 0)
+            {
+                is_well_state = False;
+            }
+
+            for (int i = 0; i < afd->nbre_finale_state; i++)
+            {
+                if (strcmp(well_state, (char *)afd->finale_state[i]) == 0)
+                {
+                    is_well_state = False;
+                    break;
+                }
+            }
+        }
+
+        return is_well_state;
+    }
+}
+
 boolean search_state_list_in_list(list list_state, list state, int permut)
 {
 }

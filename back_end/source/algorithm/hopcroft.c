@@ -122,7 +122,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         delete_element_list(L, 0);
         free(breaker);
     }
-
+    
     printf("\nles classe d'equivalences sont \n");
     printf("{ ");
     for (i = 0; i < pi->length; i++)
@@ -131,6 +131,8 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         printf(" ; ");
     }
     printf("}\n");
+
+    
 
     list initial_state_list;
     for (i = 0; i < pi->length; i++)
@@ -143,7 +145,38 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         }
     }
 
+   
+    
     int k = 0;
+    int cmpt_state = 1;
+    stack pile = new_stack();
+    void **states = calloc(pi->length, sizeof(void *));
+    void ***mat_state = calloc(pi->length, sizeof(void **));
+
+    if (is_well_state_in_AFD(afd) == True)
+    {
+        // dans le cas ou il y a un etat puit dans l'automate a minimiser alors on ne considere
+        // pas la classe qui contient cette etat puit
+        char *well_state = afd->mat_trans[afd->nbre_state * afd->nbre_label - 1][0];
+        for (i = 0; i < pi->length; i++)
+        {
+            // on supprime cette classe car elle se comporte comme un puit dans les classes d'equivalences
+            if (search_value_in_list(get_element_list(pi, i), well_state, equal_value) == True)
+            {
+                delete_element_list(pi, i);
+                break;
+            }
+        }
+    }
+
+    printf("la liste des classes sans classe puit\n");
+    printf("{ ");
+    for (i = 0; i < pi->length; i++)
+    {
+        print_list(get_element_list(pi, i), print_element_in_list);
+        printf(" ; ");
+    }
+    printf("}\n");
 
     list *tab_pi = calloc(pi->length, sizeof(void *));
     for (i = 0; i < pi->length; i++)
@@ -151,16 +184,14 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         tab_pi[i] = get_element_list(pi, i);
     }
 
-    int cmpt_state = 1;
-    stack pile = new_stack();
-    void **states = calloc(pi->length, sizeof(void *));
-    void ***mat_state = calloc(pi->length, sizeof(void **));
-
     states[0] = copy_element_list(initial_state_list);
-
     push(pile, states[0]);
     boolean is_well = False;
     boolean first_loop = True;
+    boolean find = False;
+
+
+    
 
     while (is_empty_stack(pile) == False)
     {
@@ -171,17 +202,24 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
             void **trans_result = calloc(afd->nbre_label, sizeof(void *));
             for (j = 0; j < afd->nbre_label; j++)
             {
+                find = False;
                 for (k = 0; k < pi->length; k++)
                 {
-                    if (include_value_list(tab_pi[k], trans_temp[j], equal_value) == True)
+                    if (include_value_list(tab_pi[k] , trans_temp[j], equal_value) == True)
                     {
                         //cette liste ne sert plus a rien elle sera remplace par sa correspondante dans
                         //l'ensemble des classes d'equivalences
                         free_list(trans_temp[j]);
                         trans_result[j] = copy_element_list(tab_pi[k]);
                         push(pile, trans_result[j]);
+                        find = True;
                         break;
                     }
+                }
+
+                if(find == False){
+                    trans_result[j] = new_list();
+                    is_well = True;
                 }
             }
 
@@ -202,6 +240,16 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
 
     free_stack(pile);
 
+    if(is_well == True){
+        states[pi->length] = new_list();
+        void **trans_result = calloc(afd->nbre_label, sizeof(void *));
+        for (i = 0; i < afd->nbre_label; i++)
+        {
+           trans_result[i] = new_list();
+        }
+        mat_state[pi->length] = trans_result; 
+    }
+
     int cmpt_final_state = 0 , q;
     list final_state_result = new_list();
 
@@ -219,8 +267,16 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
             }
         }
     }
+    AFD afd_result = NULL;
+    if (is_well == True)
+    {
+        afd_result = new_AFD(pi->length + 1 , final_state_result->length, afd->nbre_label);
+    }
+    else
+    {
+        afd_result = new_AFD(pi->length , final_state_result->length, afd->nbre_label);
+    }
 
-    AFD afd_result = new_AFD(pi->length, final_state_result->length, afd->nbre_label);
     for (i = 0; i < final_state_result->length; i++)
     {
         afd_result->finale_state[i] = get_element_list(final_state_result, i);
@@ -240,6 +296,15 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         }
     }
 
+    if(is_well == True){
+        for (j = 0; j < afd->nbre_label; j++)
+        {
+            add_transition_AFD(afd_result, states[pi->length], afd->tab_labels[j], mat_state[pi->length][j], cmpt);
+            cmpt++;
+        }
+    }
+
+    // printf("le nombre d'etat est %d\n" , pi->length);
     // for (i = 0; i < pi->length; i++)
     // {
     //     print_list(states[i], print_element_in_list);
@@ -395,6 +460,7 @@ static list complementaire_set(list set_A, list set_B)
 
     return result;
 }
+
 
 static list smallest_set(list set1, list set2)
 {

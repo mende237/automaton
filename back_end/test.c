@@ -423,7 +423,7 @@ MENU:
         afd_result = hopcroft_minimisation(afd, equal_label, print_element_in_list);
         
         afd_result = rename_states(afd_result, True);
-        // afd_result = brzozowski_minimisation(afd ,equal_label);
+        //afd_result = brzozowski_minimisation(afd ,equal_label);
 
         print_info_AFD(afd_result, False, print_element_in_list);
         print_AFD(afd_result, False, False, print_element_in_list, length_state);
@@ -431,9 +431,17 @@ MENU:
 
         free_AFD(afd, False);
         free_AFD(afd_result , False);
+        printf("test ok");
         break;
     case 5:
-
+        garbage = new_list();
+        afd = jason_to_AFD("./afd_complet.json", garbage);
+        if(is_well_state_in_AFD(afd) == True){
+            printf("etat puit detecté\n");
+        }else{
+            printf("pas d'etat puit\n");
+        }
+        free_AFD(afd , False);
         break;
     case 6:
     case 7:
@@ -569,13 +577,14 @@ MENU:
     case 10:
         well_state = "puit";
         path = "/home/dimitri/Bureau/afd_test.txt";
+
         garbage = new_list();
 
-        afd = convert_file_to_AFD(path, garbage);
+        afd = jason_to_AFD("./afd_min.json", garbage);
         completer_AFD(afd, well_state, equal_st);
         print_info_AFD(afd, False, print_element_in_list);
         print_AFD(afd, False, False, print_element_in_list, length_state);
-
+        AFD_to_jason(afd , "afd_complet.json");
         free_AFD(afd, False);
         break;
     case 11:

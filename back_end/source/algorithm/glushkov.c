@@ -8,7 +8,7 @@
 #include "../data_structure/tree.c"
 #include <string.h>
 
-AFN glushkov_algorithm(char **expression, int length , list garbage2)
+AFN glushkov_algorithm(char **expression, int length, list garbage2)
 {
     int i = 0, j = 0;
     stack pile = new_stack();
@@ -33,7 +33,7 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
         push(pile, get_element_list(initiale_list, i));
     }
 
-    //on insert la liste des symboles que l'on peut lire initialement
+    // on insert la liste des symboles que l'on peut lire initialement
     queue_insertion(mat_succ, initiale_list);
 
     while (is_empty_stack(pile) == False)
@@ -51,12 +51,11 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
         }
     }
 
-
     list last_state = last(t, garbage);
     int nbre_label = get_nbre_label(result, li_result->length);
     /*apres l'utilisation de cette AFN toutes variables alloués doivent etre liberé
-    chaque element de la liste des etats fianaux doit etre libere de meme que chaque 
-    element de la matrice de transition doit etre liberé ainsi que le seul etat 
+    chaque element de la liste des etats fianaux doit etre libere de meme que chaque
+    element de la matrice de transition doit etre liberé ainsi que le seul etat
     initiale*/
     AFN afn = NULL;
 
@@ -71,6 +70,7 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
 
     char *initiale = malloc(20 * sizeof(char));
     sprintf(initiale, "%d", 0);
+    queue_insertion(garbage2, initiale);
     afn->initiale_state[0] = initiale;
 
     /*on renplie les etats finaux de l'automate obtenue*/
@@ -80,6 +80,12 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
         linear_element *elem = get_element_list(last_state, i);
         sprintf(state, "%d", elem->index);
         afn->finale_state[i] = state;
+        queue_insertion(garbage2, state);
+    }
+
+    if (strcmp(t->info, "*") == 0)
+    {
+        afn->finale_state[last_state->length] = "0";
     }
 
     for (i = 0; i < mat_succ->length; i++)
@@ -93,7 +99,7 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
             /***************a free****************************/
             char *end = malloc(20 * sizeof(char));
             /***********************************************/
-            queue_insertion(garbage2 , end);
+            queue_insertion(garbage2, end);
             sprintf(end, "%d", l_elem->index);
             if (elem != NULL)
             {
@@ -113,7 +119,7 @@ AFN glushkov_algorithm(char **expression, int length , list garbage2)
             }
         }
     }
-    
+
     for (i = 0; i < state_list->length; i++)
     {
         linear_element *val = get_element_list(state_list, i);

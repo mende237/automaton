@@ -412,10 +412,10 @@ AFN jason_to_AFN(char *path, list garbage)
     {
         cJSON_ArrayForEach(string, initial_states)
         {
-            char *temp = malloc(strlen(string->valuestring)*sizeof(char));
-            strcpy(temp, string->valuestring);
-            queue_insertion(initial_states_list, temp);
-            queue_insertion(garbage, string->valuestring);
+            char *temp_ch = malloc(strlen(string->valuestring) * sizeof(char));
+            strcpy(temp_ch, string->valuestring);
+            queue_insertion(initial_states_list, temp_ch);
+            queue_insertion(garbage, temp_ch);
         }
         nbr_initial_state = cJSON_GetArraySize(initial_states);
     }
@@ -429,9 +429,10 @@ AFN jason_to_AFN(char *path, list garbage)
     {
         cJSON_ArrayForEach(string, final_states)
         {
-            
-            queue_insertion(final_state_list, string->valuestring);
-            queue_insertion(garbage, string->valuestring);
+            char *temp_ch = calloc(strlen(string->valuestring) , sizeof(char));
+            strcpy(temp_ch, string->valuestring);
+            queue_insertion(final_state_list, temp_ch);
+            queue_insertion(garbage, temp_ch);
         }
     }
     else
@@ -442,14 +443,22 @@ AFN jason_to_AFN(char *path, list garbage)
     transitions = cJSON_GetObjectItemCaseSensitive(automate, "transitions");
     if (cJSON_IsArray(transitions))
     {
+        char *temp_ch = NULL;
         cJSON_ArrayForEach(transition, transitions)
         {
             if (cJSON_IsArray(transition))
             {
                 void **trans = malloc(3 * sizeof(void *));
-                trans[0] = cJSON_GetArrayItem(transition, 0)->valuestring;
-                trans[1] = cJSON_GetArrayItem(transition, 1)->valuestring;
-                trans[2] = cJSON_GetArrayItem(transition, 2)->valuestring;
+                temp_ch = cJSON_GetArrayItem(transition, 0)->valuestring;
+                trans[0] = calloc(strlen(temp_ch) , sizeof(char));
+                strcpy(trans[0] , temp_ch);
+                temp_ch = cJSON_GetArrayItem(transition, 1)->valuestring;
+                trans[1] = calloc(strlen(temp_ch), sizeof(char));
+                strcpy(trans[1], temp_ch);
+                temp_ch = cJSON_GetArrayItem(transition, 2)->valuestring;
+                trans[2] = calloc(strlen(temp_ch), sizeof(char));
+                strcpy(trans[2], temp_ch);
+
                 queue_insertion(mat_trans, trans);
                 queue_insertion(garbage, trans[0]);
                 queue_insertion(garbage, trans[1]);

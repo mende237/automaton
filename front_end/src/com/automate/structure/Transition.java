@@ -1,29 +1,29 @@
 package com.automate.structure;
 
 public class Transition {
-    protected String begin;
+    protected State begin;
     protected String label;
-    protected String end;
+    protected State end;
 
-    public Transition(String begin , String label , String end){
+    public Transition(State begin , String label , State end){
         this.begin = begin;
         this.label = label;
         this.end = end;
     }
 
-    public String getBegin(){
+    public State getBegin(){
         return this.begin;
     }
 
-    public String getLabel() {
+    public State getLabel() {
         return this.begin;
     }
 
-    public String getEnd() {
+    public State getEnd() {
         return this.begin;
     }
 
-    public void setBegin(String begin){
+    public void setBegin(State begin){
         this.begin = begin;
     }
 
@@ -31,12 +31,12 @@ public class Transition {
         this.label = label;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(State end) {
         this.end = end;
     }
 
     @Override
     public String toString() {
-        return String.format("%s --%s--> %s", begin , label , end);
+        return String.format("%s --%s--> %s", begin.toString() , label , end.toString());
     }
 }

@@ -10,6 +10,7 @@ struct Breaker{
     char *label;
 };
 
+
 static list *break_block(list state, struct Breaker *breaker, AFD afd, boolean equal_value(void *lb1, void *lb2 ,...), void print_element_in_list(void *x, boolean last));
 
 static list intersection_set(list state1, list state2);

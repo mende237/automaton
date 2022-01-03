@@ -1,14 +1,25 @@
 package com.automate.controller;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class ConvertController {
-    @FXML 
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
+
+public class ConvertController implements Initializable {
+    @FXML
     private Button btnConvert;
-    @FXML 
+    @FXML
     private Button btnSave;
-    
-    
-    
+    @FXML
+    private SplitPane splitPane;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("la fenetre convert a ete lance!!!!!");
+        this.splitPane.setDividerPositions(0.45);
+    }
+
 }

@@ -1,6 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include "../data_structure/structure.h"
+#include "../data_structure/linked_list.h"
 
 /*cette fonction permet de verifier si deux etats sous forme de liste sont egaux
 elle prend en parametre la fonction equal_value qui permet de dire quand deux elements
@@ -16,6 +17,8 @@ differentes sont egaux */
 boolean search_state_list(void **state_tab, list state, int n, int permut);
 
 boolean search_state_list_in_list(list list_state, list state , int permut);
+
+boolean is_well_state_in_AFD(AFD afd);
 
 /*cette fonction donne le nouvelle etat ou l'on doit aller quittant d'un etat */
 void **delta_global_automate(void *automate, list state, boolean is_AFD, boolean equal_label(void *lb1, void *lb2 , ...));

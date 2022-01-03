@@ -9,6 +9,11 @@ public class State {
         this.type = type;
     }
 
+    public State(String value) {
+        this.value = value;
+        this.type = StateType.NORMAL;
+    }
+
     public String getValue(){
         return this.value;
     }
@@ -25,4 +30,8 @@ public class State {
         this.type = type;
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s %s", this.value , this.type);
+    } 
 }
