@@ -47,6 +47,10 @@ public abstract class Automate {
         return this.tabLabel;
     }
 
+    public String getName(){
+        return this.name;
+    }
+
     /*********************************************
      * setter
      ***********************************************/
@@ -80,5 +84,10 @@ public abstract class Automate {
             default:
                 return node(state.getValue()).with(Style.FILLED , Color.rgb("#87CEEB").fill());
         }
+    }
+
+    @Override
+    public String toString(){
+        return this.name;
     }
 }

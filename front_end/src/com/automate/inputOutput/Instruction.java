@@ -3,7 +3,7 @@ package com.automate.inputOutput;
 public class Instruction {
     private String name;
     private String dataPath;
-    private static int ID;
+    private static int ID = 0;
 
     public Instruction(String name , String dataPath){
         Instruction.ID += 1;
