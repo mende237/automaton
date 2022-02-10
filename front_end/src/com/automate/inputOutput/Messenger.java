@@ -52,7 +52,7 @@ public class Messenger implements Runnable {
         obj.put("data path", instruction.getDataPath());
         obj.put("reception path", this.receptionPath);
 
-        StringWriter strW = new StringWriter();666
+        StringWriter strW = new StringWriter();
         obj.write(strW);
         String jsonText = strW.toString();
         PrintWriter writer = new PrintWriter(this.sendingPath);
