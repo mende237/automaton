@@ -70,6 +70,7 @@ public class AFD extends Automate {
                             .with(Label.of(this.matTrans[i].label))));
         }
         try {
+          
             Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -223,23 +224,23 @@ public class AFD extends Automate {
         return afd;
     }
 
-    // @Override
-    // public String toString() {
-    //     String ch = "l'alphabet est : {";
-    //     for (int i = 0; i < super.tabLabel.length; i++) {
-    //         ch += super.tabLabel[i] + ";";
-    //     }
+    @Override
+    public String toString() {
+        String ch = "l'alphabet est : {";
+        for (int i = 0; i < super.tabLabel.length; i++) {
+            ch += super.tabLabel[i] + ";";
+        }
 
-    //     ch += "}\nl'etat initiale est : " + this.initialState + "\nl'ensemble des etats finaux est {";
-    //     for (int i = 0; i < super.finalStateTab.length; i++) {
-    //         ch += super.finalStateTab[i].toString() + ";";
-    //     }
-    //     ch += "}\nles differentes transitions sont :\n";
-    //     for (int i = 0; i < this.cmpt; i++) {
-    //         ch += matTrans[i].toString() + "\n";
-    //     }
-    //     return ch;
-    // }
+        ch += "}\nl'etat initiale est : " + this.initialState + "\nl'ensemble des etats finaux est {";
+        for (int i = 0; i < super.finalStateTab.length; i++) {
+            ch += super.finalStateTab[i].toString() + ";";
+        }
+        ch += "}\nles differentes transitions sont :\n";
+        for (int i = 0; i < this.cmpt; i++) {
+            ch += matTrans[i].toString() + "\n";
+        }
+        return ch;
+    }
 
     public static void main(String[] args) {
         AFD afd = null;

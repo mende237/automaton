@@ -2,10 +2,14 @@ package com.automate.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.automate.inputOutput.Scheduler;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automate;
@@ -24,9 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-
-
-public class MainController implements Initializable {
+public class MainController extends Controller implements Initializable {
     @FXML
     private Button btnDeterminisation;
     @FXML
@@ -51,9 +53,17 @@ public class MainController implements Initializable {
     private TreeItem<String> root, afd, afn, epAfn;
 
     private String path = "/home/dimitri/Documents/beep-beep/save";
+    private String imagePath = "/home/dimitri/Documents/beep-beep/.communication/.images";
     private ArrayList<AFD> tabAFD;
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
+
+
+    public MainController(Mediator mediator) {
+        super(mediator);
+        super.mediator.addController(super.id, this);
+        System.out.println("enter");
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,7 +87,7 @@ public class MainController implements Initializable {
             }
 
             // for (int i = 0; i < this.tabAFD.size(); i++) {
-            //     System.out.println(this.tabAFD.get(i));
+            // System.out.println(this.tabAFD.get(i));
             // }
 
             // chargement des afn
@@ -87,7 +97,7 @@ public class MainController implements Initializable {
             }
 
             // for (int i = 0; i < this.tabAFN.size(); i++) {
-            //     System.out.println(this.tabAFN.get(i));
+            // System.out.println(this.tabAFN.get(i));
             // }
 
             // chargement des epAFN
@@ -97,7 +107,7 @@ public class MainController implements Initializable {
             }
 
             // for (int i = 0; i < this.tabEpAFN.size(); i++) {
-            //     System.out.println(this.tabEpAFN.get(i));
+            // System.out.println(this.tabEpAFN.get(i));
             // }
 
         } catch (FileNotFoundException e) {
@@ -152,49 +162,86 @@ public class MainController implements Initializable {
         treeView.setRoot(root);
         treeView.setShowRoot(false);
         treeView.setVisible(true);
-        System.out.println("enter");
     }
 
     private void handleTreeItemMouseClicked(MouseEvent mouseEvent) {
         TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
-        if (item == null || item == this.root || item == afn || item == epAfn || item == afd){
+        if (item == null || item == this.root || item == afn || item == epAfn || item == afd) {
             System.out.println("enter!!!!!!!!!!!!!!!!!");
-        }else{
-
-            
-            if(mouseEvent.getClickCount() == 2){
-                int index = getTreeItemIndex(item);
+        } else {
+            if (mouseEvent.getClickCount() == 2) {
+                int itemIndex = getTreeItemIndex(item);
                 int indexParent = getTreeItemIndex(item.getParent());
-                
-                //System.out.println(indexParent + " " + index);
+
+                Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
+                String pathCurrentImage = this.imagePath;
+
+                if (indexParent == 0) {// dans ce cas on doit afficher un afd
+                    AFD afd = this.tabAFD.get(itemIndex);
+                    pathCurrentImage += "/afd.png";
+                    afd.makeImage(pathCurrentImage);
+                    System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
+                } else if (indexParent == 1) {// dans ce cas on doit afficher un afn
+                    AFN afn = this.tabAFN.get(itemIndex);
+                    pathCurrentImage += "/afn.png";
+                    afn.makeImage(pathCurrentImage);
+                    System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
+                } else {//
+                    AFN epAfn = this.tabEpAFN.get(itemIndex);
+                    pathCurrentImage += "/ep-afn.png";
+                    epAfn.makeImage(pathCurrentImage);
+                    System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
+                }
+
+                this.automateVisualisation(pathCurrentImage);
+                Scheduler.UPS2();
+                // System.out.println(indexParent + " " + index);
             }
         }
     }
 
-    private int getTreeItemIndex(TreeItem<String> item){
-        return item.getParent().getChildren().indexOf(item);
-    }
-
-    @FXML
-    private void handleDeterminisationView(ActionEvent event) {
+    private void automateVisualisation(String path) {
         try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
-            // this.mainContainer = root;
+            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/view.fxml"));
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
             AnchorPane.setRightAnchor(anchor, 0.0);
             AnchorPane.setLeftAnchor(anchor, 0.0);
             AnchorPane.setBottomAnchor(anchor, 0.0);
             this.mainContainer.getChildren().setAll(anchor);
-
-            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
-
-        } catch (Exception e) {
+            
+            anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+            anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+            System.out.println("                  visualisation          ");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
-            // System.out.println("eror");
         }
-        // System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
+        // this.mainContainer = root;
+
+    }
+
+    private int getTreeItemIndex(TreeItem<String> item) {
+        return item.getParent().getChildren().indexOf(item);
+    }
+
+    @FXML
+    private void handleDeterminisationView(ActionEvent event) throws IOException {
+        // Path path = Paths.get("src/ressource/test/convertView.fxml");
+        // System.out.println(path.toRealPath());
+        AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
+        //this.mainContainer = anchor;
+
+        this.mainContainer.getChildren().clear();
+        AnchorPane.setTopAnchor(anchor, 0.0);
+        AnchorPane.setRightAnchor(anchor, 0.0);
+        AnchorPane.setLeftAnchor(anchor, 0.0);
+        AnchorPane.setBottomAnchor(anchor, 0.0);
+        this.mainContainer.getChildren().setAll(anchor);
+
+        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
     }
 
     @FXML
@@ -356,6 +403,18 @@ public class MainController implements Initializable {
             }
         }
         return list;
+    }
+
+    @Override
+    public void sendMessage(Message message) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void receiveMessage(Message message) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

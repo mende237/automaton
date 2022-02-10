@@ -26,14 +26,14 @@
       <BorderPane layoutX="87.0" layoutY="73.0" prefHeight="520.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <SplitPane fx:id="splitPane" dividerPositions="0.10288461538461538">
-              <items>
-                <AnchorPane minHeight="200.0" minWidth="50.0" prefHeight="160.0" prefWidth="500.0">
+               <items>
+                  <AnchorPane minHeight="200.0" minWidth="50.0" prefHeight="160.0" prefWidth="500.0">
                      <children>
                         <TreeView fx:id="treeView" prefHeight="273.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity" />
-              </items>
+                  <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity" />
+               </items>
             </SplitPane>
          </center>
          <top>
@@ -42,34 +42,34 @@
                   <VBox alignment="CENTER" prefHeight="228.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <MenuBar>
-                          <menus>
-                            <Menu mnemonicParsing="false" text="File">
-                              <items>
-                                <MenuItem mnemonicParsing="false" text="Close" />
-                              </items>
-                            </Menu>
-                            <Menu mnemonicParsing="false" text="Edit">
-                              <items>
-                                <MenuItem mnemonicParsing="false" text="Delete" />
-                              </items>
-                            </Menu>
-                            <Menu mnemonicParsing="false" text="Help">
-                              <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
-                              </items>
-                            </Menu>
-                              <Menu mnemonicParsing="false" text="about">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Action 1" />
-                                </items>
+                           <menus>
+                              <Menu mnemonicParsing="false" text="File">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Close" />
+                                 </items>
                               </Menu>
-                          </menus>
+                              <Menu mnemonicParsing="false" text="Edit">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Delete" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Help">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="About" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="about">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                 </items>
+                              </Menu>
+                           </menus>
                         </MenuBar>
                         <TabPane prefHeight="200.0" prefWidth="660.0" tabClosingPolicy="UNAVAILABLE">
-                          <tabs>
+                           <tabs>
                               <Tab text="accueil">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
                                           <ToolBar prefHeight="76.0" prefWidth="660.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <items>
@@ -78,15 +78,15 @@
                                                       <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <GridPane alignment="CENTER" hgap="5.0" prefHeight="138.0" prefWidth="250.0" vgap="5.0">
-                                                              <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="155.0" />
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
-                                                              </columnConstraints>
-                                                              <rowConstraints>
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                              </rowConstraints>
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="155.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
                                                                <children>
                                                                   <Button id="btnDeterminisation" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeterminisationView" prefHeight="12.0" prefWidth="152.0" text="determinisation" textAlignment="CENTER">
                                                                      <graphic>
@@ -155,15 +155,15 @@
                                                       <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <GridPane alignment="CENTER" prefHeight="135.0" prefWidth="191.0">
-                                                              <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="162.0" minWidth="10.0" prefWidth="162.0" />
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="76.0" />
-                                                              </columnConstraints>
-                                                              <rowConstraints>
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                              </rowConstraints>
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="162.0" minWidth="10.0" prefWidth="162.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="76.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
                                                                <children>
                                                                   <Button id="btnUnion" fx:id="btnUnion" mnemonicParsing="false" prefHeight="37.0" prefWidth="151.0" text="union">
                                                                      <graphic>
@@ -258,19 +258,19 @@
                                           </ToolBar>
                                        </children>
                                     </AnchorPane>
-                                </content>
+                                 </content>
                               </Tab>
-                            <Tab text="creation">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                              </content>
-                            </Tab>
-                            <Tab text="edition">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                              </content>
-                            </Tab>
-                          </tabs>
+                              <Tab text="creation">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                              <Tab text="edition">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                           </tabs>
                         </TabPane>
                      </children>
                   </VBox>
