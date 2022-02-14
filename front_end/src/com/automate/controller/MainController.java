@@ -58,10 +58,11 @@ public class MainController extends Controller implements Initializable {
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
 
+    private boolean view;
 
     public MainController(Mediator mediator) {
         super(mediator);
-        super.mediator.addController(super.id, this);
+        this.view = true;
         System.out.println("enter");
     }
 
@@ -175,43 +176,60 @@ public class MainController extends Controller implements Initializable {
 
                 Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
                 String pathCurrentImage = this.imagePath;
-
+                Automate automate = null;
                 if (indexParent == 0) {// dans ce cas on doit afficher un afd
-                    AFD afd = this.tabAFD.get(itemIndex);
+                    automate = this.tabAFD.get(itemIndex);
                     pathCurrentImage += "/afd.png";
-                    afd.makeImage(pathCurrentImage);
+                    automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 } else if (indexParent == 1) {// dans ce cas on doit afficher un afn
-                    AFN afn = this.tabAFN.get(itemIndex);
+                    automate = this.tabAFN.get(itemIndex);
                     pathCurrentImage += "/afn.png";
-                    afn.makeImage(pathCurrentImage);
+                    automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 } else {//
-                    AFN epAfn = this.tabEpAFN.get(itemIndex);
+                    automate = this.tabEpAFN.get(itemIndex);
                     pathCurrentImage += "/ep-afn.png";
-                    epAfn.makeImage(pathCurrentImage);
+                    automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 }
 
-                this.automateVisualisation(pathCurrentImage);
+                this.automateVisualisation(pathCurrentImage, automate);
                 Scheduler.UPS2();
                 // System.out.println(indexParent + " " + index);
             }
         }
     }
 
-    private void automateVisualisation(String path) {
+    private void automateVisualisation(String path, Automate automate) {
         try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/view.fxml"));
-            this.mainContainer.getChildren().clear();
-            AnchorPane.setTopAnchor(anchor, 0.0);
-            AnchorPane.setRightAnchor(anchor, 0.0);
-            AnchorPane.setLeftAnchor(anchor, 0.0);
-            AnchorPane.setBottomAnchor(anchor, 0.0);
-            this.mainContainer.getChildren().setAll(anchor);
-            
-            anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+            if (this.view == true) {
+                ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+                FXMLLoader loader = null;
+                loader = new FXMLLoader(getClass().getResource("../../../ressource/window/view.fxml"));
+                loader.setControllerFactory(c -> {
+                    return new ViewController(m);
+                });
+
+                AnchorPane anchor = loader.load();
+                this.mainContainer.getChildren().clear();
+                AnchorPane.setTopAnchor(anchor, 0.0);
+                AnchorPane.setRightAnchor(anchor, 0.0);
+                AnchorPane.setLeftAnchor(anchor, 0.0);
+                AnchorPane.setBottomAnchor(anchor, 0.0);
+                this.mainContainer.getChildren().setAll(anchor);
+
+                anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+                anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+
+                ViewController viewController = loader.getController();
+                Message message = new Message(viewController.getId(),
+                        automate.getName() + ";" + automate.getDescription() + ";" + path);
+                this.sendMessage(message);
+            } else {
+                Message message = new Message(ConvertController.getConvertController(super.mediator).getId(), path);
+                this.sendMessage(message);
+            }
             System.out.println("                  visualisation          ");
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -227,10 +245,18 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void handleDeterminisationView(ActionEvent event) throws IOException {
+        this.view = false;
         // Path path = Paths.get("src/ressource/test/convertView.fxml");
         // System.out.println(path.toRealPath());
-        AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
-        //this.mainContainer = anchor;
+        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
+
+        loader.setControllerFactory(c -> {
+            return ConvertController.getConvertController(mediator);
+        });
+        AnchorPane anchor = loader.load();
+        ConvertController convertController = loader.getController();
+        // this.mainContainer = anchor;
 
         this.mainContainer.getChildren().clear();
         AnchorPane.setTopAnchor(anchor, 0.0);
@@ -245,87 +271,107 @@ public class MainController extends Controller implements Initializable {
     }
 
     @FXML
-    void handleComplementaireView(ActionEvent event) {
-        try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
-            // this.mainContainer = root;
-            this.mainContainer.getChildren().clear();
-            AnchorPane.setTopAnchor(anchor, 0.0);
-            AnchorPane.setRightAnchor(anchor, 0.0);
-            AnchorPane.setLeftAnchor(anchor, 0.0);
-            AnchorPane.setBottomAnchor(anchor, 0.0);
-            this.mainContainer.getChildren().setAll(anchor);
+    void handleComplementaireView(ActionEvent event) throws IOException {
+        this.view = false;
+        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
-            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        loader.setControllerFactory(c -> {
+            return ConvertController.getConvertController(mediator);
+        });
+        AnchorPane anchor = loader.load();
+        ConvertController convertController = loader.getController();
+        // this.mainContainer = anchor;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            // System.out.println("eror");
-        }
+        this.mainContainer.getChildren().clear();
+        AnchorPane.setTopAnchor(anchor, 0.0);
+        AnchorPane.setRightAnchor(anchor, 0.0);
+        AnchorPane.setLeftAnchor(anchor, 0.0);
+        AnchorPane.setBottomAnchor(anchor, 0.0);
+        this.mainContainer.getChildren().setAll(anchor);
+
+        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
+
     }
 
     @FXML
-    void handleEpDeterminisationView(ActionEvent event) {
-        try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
-            // this.mainContainer = root;
-            this.mainContainer.getChildren().clear();
-            AnchorPane.setTopAnchor(anchor, 0.0);
-            AnchorPane.setRightAnchor(anchor, 0.0);
-            AnchorPane.setLeftAnchor(anchor, 0.0);
-            AnchorPane.setBottomAnchor(anchor, 0.0);
-            this.mainContainer.getChildren().setAll(anchor);
+    void handleEpDeterminisationView(ActionEvent event) throws IOException {
+        this.view = false;
+        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
-            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        loader.setControllerFactory(c -> {
+            return ConvertController.getConvertController(mediator);
+        });
+        AnchorPane anchor = loader.load();
+        ConvertController convertController = loader.getController();
+        // this.mainContainer = anchor;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            // System.out.println("eror");
-        }
+        this.mainContainer.getChildren().clear();
+        AnchorPane.setTopAnchor(anchor, 0.0);
+        AnchorPane.setRightAnchor(anchor, 0.0);
+        AnchorPane.setLeftAnchor(anchor, 0.0);
+        AnchorPane.setBottomAnchor(anchor, 0.0);
+        this.mainContainer.getChildren().setAll(anchor);
+
+        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
+
     }
 
     @FXML
-    void handleMinimisationView(ActionEvent event) {
-        try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
-            // this.mainContainer = root;
-            this.mainContainer.getChildren().clear();
-            AnchorPane.setTopAnchor(anchor, 0.0);
-            AnchorPane.setRightAnchor(anchor, 0.0);
-            AnchorPane.setLeftAnchor(anchor, 0.0);
-            AnchorPane.setBottomAnchor(anchor, 0.0);
-            this.mainContainer.getChildren().setAll(anchor);
+    void handleMinimisationView(ActionEvent event) throws IOException {
+        this.view = false;
+        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
-            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        loader.setControllerFactory(c -> {
+            return ConvertController.getConvertController(mediator);
+        });
+        AnchorPane anchor = loader.load();
+        ConvertController convertController = loader.getController();
+        // this.mainContainer = anchor;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            // System.out.println("eror");
-        }
+        this.mainContainer.getChildren().clear();
+        AnchorPane.setTopAnchor(anchor, 0.0);
+        AnchorPane.setRightAnchor(anchor, 0.0);
+        AnchorPane.setLeftAnchor(anchor, 0.0);
+        AnchorPane.setBottomAnchor(anchor, 0.0);
+        this.mainContainer.getChildren().setAll(anchor);
+
+        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
+
     }
 
     @FXML
-    void handleMiroirView(ActionEvent event) {
-        try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/convertView.fxml"));
-            // this.mainContainer = root;
-            this.mainContainer.getChildren().clear();
-            AnchorPane.setTopAnchor(anchor, 0.0);
-            AnchorPane.setRightAnchor(anchor, 0.0);
-            AnchorPane.setLeftAnchor(anchor, 0.0);
-            AnchorPane.setBottomAnchor(anchor, 0.0);
-            this.mainContainer.getChildren().setAll(anchor);
+    void handleMiroirView(ActionEvent event) throws IOException {
+        this.view = false;
+        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
-            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        loader.setControllerFactory(c -> {
+            return ConvertController.getConvertController(mediator);
+        });
+        AnchorPane anchor = loader.load();
+        ConvertController convertController = loader.getController();
+        // this.mainContainer = anchor;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            // System.out.println("eror");
-        }
+        this.mainContainer.getChildren().clear();
+        AnchorPane.setTopAnchor(anchor, 0.0);
+        AnchorPane.setRightAnchor(anchor, 0.0);
+        AnchorPane.setLeftAnchor(anchor, 0.0);
+        AnchorPane.setBottomAnchor(anchor, 0.0);
+        this.mainContainer.getChildren().setAll(anchor);
+
+        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
+
     }
 
     @FXML
@@ -407,14 +453,14 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void sendMessage(Message message) {
-        // TODO Auto-generated method stub
-        
+        message.setIdExpediteur(super.id);
+        super.mediator.transmitMessage(message);
     }
 
     @Override
     public void receiveMessage(Message message) {
-        // TODO Auto-generated method stub
-        
+        System.out.println(message);
+
     }
 
 }

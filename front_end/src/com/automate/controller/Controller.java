@@ -8,6 +8,7 @@ public abstract class Controller {
     public Controller(Mediator mediator){
         this.id = Controller.cmpt;
         this.mediator = mediator;
+        this.mediator.addController(this.id, this);
         Controller.cmpt++;
     }
 

@@ -12,6 +12,8 @@ public abstract class Automate {
     protected int nbrState;
     protected String name;
     protected String description;
+
+   
     protected String finalStateTab[];
     protected String tabLabel[];
 
@@ -51,6 +53,14 @@ public abstract class Automate {
         return this.name;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
     /*********************************************
      * setter
      ***********************************************/

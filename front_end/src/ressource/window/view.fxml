@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.ViewController">
    <children>
@@ -14,7 +15,11 @@
         <items>
           <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="185.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true" />
+                  <VBox alignment="CENTER" prefHeight="153.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </VBox>
                </children></AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>

@@ -1,6 +1,6 @@
 package com.automate.inputOutput;
 
-public class Scheduler {
+public class Scheduler{
     private static int S1 = 1;//controle l'envoie et la reception des messages
     private static int S2 = 1;//controle l'affichage
 
@@ -26,7 +26,6 @@ public class Scheduler {
     public static void UPS2() {
         Scheduler.S2 = 1;
     }
-
 
 
 }

@@ -82,7 +82,7 @@ public class App extends Application {
         // System.out.println(App.class.getResource("test1.txt"));
         // System.out.println("traverser");
         String css = this.getClass().getResource("ressource/style/caspian.css").toExternalForm();
-        ConrceteMadiator m = new ConrceteMadiator();
+        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ressource/window/mainView.fxml"));
 
         loader.setControllerFactory(c -> {

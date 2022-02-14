@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -9,8 +10,11 @@
    <children>
       <SplitPane dividerPositions="0.2905405405405405, 0.5" prefHeight="222.0" prefWidth="298.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane fx:id="anchorPaneData" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <ImageView fx:id="imageViewData" fitHeight="67.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true" />
+               </children></AnchorPane>
+            <AnchorPane maxWidth="100.0" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <VBox alignment="CENTER" prefHeight="220.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -19,7 +23,10 @@
                   </VBox>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+          <AnchorPane fx:id="anchorPaneResult" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="imageViewResult" fitHeight="133.0" fitWidth="106.0" pickOnBounds="true" preserveRatio="true" />
+               </children></AnchorPane>
         </items>
       </SplitPane>
    </children>

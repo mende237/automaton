@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Mediator {
-    private Map<Integer , Controller> controllers = new HashMap<>();
+    protected Map<Integer , Controller> controllers = new HashMap<>();
 
     public void addController(int id , Controller controller){
         this.controllers.put(id , controller);
