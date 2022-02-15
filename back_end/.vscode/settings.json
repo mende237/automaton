@@ -1,6 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "Enabled",
     "files.associations": {
+        "*.rmd": "markdown",
         "afn.h": "c",
         "linked_list.h": "c",
         "cmath": "c",
@@ -8,6 +9,7 @@
         "cstdio": "c",
         "cstdlib": "c",
         "limits": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "typeinfo": "c"
     }
 }

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 #include "./source/algorithm/AFN.c"
 #include "./source/algorithm/AFD.c"
 #include "./source/data_structure/linked_list.c"
@@ -11,6 +12,9 @@
 #include "./source/algorithm/utilitaire.c"
 #include "./source/algorithm/brzozowski.c"
 #include "./source/algorithm/hopcroft.c"
+
+#include "./source/inputOutput/messenger.c"
+#include "./source/inputOutput/configuration.c"
 
 char **add_data(int n, ...);
 void clearScreen();
@@ -303,11 +307,30 @@ MENU:
     //     printf("pas egale\n");
     // }
 
+    int user_rep = 1;
+    messenger = get_messenger();
+    config = get_config("test.json");
+    print_config(config);
+    messenger->reception_path = config->request_path;
+    messenger->sending_path = config->response_path;
+    
+    Message message = {messenger->message.id , config->data_response_path , "instruction name"};
+    //send_result(messenger, message);
+    boolean is_new = check_new(messenger);
+
+    if (is_new == True)
+    {
+        printf("look there is news \n");
+    }
+    else
+    {
+        printf("there is nothing \n");
+    }
+
     boolean restart = False;
     boolean rep = False;
 
     int length = 0;
-    int user_rep = 1;
     int word_length = 0;
 
     int nbr_state = 2;

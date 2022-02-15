@@ -2,6 +2,7 @@
 #define FUNCTION_H
 #include "../data_structure/structure.h"
 #include "../data_structure/linked_list.h"
+#include "./AFD.h"
 
 /*cette fonction permet de verifier si deux etats sous forme de liste sont egaux
 elle prend en parametre la fonction equal_value qui permet de dire quand deux elements
