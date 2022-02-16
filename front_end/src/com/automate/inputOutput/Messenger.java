@@ -6,16 +6,15 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Scanner;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Messenger implements Runnable {
-    private String receptionPath;//le chemin vers lequel sera envoyé la reponse
-    private String sendingPath;//le chemo
+public class Messenger{
+    private String receptionPath;
+    private String sendingPath;
+
     private String dataPathResponse;
-
-   
-
+    private static final long DELAY = 30000;
+    
     private int previousId;
     private long delay;
     private long begin;
@@ -24,7 +23,7 @@ public class Messenger implements Runnable {
     private static Messenger messenger;
 
     private Messenger(){
-        this.delay = 300000;
+        this.delay = Messenger.DELAY;
         this.previousId = -1;
     }
 
@@ -36,8 +35,23 @@ public class Messenger implements Runnable {
     public boolean isResponse() {
         return this.response;
     }
-    
 
+    public String getReceptionPath() {
+        return this.receptionPath;
+    }
+
+    public String getSendingPath() {
+        return this.sendingPath;
+    }
+    
+    /******************* setter ********************/
+    public void setReceptionPath(String receptionPath) {
+        this.receptionPath = receptionPath;
+    }
+
+    public void setSendingPath(String sendingPath) {
+        this.sendingPath = sendingPath;
+    }
     /************* methods **********************/
     public static Messenger getMessenger(){
         if(Messenger.messenger == null){
@@ -47,15 +61,15 @@ public class Messenger implements Runnable {
         return Messenger.messenger;
     }
 
-    public boolean sendInstruction(Instruction instruction, String sendingPath, String receptionPath, long delay)
+    
+
+    public void sendInstruction(Instruction instruction , long delay)
             throws FileNotFoundException {
         Scheduler.DOWNS1();
-        this.sendingPath = sendingPath;
-        this.receptionPath = receptionPath;
         this.delay = delay;
 
         JSONObject obj = new JSONObject();
-        obj.put("id", instruction.getID());
+        obj.put("id", instruction.getId());
         obj.put("name", instruction.getName());
         obj.put("data path", instruction.getDataPath());
         obj.put("reception path", this.receptionPath);
@@ -67,34 +81,53 @@ public class Messenger implements Runnable {
         writer.println(jsonText);
         writer.close();
         this.begin = System.currentTimeMillis();
-        run();
-        return true;
-
-        // faire un up lorsqu'on recoit la reponse a l'instruction envoyé
+        this.checkResponse();
     }
 
-
-    public boolean sendInstruction(Instruction instruction, String sendingPath, String receptionPath)
+    public void sendInstruction(Instruction instruction)
             throws FileNotFoundException {
-                return this.sendInstruction(instruction, sendingPath, receptionPath , 300000);
-
+        this.sendInstruction(instruction , Messenger.DELAY);
     }
 
-    @Override
-    public void run() {
-        boolean rep = false;
 
+    public void sendInstruction(Instruction instruction, String sendingPath, String receptionPath, long delay)
+            throws FileNotFoundException {
+       
+        this.sendingPath = sendingPath;
+        this.receptionPath = receptionPath;
+        this.sendInstruction(instruction, delay);
+    }
+
+    public void sendInstruction(Instruction instruction, String sendingPath, String receptionPath)
+            throws FileNotFoundException {
+            this.sendInstruction(instruction, sendingPath, receptionPath , Messenger.DELAY);
+    }
+
+
+    
+    private void checkResponse() throws FileNotFoundException {
+        boolean rep = false;
         while (rep == false && System.currentTimeMillis() - this.begin <= this.delay) {
             File file = new File(this.receptionPath);
             if (file.exists()) {
-                try (Scanner reader = new Scanner(new File(this.receptionPath)).useDelimiter("\\Z")) {
+                //try (Scanner reader = new Scanner(new File(this.receptionPath)).useDelimiter("\\Z")) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    Scanner reader = new Scanner(new File(this.receptionPath)).useDelimiter("\\Z");
                     String content = reader.next();
                     reader.close();
                     JSONObject obj = new JSONObject(content);
                     if(this.previousId != obj.getInt("id")){
                         this.dataPathResponse = obj.getString("data path");
+                        this.previousId = obj.getInt("id");
+                        rep = true;
+                        System.out.println("response");
                     }
-                } catch (FileNotFoundException | JSONException e) {
+                // } catch (FileNotFoundException | JSONException e) {
                     /*****************************************
                     ********************************************
                      ********************************************
@@ -108,17 +141,22 @@ public class Messenger implements Runnable {
                      ********************************************
                     *******************************************/
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                    //e.printStackTrace();
+                //}
+                //System.out.println("waiting");
+            }else{
+                rep = false;
+                System.out.println("le dossier contenant les reponses est vide");
             }
         }
 
         if (rep == true) {
             this.response = true;
-            Scheduler.UPS1();
         } else {
+            System.out.println("pas de reponse");
             this.response = false;
         }
+        Scheduler.UPS1();
     }
 
     public static void main(String[] args) {

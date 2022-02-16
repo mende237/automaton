@@ -1,0 +1,5 @@
+package com.automate.controller;
+
+public enum Algorithm {
+    MINIMISATION_B , MINIMISATION_H , DERTIMINISATION , EP_DERTIMINISATION , COMPLEMENTAIRE , COMPLETION , MIROIR
+}

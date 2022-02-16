@@ -3,16 +3,18 @@ package com.automate.inputOutput;
 public class Instruction {
     private String name;
     private String dataPath;
-    private static int ID = 0;
+    private static int cmpt = 0;
+    private int id = 0;
 
     public Instruction(String name , String dataPath){
-        Instruction.ID += 1;
+        this.id = cmpt;
         this.name = name;
         this.dataPath = dataPath;
+        Instruction.cmpt += 1;
     }
 
-    public int getID(){
-        return Instruction.ID;
+    public int getId(){
+        return this.id;
     }
 
 

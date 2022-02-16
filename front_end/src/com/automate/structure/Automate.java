@@ -12,7 +12,7 @@ public abstract class Automate {
     protected int nbrState;
     protected String name;
     protected String description;
-
+    protected String path;
    
     protected String finalStateTab[];
     protected String tabLabel[];
@@ -20,13 +20,16 @@ public abstract class Automate {
     /*******************************************
      * constructor
      *************************************************/
-    public Automate(String tabLabel[] , int nbrState, String finalStateTab[] , String name, String description) {
+    public Automate(String tabLabel[] , int nbrState, String finalStateTab[] , String name, String description , String path) {
+        this(tabLabel , nbrState , finalStateTab , path);
         this.name = name;
         this.description = description;
-        this.finalStateTab = finalStateTab;
-        this.tabLabel = tabLabel;
-        this.nbrState = nbrState;
-        this.cmpt = 0;
+    }
+
+    public Automate(String tabLabel[], int nbrState, String finalStateTab[], String name, String description) {
+        this(tabLabel, nbrState, finalStateTab);
+        this.name = name;
+        this.description = description;
     }
 
     public Automate(String tabLabel[], int nbrState, String finalStateTab[]) {
@@ -34,12 +37,20 @@ public abstract class Automate {
         this.tabLabel = tabLabel;
         this.nbrState = nbrState;
         this.cmpt = 0;
+
+    }
+
+    public Automate(String tabLabel[], int nbrState, String finalStateTab[] , String path) {
+        this(tabLabel , nbrState , finalStateTab);
+        this.path = path;
     }
 
     /**********************************************
      * getter
      **************************************************/
-
+    public String getPath() {
+        return this.path;
+    }
 
     public String[] getFinalStateTab() {
         return this.finalStateTab;
@@ -64,6 +75,9 @@ public abstract class Automate {
     /*********************************************
      * setter
      ***********************************************/
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public void setFinalStateTab(String finalStateTab[]) {
         this.finalStateTab = finalStateTab;

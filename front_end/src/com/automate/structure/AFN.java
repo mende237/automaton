@@ -31,13 +31,26 @@ public class AFN extends Automate {
     public AFN(String tabLabel[], String epsilone, int nbrState, String finalStateTab[],
             String initialStateTab[], String name, String description) {
         super(tabLabel, nbrState, finalStateTab, name, description);
-        this.matTrans = new LinkedList<>();
-        this.epsilone = epsilone;
-        this.initialStateTab = initialStateTab;
+        this.init(epsilone, initialStateTab);
+    }
+
+    public AFN(String tabLabel[], String epsilone, int nbrState, String finalStateTab[],
+            String initialStateTab[], String name, String description , String path) {
+        super(tabLabel, nbrState, finalStateTab, name, description , path);
+        this.init(epsilone, initialStateTab);
+    }
+
+    public AFN(String tabLabel[], String epsilone, int nbrState, String finalStateTab[], String initialStateTab[] , String path) {
+        super(tabLabel, nbrState, finalStateTab , path);
+        this.init(epsilone, initialStateTab);
     }
 
     public AFN(String tabLabel[], String epsilone, int nbrState, String finalStateTab[], String initialStateTab[]) {
         super(tabLabel, nbrState, finalStateTab);
+        this.init(epsilone, initialStateTab);
+    }
+
+    private void init(String epsilone , String initialStateTab[]){
         this.epsilone = epsilone;
         this.matTrans = new LinkedList<>();
         this.initialStateTab = initialStateTab;

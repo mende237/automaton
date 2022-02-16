@@ -58,11 +58,15 @@ public class MainController extends Controller implements Initializable {
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
 
-    private boolean view;
+    private enum viewType{
+        AUTOMATE_VIEW , CONVERT_VIEW
+    }
+
+    private viewType vType;
 
     public MainController(Mediator mediator) {
         super(mediator);
-        this.view = true;
+        this.vType = viewType.AUTOMATE_VIEW;
         System.out.println("enter");
     }
 
@@ -193,7 +197,7 @@ public class MainController extends Controller implements Initializable {
                     automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 }
-
+                System.out.println("chemin   " + automate.getPath());
                 this.automateVisualisation(pathCurrentImage, automate);
                 Scheduler.UPS2();
                 // System.out.println(indexParent + " " + index);
@@ -203,33 +207,38 @@ public class MainController extends Controller implements Initializable {
 
     private void automateVisualisation(String path, Automate automate) {
         try {
-            if (this.view == true) {
-                ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
-                FXMLLoader loader = null;
-                loader = new FXMLLoader(getClass().getResource("../../../ressource/window/view.fxml"));
-                loader.setControllerFactory(c -> {
-                    return new ViewController(m);
-                });
+            Message message = null;
+            switch (this.vType) {
+                case AUTOMATE_VIEW:
+                    ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+                    FXMLLoader loader = null;
+                    loader = new FXMLLoader(getClass().getResource("../../../ressource/window/view.fxml"));
+                    loader.setControllerFactory(c -> {
+                        return new ViewController(m);
+                    });
 
-                AnchorPane anchor = loader.load();
-                this.mainContainer.getChildren().clear();
-                AnchorPane.setTopAnchor(anchor, 0.0);
-                AnchorPane.setRightAnchor(anchor, 0.0);
-                AnchorPane.setLeftAnchor(anchor, 0.0);
-                AnchorPane.setBottomAnchor(anchor, 0.0);
-                this.mainContainer.getChildren().setAll(anchor);
+                    AnchorPane anchor = loader.load();
+                    this.mainContainer.getChildren().clear();
+                    AnchorPane.setTopAnchor(anchor, 0.0);
+                    AnchorPane.setRightAnchor(anchor, 0.0);
+                    AnchorPane.setLeftAnchor(anchor, 0.0);
+                    AnchorPane.setBottomAnchor(anchor, 0.0);
+                    this.mainContainer.getChildren().setAll(anchor);
 
-                anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-                anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+                    anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+                    anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
 
-                ViewController viewController = loader.getController();
-                Message message = new Message(viewController.getId(),
-                        automate.getName() + ";" + automate.getDescription() + ";" + path);
-                this.sendMessage(message);
-            } else {
-                Message message = new Message(ConvertController.getConvertController(super.mediator).getId(), path);
-                this.sendMessage(message);
+                    ViewController viewController = loader.getController();
+                    message = new Message(viewController.getId(),
+                            automate.getName() + ";" + automate.getDescription() + ";" + path);
+                    this.sendMessage(message);
+                    break;
+                case CONVERT_VIEW:
+                    message = new Message(ConvertController.getConvertController().getId(), path+";"+automate.getPath());
+                    this.sendMessage(message);
+                    break;
             }
+           
             System.out.println("                  visualisation          ");
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -245,14 +254,14 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void handleDeterminisationView(ActionEvent event) throws IOException {
-        this.view = false;
+        this.vType = viewType.CONVERT_VIEW;
         // Path path = Paths.get("src/ressource/test/convertView.fxml");
         // System.out.println(path.toRealPath());
         ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator);
+            return ConvertController.getConvertController(mediator , Algorithm.DERTIMINISATION);
         });
         AnchorPane anchor = loader.load();
         ConvertController convertController = loader.getController();
@@ -272,12 +281,12 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     void handleComplementaireView(ActionEvent event) throws IOException {
-        this.view = false;
+        this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator);
+            return ConvertController.getConvertController(mediator , Algorithm.COMPLEMENTAIRE);
         });
         AnchorPane anchor = loader.load();
         ConvertController convertController = loader.getController();
@@ -298,12 +307,12 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     void handleEpDeterminisationView(ActionEvent event) throws IOException {
-        this.view = false;
+        this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator);
+            return ConvertController.getConvertController(mediator , Algorithm.EP_DERTIMINISATION);
         });
         AnchorPane anchor = loader.load();
         ConvertController convertController = loader.getController();
@@ -324,12 +333,12 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     void handleMinimisationView(ActionEvent event) throws IOException {
-        this.view = false;
+        this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator);
+            return ConvertController.getConvertController(mediator , Algorithm.MINIMISATION_B);
         });
         AnchorPane anchor = loader.load();
         ConvertController convertController = loader.getController();
@@ -350,12 +359,12 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     void handleMiroirView(ActionEvent event) throws IOException {
-        this.view = false;
+        this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator);
+            return ConvertController.getConvertController(mediator , Algorithm.MIROIR);
         });
         AnchorPane anchor = loader.load();
         ConvertController convertController = loader.getController();
@@ -441,9 +450,11 @@ public class MainController extends Controller implements Initializable {
             if (file.isFile()) {
                 if (isAFD == true) {
                     AFD afd = AFD.jsonToAFD(file.getPath(), true);
+                    afd.setPath(file.getPath());
                     list.add(afd);
                 } else {
                     AFN afn = AFN.jsonToAFN(file.getPath(), true);
+                    afn.setPath(file.getPath());
                     list.add(afn);
                 }
             }

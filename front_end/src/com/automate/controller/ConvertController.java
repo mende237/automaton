@@ -1,9 +1,14 @@
 package com.automate.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.automate.inputOutput.Instruction;
+import com.automate.inputOutput.Messenger;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,6 +16,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+
+
 
 public class ConvertController extends Controller implements Initializable {
     public static ConvertController convertController = null;
@@ -29,21 +36,54 @@ public class ConvertController extends Controller implements Initializable {
     private AnchorPane anchorPaneData;
     @FXML
     private AnchorPane anchorPaneResult;
+ 
+    private Algorithm algorithmType;
+    private String dataPath;
 
-    private ConvertController(Mediator mediator) {
+    
+    private ConvertController(Mediator mediator , Algorithm algorithmType) {
         super(mediator);
+        this.algorithmType = algorithmType;
     }
 
-    public static ConvertController getConvertController(Mediator mediator) {
+    public static ConvertController getConvertController(Mediator mediator , Algorithm algorithmType) {
         if (ConvertController.convertController == null) {
-            ConvertController.convertController = new ConvertController(mediator);
+            ConvertController.convertController = new ConvertController(mediator , algorithmType);
+        }else{
+            ConvertController.convertController.algorithmType = algorithmType;
         }
 
         return ConvertController.convertController;
     }
 
+    public static ConvertController getConvertController() {
+        return ConvertController.convertController;
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        switch (algorithmType) {
+            case DERTIMINISATION:
+                this.btnConvert.setText("deternine");
+                break;
+            case EP_DERTIMINISATION:
+                this.btnConvert.setText("deternine");
+                break;
+            case MINIMISATION_B:
+                this.btnConvert.setText("minimisation");
+                break;
+            case MINIMISATION_H:
+                this.btnConvert.setText("minimisation");
+                break;
+            case COMPLEMENTAIRE:
+                this.btnConvert.setText("complementaire");
+                break;
+            case COMPLETION:
+                this.btnConvert.setText("completion");
+                break;
+            case MIROIR:
+                this.btnConvert.setText("miroir");
+                break;
+        }
         System.out.println("la fenetre convert a ete lance!!!!!");
         this.imageViewData.fitWidthProperty().bind(this.anchorPaneData.widthProperty());
         this.imageViewData.fitHeightProperty().bind(this.anchorPaneData.heightProperty());
@@ -56,6 +96,14 @@ public class ConvertController extends Controller implements Initializable {
         // this.splitPane.setDividerPositions(0.45);
     }
 
+    public Algorithm getAlgorithmType() {
+        return this.algorithmType;
+    }
+
+    public void setAlgorithmType(Algorithm algorithmType) {
+        this.algorithmType = algorithmType;
+    }
+
     @Override
     public void sendMessage(Message message) {
         message.setIdExpediteur(super.id);
@@ -65,9 +113,49 @@ public class ConvertController extends Controller implements Initializable {
     @Override
     public void receiveMessage(Message message) {
         System.out.println(message);
-        File file = new File(message.getContent());
-        Image image = new Image(file.toURI().toString());
-        this.imageViewData.setImage(image);
+        if(message.getIdExpediteur() == 0){
+            String tab[] = message.getContent().split(";");
+            File file = new File(tab[0]);
+            Image image = new Image(file.toURI().toString());
+            this.imageViewData.setImage(image);
+            this.dataPath = tab[1];
+        }
     }
 
+
+    @FXML
+    public void handleBtnConvertClicked(ActionEvent event){
+        Messenger messenger = Messenger.getMessenger();
+        Instruction instruction;
+        switch (algorithmType) {
+            case DERTIMINISATION:
+                instruction = new Instruction("determinisation", this.dataPath);
+                try {
+                    messenger.sendInstruction(instruction);
+                } catch (FileNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                System.out.println("instruction envoye");
+                break;
+            case EP_DERTIMINISATION:
+                this.btnConvert.setText("deternine");
+                break;
+            case MINIMISATION_B:
+                this.btnConvert.setText("minimisation");
+                break;
+            case MINIMISATION_H:
+                this.btnConvert.setText("minimisation");
+                break;
+            case COMPLEMENTAIRE:
+                this.btnConvert.setText("complementaire");
+                break;
+            case COMPLETION:
+                this.btnConvert.setText("completion");
+                break;
+            case MIROIR:
+                this.btnConvert.setText("miroir");
+                break;
+        }
+    }
 }

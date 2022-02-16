@@ -4,10 +4,13 @@
 // import java.io.File;
 // import java.io.FileWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.automate.controller.ConrceteMadiator;
 import com.automate.controller.MainController;
+import com.automate.inputOutput.Configuration;
+import com.automate.inputOutput.Messenger;
 
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
@@ -26,8 +29,20 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
+    public static Configuration config;
+    public static Messenger messenger = Messenger.getMessenger();
 
     public static void main(String args[]) throws IOException {
+        try {
+            config = Configuration.getConfiguration("../config.json");
+            System.out.println(config);
+        } catch (FileNotFoundException e) {
+            //TODO: handle exception
+        }
+        
+        messenger.setSendingPath(config.getRequestPath());
+        messenger.setReceptionPath(config.getResponsePath());
+
         launch();
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");

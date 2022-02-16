@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import guru.nidi.graphviz.attribute.Label;
@@ -27,14 +28,28 @@ public class AFD extends Automate {
      * constructor
      ************************************/
     public AFD(String tabLabel[], int nbrState, String finalStateTab[], String initialState, String name,
+            String description , String path) {
+        super(tabLabel, nbrState, finalStateTab, name, description , path);
+        this.init(initialState);
+    }
+
+    public AFD(String tabLabel[], int nbrState, String finalStateTab[], String initialState, String name,
             String description) {
         super(tabLabel, nbrState, finalStateTab, name, description);
-        this.initialState = initialState;
-        this.matTrans = new Transition[super.nbrState * super.tabLabel.length];
+        this.init(initialState);
+    }
+
+    public AFD(String tabLabel[], int nbrState, String finalStateTab[], String initialState , String path) {
+        super(tabLabel, nbrState, finalStateTab , path);
+        this.init(initialState);
     }
 
     public AFD(String tabLabel[], int nbrState, String finalStateTab[], String initialState) {
         super(tabLabel, nbrState, finalStateTab);
+        this.init(initialState);
+    }
+
+    private void init(String initialState){
         this.initialState = initialState;
         this.matTrans = new Transition[super.nbrState * super.tabLabel.length];
     }
@@ -80,7 +95,7 @@ public class AFD extends Automate {
 
     }
 
-    public static AFD jsonToAFD(String filePath, boolean readInfo) throws FileNotFoundException {
+    public static AFD jsonToAFD(String filePath, boolean readInfo) throws FileNotFoundException , JSONException{
         AFD afd = null;
         String alphabet[] = null;
         String initialState = null;
@@ -89,43 +104,43 @@ public class AFD extends Automate {
         Object transitions[][] = null;
         String name = null;
         String description = null;
-        Scanner reader = new Scanner(new File(filePath)).useDelimiter("\\Z");
-        String content = reader.next();
-        reader.close();
-        JSONObject obj = new JSONObject(content);
+        try (Scanner reader = new Scanner(new File(filePath)).useDelimiter("\\Z")) {
+            String content = reader.next();
+            reader.close();
+            JSONObject obj = new JSONObject(content);
 
-        if (readInfo == true) {
-            name = obj.getString("name");
-            description = obj.getString("description");
-        }
-        JSONArray JTabAlphabet = obj.getJSONArray("alphabet");
-        alphabet = new String[JTabAlphabet.length()];
-        for (int i = 0; i < JTabAlphabet.length(); i++) {
-            alphabet[i] = JTabAlphabet.getString(i);
-        }
+            if (readInfo == true) {
+                name = obj.getString("name");
+                description = obj.getString("description");
+            }
+            JSONArray JTabAlphabet = obj.getJSONArray("alphabet");
+            alphabet = new String[JTabAlphabet.length()];
+            for (int i = 0; i < JTabAlphabet.length(); i++) {
+                alphabet[i] = JTabAlphabet.getString(i);
+            }
 
-        nbr_state = obj.getInt("number state");
-        initialState = obj.getString("initial state");
+            nbr_state = obj.getInt("number state");
+            initialState = obj.getString("initial state");
 
-        JSONArray JTabFinalState = obj.getJSONArray("final states");
-        finalStates = new String[JTabFinalState.length()];
-        for (int i = 0; i < JTabFinalState.length(); i++) {
-            finalStates[i] = JTabFinalState.getString(i);
-        }
+            JSONArray JTabFinalState = obj.getJSONArray("final states");
+            finalStates = new String[JTabFinalState.length()];
+            for (int i = 0; i < JTabFinalState.length(); i++) {
+                finalStates[i] = JTabFinalState.getString(i);
+            }
 
-        JSONArray JTabTransition = obj.getJSONArray("transitions");
-        transitions = new Object[JTabTransition.length()][3];
-        for (int i = 0; i < JTabTransition.length(); i++) {
-            JSONArray Jtemp = JTabTransition.getJSONArray(i);
-            for (int j = 0; j < Jtemp.length(); j++) {
-                if (j != 1) {
-                    transitions[i][j] = new State(Jtemp.getString(j));
-                } else {
-                    transitions[i][j] = Jtemp.getString(j);
+            JSONArray JTabTransition = obj.getJSONArray("transitions");
+            transitions = new Object[JTabTransition.length()][3];
+            for (int i = 0; i < JTabTransition.length(); i++) {
+                JSONArray Jtemp = JTabTransition.getJSONArray(i);
+                for (int j = 0; j < Jtemp.length(); j++) {
+                    if (j != 1) {
+                        transitions[i][j] = new State(Jtemp.getString(j));
+                    } else {
+                        transitions[i][j] = Jtemp.getString(j);
+                    }
                 }
             }
         }
-
         for (int i = 0; i < finalStates.length; i++) {
             for (int j = 0; j < transitions.length; j++) {
                 State tempState1 = (State) transitions[j][0];

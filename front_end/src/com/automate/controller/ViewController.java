@@ -31,7 +31,6 @@ public class ViewController extends Controller implements Initializable {
         imageView.fitWidthProperty().bind(this.anchorPane.widthProperty());
         imageView.fitHeightProperty().bind(this.anchorPane.heightProperty());
         imageView.setPreserveRatio(true);
-
     }
 
     private void centerImage() {
