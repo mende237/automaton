@@ -13,9 +13,7 @@ Messenger *messenger = NULL;
 Messenger *get_messenger(){
     if(messenger == NULL){
         messenger = calloc(1 , sizeof(Messenger));
-        printf("%p\n" , messenger);
-    }else{
-        printf("%p\n", messenger);
+        messenger->previous_id = -1;
     }
 
     return messenger;

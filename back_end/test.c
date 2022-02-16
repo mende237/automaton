@@ -308,25 +308,29 @@ MENU:
     // }
 
     int user_rep = 1;
+    boolean is_new;
     messenger = get_messenger();
-    config = get_config("test.json");
+    config = get_config("../test.json");
     print_config(config);
     messenger->reception_path = config->request_path;
     messenger->sending_path = config->response_path;
-    
-    Message message = {messenger->message.id , config->data_response_path , "instruction name"};
+
+    // Message message = {messenger->message.id , config->data_response_path , "instruction name"};
     //send_result(messenger, message);
-    boolean is_new = check_new(messenger);
+    START:
+    is_new = check_new(messenger);
 
     if (is_new == True)
     {
         printf("look there is news \n");
+        user_rep = receive_instruction(messenger);
     }
     else
     {
         printf("there is nothing \n");
     }
 
+    printf("user rep %d\n" , user_rep);
     boolean restart = False;
     boolean rep = False;
 
@@ -362,14 +366,12 @@ MENU:
     AFN afn_result = NULL;
     AFD old_afd = NULL;
 
-    do
-    {
-        printf("QUE VOULEZ EXECUTER : ");
-        scanf("%d", &user_rep);
-    } while (user_rep < 1 && user_rep > 5);
-    void **test;
-    // do
-    // {
+    
+    // while (user_rep < 1 || user_rep > 15){
+    //     printf("QUE VOULEZ EXECUTER : ");
+    // }
+   
+    
     switch (user_rep)
     {
     case 1:
@@ -680,8 +682,10 @@ MENU:
     }
     free_list(garbage);
 
+    goto START;
     //user_rep = 0;
     // } while (user_rep == 1);
-
+    free(messenger);
+    free(config);
     return 0;
 }
