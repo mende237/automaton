@@ -14,6 +14,7 @@ import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automate;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -461,6 +462,12 @@ public class MainController extends Controller implements Initializable {
         }
         return list;
     }
+    
+    // @FXML
+    // public void exitApplication(ActionEvent event) {
+    //     System.out.println("Stage is closing");
+    //     Platform.exit();
+    // }
 
     @Override
     public void sendMessage(Message message) {

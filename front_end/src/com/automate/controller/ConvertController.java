@@ -5,8 +5,13 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.automate.inputOutput.Configuration;
+
 import com.automate.inputOutput.Instruction;
 import com.automate.inputOutput.Messenger;
+import com.automate.structure.AFD;
+
+import org.json.JSONException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -126,7 +131,9 @@ public class ConvertController extends Controller implements Initializable {
     @FXML
     public void handleBtnConvertClicked(ActionEvent event){
         Messenger messenger = Messenger.getMessenger();
+        Configuration config = Configuration.getConfiguration();
         Instruction instruction;
+        AFD afd = null;
         switch (algorithmType) {
             case DERTIMINISATION:
                 instruction = new Instruction("determinisation", this.dataPath);
@@ -136,7 +143,19 @@ public class ConvertController extends Controller implements Initializable {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                System.out.println("instruction envoye");
+
+                if(messenger.isResponse() == true){
+                    try {
+                        afd = AFD.jsonToAFD(messenger.getDataPathResponse() , false);
+                        afd.makeImage(config.getImagePath() + "/afd.png");
+                        File file = new File(config.getImagePath()+"/afd.png");
+                        Image image = new Image(file.toURI().toString());
+                        this.imageViewResult.setImage(image);
+                    } catch (FileNotFoundException | JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } 
+                }
                 break;
             case EP_DERTIMINISATION:
                 this.btnConvert.setText("deternine");
@@ -158,4 +177,6 @@ public class ConvertController extends Controller implements Initializable {
                 break;
         }
     }
+
+
 }

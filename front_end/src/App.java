@@ -112,4 +112,18 @@ public class App extends Application {
         stage.show();
     }
 
+    @Override
+    public void stop() {
+        System.out.println("Stage is closing");
+        File file;
+        file = new File(config.getRequestPath());
+        file.delete();
+        file = new File(config.getResponsePath());
+        file.delete();
+        file = new File(config.getDataResponsePath());
+        file.delete();
+
+    }
+
+
 }

@@ -13,8 +13,9 @@ public class Configuration {
     private static String responsePath;
     private static String dataRequestPath;
     private static String dataResponsePath;
+    private static String imagePath;
 
-
+   
     private Configuration() {
 
     }
@@ -30,13 +31,22 @@ public class Configuration {
             Configuration.responsePath = obj.getString("response path");
             Configuration.dataRequestPath = obj.getString("data request path");
             Configuration.dataResponsePath = obj.getString("data reponse path");
+            Configuration.imagePath = obj.getString("image path");
         }
 
         return Configuration.configuration;
     }
 
-    public static Configuration getConfiguration(){
+    public static Configuration getConfiguration() {
         return Configuration.configuration;
+    }
+
+    public String getImagePath() {
+        return Configuration.imagePath;
+    }
+
+    public void setimagePath(String imagePath) {
+        Configuration.imagePath = imagePath;
     }
 
 
@@ -76,6 +86,6 @@ public class Configuration {
     public String toString(){
         return "data request ->" + Configuration.dataRequestPath  + "\ndata response ->" 
         + Configuration.dataResponsePath +"\nrequest -> " + Configuration.requestPath+ "\nresponse -> " 
-        + Configuration.responsePath + "\n";
+        + Configuration.responsePath +"\nimage data -> " + Configuration.imagePath + "\n";
     }
 }
