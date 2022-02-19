@@ -179,7 +179,7 @@ public class MainController extends Controller implements Initializable {
                 int itemIndex = getTreeItemIndex(item);
                 int indexParent = getTreeItemIndex(item.getParent());
 
-                Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
+               // Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
                 String pathCurrentImage = this.imagePath;
                 Automate automate = null;
                 if (indexParent == 0) {// dans ce cas on doit afficher un afd
@@ -200,7 +200,7 @@ public class MainController extends Controller implements Initializable {
                 }
                 System.out.println("chemin   " + automate.getPath());
                 this.automateVisualisation(pathCurrentImage, automate);
-                Scheduler.UPS2();
+                //Scheduler.UPS2();
                 // System.out.println(indexParent + " " + index);
             }
         }
@@ -365,7 +365,7 @@ public class MainController extends Controller implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator , Algorithm.MIROIR);
+            return ConvertController.getConvertController(mediator , Algorithm.MIROIR_AFD);
         });
         AnchorPane anchor = loader.load();
         ConvertController convertController = loader.getController();

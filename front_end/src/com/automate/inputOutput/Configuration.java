@@ -14,7 +14,10 @@ public class Configuration {
     private static String dataRequestPath;
     private static String dataResponsePath;
     private static String imagePath;
+    private static String pathSemRequest;
+    private static String pathSemResponse;
 
+    
    
     private Configuration() {
 
@@ -31,6 +34,8 @@ public class Configuration {
             Configuration.responsePath = obj.getString("response path");
             Configuration.dataRequestPath = obj.getString("data request path");
             Configuration.dataResponsePath = obj.getString("data reponse path");
+            Configuration.pathSemRequest = obj.getString("path semaphore request");
+            Configuration.pathSemResponse = obj.getString("path semaphore response");
             Configuration.imagePath = obj.getString("image path");
         }
 
@@ -39,6 +44,22 @@ public class Configuration {
 
     public static Configuration getConfiguration() {
         return Configuration.configuration;
+    }
+
+    public String getPathSemRequest() {
+        return Configuration.pathSemRequest;
+    }
+
+    public void setPathSemRequest(String pathSemRequest) {
+        Configuration.pathSemRequest = pathSemRequest;
+    }
+
+    public String getPathSemResponse() {
+        return Configuration.pathSemResponse;
+    }
+
+    public void setPathSemResponse(String pathSemResponse) {
+        Configuration.pathSemResponse = pathSemResponse;
     }
 
     public String getImagePath() {
@@ -86,6 +107,8 @@ public class Configuration {
     public String toString(){
         return "data request ->" + Configuration.dataRequestPath  + "\ndata response ->" 
         + Configuration.dataResponsePath +"\nrequest -> " + Configuration.requestPath+ "\nresponse -> " 
-        + Configuration.responsePath +"\nimage data -> " + Configuration.imagePath + "\n";
+        + Configuration.responsePath +"\nimage data -> " + Configuration.imagePath + 
+        "\npath semaphore request "+Configuration.pathSemRequest + "\npath semaphore reponse " + 
+        Configuration.pathSemResponse +"\n";
     }
 }

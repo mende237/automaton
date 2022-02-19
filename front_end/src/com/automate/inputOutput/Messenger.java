@@ -2,7 +2,9 @@ package com.automate.inputOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.util.Scanner;
 
@@ -64,10 +66,9 @@ public class Messenger{
     
 
     public void sendInstruction(Instruction instruction , long delay)
-            throws FileNotFoundException {
-        Scheduler.DOWNS1();
+            throws IOException {
+        //Scheduler.DOWN_SEM_REQUEST();
         this.delay = delay;
-
         JSONObject obj = new JSONObject();
         obj.put("id", instruction.getId());
         obj.put("name", instruction.getName());
@@ -77,21 +78,25 @@ public class Messenger{
         StringWriter strW = new StringWriter();
         obj.write(strW);
         String jsonText = strW.toString();
-        PrintWriter writer = new PrintWriter(this.sendingPath);
-        writer.println(jsonText);
-        writer.close();
+        
+        RandomAccessFile raf = new RandomAccessFile(this.sendingPath, "rw");
+        raf.write(jsonText.getBytes());
+        raf.close();
+        
         this.begin = System.currentTimeMillis();
+        //Scheduler.UP_SEM_REQUEST();
         this.checkResponse();
+
     }
 
     public void sendInstruction(Instruction instruction)
-            throws FileNotFoundException {
+            throws IOException {
         this.sendInstruction(instruction , Messenger.DELAY);
     }
 
 
     public void sendInstruction(Instruction instruction, String sendingPath, String receptionPath, long delay)
-            throws FileNotFoundException {
+            throws IOException {
        
         this.sendingPath = sendingPath;
         this.receptionPath = receptionPath;
@@ -99,7 +104,7 @@ public class Messenger{
     }
 
     public void sendInstruction(Instruction instruction, String sendingPath, String receptionPath)
-            throws FileNotFoundException {
+            throws IOException {
             this.sendInstruction(instruction, sendingPath, receptionPath , Messenger.DELAY);
     }
 
@@ -110,13 +115,7 @@ public class Messenger{
         while (rep == false && System.currentTimeMillis() - this.begin <= this.delay) {
             File file = new File(this.receptionPath);
             if (file.exists()) {
-                //try (Scanner reader = new Scanner(new File(this.receptionPath)).useDelimiter("\\Z")) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                    System.out.println(this.receptionPath);
                     Scanner reader = new Scanner(new File(this.receptionPath)).useDelimiter("\\Z");
                     String content = reader.next();
                     reader.close();
@@ -127,23 +126,6 @@ public class Messenger{
                         rep = true;
                         System.out.println("response");
                     }
-                // } catch (FileNotFoundException | JSONException e) {
-                    /*****************************************
-                    ********************************************
-                     ********************************************
-                     ********************************************
-                     ********************************************
-                     ********************************************
-                     *****************a traité *****************
-                     ********************************************
-                     ********************************************
-                     ********************************************
-                     ********************************************
-                    *******************************************/
-                    // TODO Auto-generated catch block
-                    //e.printStackTrace();
-                //}
-                //System.out.println("waiting");
             }else{
                 rep = false;
                 System.out.println("le dossier contenant les reponses est vide");
@@ -156,7 +138,6 @@ public class Messenger{
             System.out.println("pas de reponse");
             this.response = false;
         }
-        Scheduler.UPS1();
     }
 
     public static void main(String[] args) {

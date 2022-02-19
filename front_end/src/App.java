@@ -5,6 +5,7 @@
 // import java.io.FileWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import com.automate.controller.ConrceteMadiator;
@@ -42,7 +43,7 @@ public class App extends Application {
         
         messenger.setSendingPath(config.getRequestPath());
         messenger.setReceptionPath(config.getResponsePath());
-
+        App.reset();
         launch();
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -115,6 +116,9 @@ public class App extends Application {
     @Override
     public void stop() {
         System.out.println("Stage is closing");
+    }
+    
+    private static void reset(){
         File file;
         file = new File(config.getRequestPath());
         file.delete();
@@ -122,6 +126,27 @@ public class App extends Application {
         file.delete();
         file = new File(config.getDataResponsePath());
         file.delete();
+        FileWriter fw;
+
+        file = new File(config.getPathSemRequest());
+        try {
+            fw = new FileWriter(file);
+            fw.write('1');
+            fw.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        file = new File(config.getPathSemResponse());
+        try {
+            fw = new FileWriter(file);
+            fw.write('1');
+            fw.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
