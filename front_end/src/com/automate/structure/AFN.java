@@ -212,7 +212,7 @@ public class AFN extends Automate {
 
     @Override
     public void makeImage(String path) {
-        Graph g = graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+        Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
                 .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < this.matTrans.size(); i++) {

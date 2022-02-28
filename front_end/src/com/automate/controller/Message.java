@@ -1,29 +1,29 @@
 package com.automate.controller;
 
 public class Message {
-    private int idDestinataire;
-    private int idExpediteur;
+    private String idDestinataire;
+    private String idExpediteur;
     private String content;
 
-    public Message(int idDestinataire, String content) {
+    public Message(String idDestinataire, String content) {
         this.idDestinataire = idDestinataire;
         this.content = content;
     }
 
 
-    public int getIdDestinataire() {
+    public String getIdDestinataire() {
         return this.idDestinataire;
     }
 
-    public void setIdDestinataire(int idDestinataire) {
+    public void setIdDestinataire(String idDestinataire) {
         this.idDestinataire = idDestinataire;
     }
 
-    public int getIdExpediteur() {
+    public String getIdExpediteur() {
         return this.idExpediteur;
     }
 
-    public void setIdExpediteur(int idExpediteur) {
+    public void setIdExpediteur(String idExpediteur) {
         this.idExpediteur = idExpediteur;
     }
 

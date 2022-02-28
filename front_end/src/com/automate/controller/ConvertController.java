@@ -44,13 +44,15 @@ public class ConvertController extends Controller implements Initializable {
     @FXML
     private AnchorPane anchorPaneResult;
  
+    protected static final String ID = "convertController";
     private Algorithm algorithmType;
     private String dataPath;
 
     
     private ConvertController(Mediator mediator , Algorithm algorithmType) {
-        super(mediator);
+        super(ID , mediator);
         this.algorithmType = algorithmType;
+        System.out.println("************convert controller*******************");
     }
 
     public static ConvertController getConvertController(Mediator mediator , Algorithm algorithmType) {
@@ -58,6 +60,7 @@ public class ConvertController extends Controller implements Initializable {
             ConvertController.convertController = new ConvertController(mediator , algorithmType);
         }else{
             ConvertController.convertController.algorithmType = algorithmType;
+            System.out.println("deja lance");
         }
 
         return ConvertController.convertController;
@@ -66,6 +69,7 @@ public class ConvertController extends Controller implements Initializable {
     public static ConvertController getConvertController() {
         return ConvertController.convertController;
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         switch (algorithmType) {
@@ -93,8 +97,10 @@ public class ConvertController extends Controller implements Initializable {
             case MIROIR_AFN:
                 this.btnConvert.setText("miroir");
                 break;
+            default:
+                break;
         }
-        System.out.println("la fenetre convert a ete lance!!!!!");
+        //System.out.println("la fenetre convert a ete lance!!!!!");
         this.imageViewData.fitWidthProperty().bind(this.anchorPaneData.widthProperty());
         this.imageViewData.fitHeightProperty().bind(this.anchorPaneData.heightProperty());
         this.imageViewData.setPreserveRatio(true);
@@ -123,7 +129,7 @@ public class ConvertController extends Controller implements Initializable {
     @Override
     public void receiveMessage(Message message) {
         System.out.println(message);
-        if(message.getIdExpediteur() == 0){
+        if(message.getIdExpediteur().equals(MainController.ID)){
             String tab[] = message.getContent().split(";");
             File file = new File(tab[0]);
             Image image = new Image(file.toURI().toString());
@@ -135,7 +141,7 @@ public class ConvertController extends Controller implements Initializable {
 
     @FXML
     public void handleBtnConvertClicked(ActionEvent event){
-        switch (algorithmType) {
+        switch (this.algorithmType) {
             case DERTIMINISATION:
                 this.btnConvert.setText("deternine");
                 this.handleDeterminisation();
@@ -167,6 +173,8 @@ public class ConvertController extends Controller implements Initializable {
             case MIROIR_AFN:
                 this.btnConvert.setText("miroir");
                 this.handleMiroir("afn");
+                break;
+            default:
                 break;
         }
     }

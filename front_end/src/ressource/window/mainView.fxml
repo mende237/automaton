@@ -224,7 +224,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Label>
-                                                                  <Button id="btnAfdReconnaissance" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="94.0">
+                                                                  <Button id="btnAfdReconnaissance" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" onAction="#handleReconnaissanceAFD_View" prefHeight="46.0" prefWidth="94.0">
                                                                      <graphic>
                                                                         <ImageView fitHeight="38.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -233,7 +233,7 @@
                                                                         </ImageView>
                                                                      </graphic>
                                                                   </Button>
-                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="90.0">
+                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" onAction="#handleReconnaissanceAFN_View" prefHeight="45.0" prefWidth="90.0">
                                                                      <graphic>
                                                                         <ImageView id="btnAfnReconnaissance" fitHeight="42.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>

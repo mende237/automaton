@@ -1,6 +1,7 @@
 package com.automate.controller;
 
 import java.io.File;
+import java.lang.annotation.Retention;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,7 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class ViewController extends Controller implements Initializable {
-
+    public static ViewController viewController = null;
+    protected static final String ID = "viewController";
     @FXML
     private Label name;
     @FXML
@@ -22,15 +24,27 @@ public class ViewController extends Controller implements Initializable {
     @FXML
     private AnchorPane anchorPane;
 
-    public ViewController(Mediator mediator) {
-        super(mediator);
+    private ViewController(Mediator mediator) {
+        super(ID , mediator);
     }
 
+    
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         imageView.fitWidthProperty().bind(this.anchorPane.widthProperty());
         imageView.fitHeightProperty().bind(this.anchorPane.heightProperty());
         imageView.setPreserveRatio(true);
+    }
+
+    public static ViewController getViewController(Mediator mediator) {
+        if(ViewController.viewController == null){
+            ViewController.viewController = new ViewController(mediator);
+        }
+        return ViewController.viewController;
+    }
+
+    public static ViewController getViewController() {
+        return ViewController.viewController;
     }
 
     private void centerImage() {

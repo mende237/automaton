@@ -26,6 +26,7 @@ import guru.nidi.graphviz.model.Graph;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -97,15 +98,17 @@ public class App extends Application {
         // System.out.println(App.class.getResource("App.class"));
         // System.out.println(App.class.getResource("test1.txt"));
         // System.out.println("traverser");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("./ressource/icon/beepbeep.png")));
+        stage.setTitle("beep-beep");
         String css = this.getClass().getResource("ressource/style/caspian.css").toExternalForm();
-        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ressource/window/mainView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return new MainController(m);
+            return new MainController(mediator);
         });
         AnchorPane root = loader.load();
-
+        
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(css);

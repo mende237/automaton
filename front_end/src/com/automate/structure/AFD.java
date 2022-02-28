@@ -76,7 +76,7 @@ public class AFD extends Automate {
 
     @Override
     public void makeImage(String path) {
-        Graph g = graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+        Graph g = graph("afd").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
                 .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < this.matTrans.length; i++) {

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Mediator {
-    protected Map<Integer , Controller> controllers = new HashMap<>();
+    protected Map<String , Controller> controllers = new HashMap<>();
 
-    public void addController(int id , Controller controller){
+    public void addController(String id , Controller controller){
         this.controllers.put(id , controller);
     }
 

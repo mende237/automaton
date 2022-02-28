@@ -2,21 +2,19 @@ package com.automate.controller;
 
 public abstract class Controller {
     protected Mediator mediator;
-    private static int cmpt = 0;
-    protected int id;
+    protected String id;
 
-    public Controller(Mediator mediator){
-        this.id = Controller.cmpt;
+    public Controller(String id , Mediator mediator){
+        this.id = id;
         this.mediator = mediator;
         this.mediator.addController(this.id, this);
-        Controller.cmpt++;
     }
 
     public abstract void sendMessage(Message message);
     public abstract void receiveMessage(Message message);
 
 
-    public int getId(){
+    public String getId(){
         return this.id;
     }
 

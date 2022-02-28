@@ -59,16 +59,17 @@ public class MainController extends Controller implements Initializable {
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
 
-    private enum viewType{
-        AUTOMATE_VIEW , CONVERT_VIEW
+    private enum viewType {
+        AUTOMATE_VIEW, CONVERT_VIEW , RECONNAISSANCE_VIEW
     }
 
+    protected static final String ID = "mainController";
     private viewType vType;
 
     public MainController(Mediator mediator) {
-        super(mediator);
+        super(ID, mediator);
         this.vType = viewType.AUTOMATE_VIEW;
-        System.out.println("enter");
+        System.out.println("enter main controller");
     }
 
     @Override
@@ -179,7 +180,7 @@ public class MainController extends Controller implements Initializable {
                 int itemIndex = getTreeItemIndex(item);
                 int indexParent = getTreeItemIndex(item.getParent());
 
-               // Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
+                // Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
                 String pathCurrentImage = this.imagePath;
                 Automate automate = null;
                 if (indexParent == 0) {// dans ce cas on doit afficher un afd
@@ -200,7 +201,7 @@ public class MainController extends Controller implements Initializable {
                 }
                 System.out.println("chemin   " + automate.getPath());
                 this.automateVisualisation(pathCurrentImage, automate);
-                //Scheduler.UPS2();
+                // Scheduler.UPS2();
                 // System.out.println(indexParent + " " + index);
             }
         }
@@ -211,11 +212,11 @@ public class MainController extends Controller implements Initializable {
             Message message = null;
             switch (this.vType) {
                 case AUTOMATE_VIEW:
-                    ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+                    ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
                     FXMLLoader loader = null;
                     loader = new FXMLLoader(getClass().getResource("../../../ressource/window/view.fxml"));
                     loader.setControllerFactory(c -> {
-                        return new ViewController(m);
+                        return ViewController.getViewController(mediator);
                     });
 
                     AnchorPane anchor = loader.load();
@@ -232,14 +233,22 @@ public class MainController extends Controller implements Initializable {
                     ViewController viewController = loader.getController();
                     message = new Message(viewController.getId(),
                             automate.getName() + ";" + automate.getDescription() + ";" + path);
+
+                    System.out.println(message);
                     this.sendMessage(message);
                     break;
                 case CONVERT_VIEW:
-                    message = new Message(ConvertController.getConvertController().getId(), path+";"+automate.getPath());
+                    message = new Message(ConvertController.getConvertController().getId(),
+                            path + ";" + automate.getPath());
+                    this.sendMessage(message);
+                    break;
+                case RECONNAISSANCE_VIEW:
+                    message = new Message(ReconnaissanceController.getReconnaissanceController().getId(),
+                            path + ";" + automate.getPath());
                     this.sendMessage(message);
                     break;
             }
-           
+
             System.out.println("                  visualisation          ");
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -258,14 +267,14 @@ public class MainController extends Controller implements Initializable {
         this.vType = viewType.CONVERT_VIEW;
         // Path path = Paths.get("src/ressource/test/convertView.fxml");
         // System.out.println(path.toRealPath());
-        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator , Algorithm.DERTIMINISATION);
+            return ConvertController.getConvertController(mediator, Algorithm.DERTIMINISATION);
         });
         AnchorPane anchor = loader.load();
-        ConvertController convertController = loader.getController();
+        //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
         this.mainContainer.getChildren().clear();
@@ -283,14 +292,14 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleComplementaireView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator , Algorithm.COMPLEMENTAIRE);
+            return ConvertController.getConvertController(mediator, Algorithm.COMPLEMENTAIRE);
         });
         AnchorPane anchor = loader.load();
-        ConvertController convertController = loader.getController();
+        //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
         this.mainContainer.getChildren().clear();
@@ -309,14 +318,14 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleEpDeterminisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator , Algorithm.EP_DERTIMINISATION);
+            return ConvertController.getConvertController(mediator, Algorithm.EP_DERTIMINISATION);
         });
         AnchorPane anchor = loader.load();
-        ConvertController convertController = loader.getController();
+        //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
         this.mainContainer.getChildren().clear();
@@ -335,14 +344,14 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleMinimisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator , Algorithm.MINIMISATION_B);
+            return ConvertController.getConvertController(mediator, Algorithm.MINIMISATION_B);
         });
         AnchorPane anchor = loader.load();
-        ConvertController convertController = loader.getController();
+        //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
         this.mainContainer.getChildren().clear();
@@ -361,14 +370,14 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleMiroirView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator m = ConrceteMadiator.getConrceteMadiator();
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator , Algorithm.MIROIR_AFD);
+            return ConvertController.getConvertController(mediator, Algorithm.MIROIR_AFD);
         });
         AnchorPane anchor = loader.load();
-        ConvertController convertController = loader.getController();
+        //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
         this.mainContainer.getChildren().clear();
@@ -411,6 +420,59 @@ public class MainController extends Controller implements Initializable {
         try {
             AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/regToAfnView.fxml"));
             // this.mainContainer = root;
+            this.mainContainer.getChildren().clear();
+            AnchorPane.setTopAnchor(anchor, 0.0);
+            AnchorPane.setRightAnchor(anchor, 0.0);
+            AnchorPane.setLeftAnchor(anchor, 0.0);
+            AnchorPane.setBottomAnchor(anchor, 0.0);
+            this.mainContainer.getChildren().setAll(anchor);
+
+            anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+            anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // System.out.println("eror");
+        }
+    }
+
+    @FXML
+    public void handleReconnaissanceAFD_View() {
+        try {
+            this.vType = viewType.RECONNAISSANCE_VIEW;
+            ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/reconnaissance.fxml"));
+
+            loader.setControllerFactory(c -> {
+                return ReconnaissanceController.getReconnaissanceController(mediator , Algorithm.RECONNAISSANCE_AFD);
+            });
+
+            AnchorPane anchor = loader.load();
+            this.mainContainer.getChildren().clear();
+            AnchorPane.setTopAnchor(anchor, 0.0);
+            AnchorPane.setRightAnchor(anchor, 0.0);
+            AnchorPane.setLeftAnchor(anchor, 0.0);
+            AnchorPane.setBottomAnchor(anchor, 0.0);
+            this.mainContainer.getChildren().setAll(anchor);
+
+            anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+            anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // System.out.println("eror");
+        }
+    }
+
+    @FXML
+    public void handleReconnaissanceAFN_View() {
+        try {
+            this.vType = viewType.RECONNAISSANCE_VIEW;
+            ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/reconnaissance.fxml"));
+
+            loader.setControllerFactory(c -> {
+                return ReconnaissanceController.getReconnaissanceController(mediator, Algorithm.RECONNAISSANCE_AFN);
+            });
+            AnchorPane anchor = loader.load();
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
             AnchorPane.setRightAnchor(anchor, 0.0);
@@ -462,11 +524,11 @@ public class MainController extends Controller implements Initializable {
         }
         return list;
     }
-    
+
     // @FXML
     // public void exitApplication(ActionEvent event) {
-    //     System.out.println("Stage is closing");
-    //     Platform.exit();
+    // System.out.println("Stage is closing");
+    // Platform.exit();
     // }
 
     @Override
