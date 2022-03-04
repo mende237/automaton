@@ -75,7 +75,7 @@ public class AFD extends Automate {
     }
 
     @Override
-    public void makeImage(String path) {
+    public Graph markeGraph() {
         Graph g = graph("afd").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
                 .nodeAttr().with(Shape.CIRCLE);
 
@@ -84,6 +84,12 @@ public class AFD extends Automate {
                     .link(to(super.addState(this.matTrans[i].end))
                             .with(Label.of(this.matTrans[i].label))));
         }
+        return g;
+    }
+
+    @Override
+    public void makeImage(String path) {
+        Graph g = markeGraph();
         try {
           
             Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
@@ -268,4 +274,6 @@ public class AFD extends Automate {
         afd.makeImage("./test.png");
         System.out.println(afd);
     }
+
+   
 }

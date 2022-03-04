@@ -244,7 +244,8 @@ public class MainController extends Controller implements Initializable {
                     break;
                 case RECONNAISSANCE_VIEW:
                     message = new Message(ReconnaissanceController.getReconnaissanceController().getId(),
-                            path + ";" + automate.getPath());
+                            path);
+                    ReconnaissanceController.getReconnaissanceController().setAutomate(automate);
                     this.sendMessage(message);
                     break;
             }

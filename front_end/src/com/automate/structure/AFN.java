@@ -212,6 +212,19 @@ public class AFN extends Automate {
 
     @Override
     public void makeImage(String path) {
+        Graph g = this.markeGraph();
+        try {
+            Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public Graph markeGraph() {
+        
         Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
                 .nodeAttr().with(Shape.CIRCLE);
 
@@ -226,25 +239,7 @@ public class AFN extends Automate {
                                 .with(Label.of("\u03B5"))));
             }
         }
-        try {
-            Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println("test");
-    }
-
-    public static void main(String[] args) {
-        AFN afn = null;
-        try {
-            afn = AFN.jsonToAFN("/home/dimitri/automate_manip/back_end/afn.json", false);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        afn.makeImage("./test_afn.png");
-        System.out.println(afn);
+        return g;
     }
 
 }

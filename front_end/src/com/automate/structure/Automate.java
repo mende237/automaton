@@ -5,6 +5,7 @@ import static guru.nidi.graphviz.model.Factory.*;
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.attribute.Shape;
+import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 
 public abstract class Automate {
@@ -92,7 +93,7 @@ public abstract class Automate {
      **************************************************/
 
     public abstract void save(String path);
-
+    public abstract Graph markeGraph();
     public abstract void makeImage(String path);
 
     protected Node addState(State state) {

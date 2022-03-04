@@ -13,14 +13,6 @@ import com.automate.controller.MainController;
 import com.automate.inputOutput.Configuration;
 import com.automate.inputOutput.Messenger;
 
-import guru.nidi.graphviz.attribute.Color;
-import guru.nidi.graphviz.attribute.Label;
-import guru.nidi.graphviz.attribute.Rank;
-import guru.nidi.graphviz.attribute.Rank.RankDir;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
-import static guru.nidi.graphviz.model.Factory.*;
-import guru.nidi.graphviz.model.Graph;
 // import javafx.application.Application;
 // import javafx.stage.Stage;
 import javafx.application.Application;
@@ -46,12 +38,15 @@ public class App extends Application {
         messenger.setReceptionPath(config.getResponsePath());
         App.reset();
         launch();
+
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
         // Graph g =
         // graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT));
-
-        // g = g.with(node("a").with(Color.RED).link(node("b")),
+        // Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+        //         .nodeAttr().with(Shape.CIRCLE);
+                
+        // g.with(node("a").with(Color.RED).link(node("b")),
         // node("b").link(to(node("c")).with(Label.of("test"))),
         // node("a").link(node("c")),
         // node("b").link(node("a"))
@@ -90,7 +85,7 @@ public class App extends Application {
         // Graphviz.fromGraph(g).width(900).render(Format.PNG).toFile(new
         // File("./ex1.png"));
 
-        // System.out.println("fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     @Override
