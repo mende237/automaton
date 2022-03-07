@@ -23,7 +23,7 @@ AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label);
 elle prend en paramettre la fonction  equal_state qui permet de dire quand deux etats
 sont egaux , la fonction equal_lable qui joue presque le meme role que la fonction equal_state , elle
 permet de dire lorsque deux ettiquettes sont egaux*/
-boolean detect_AFD(AFD afd, void *word, int size);
+list detect_AFD(AFD afd, void *word, int size);
 
 // static void **delta_global_AFN(AFN afn, list state, boolean equal_value(void *lb1, void *lb2));
 

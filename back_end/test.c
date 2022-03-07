@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
 #include "./source/algorithm/AFN.c"
 #include "./source/algorithm/AFD.c"
 #include "./source/data_structure/linked_list.c"
@@ -259,78 +258,7 @@ char **add_data(int n, ...)
 
 int main()
 {
-MENU:
-    clearScreen();
-    // printf("***************************************TP_AUTOMATE*****************************************\n");
-    // printf("***********                                                            ****************\n");
-    // printf("**********                          1-ALGORITHME DE GLUSHKOV                         *********\n");
-    // printf("********                                                                                ******\n");
-    // printf("******                               2-ALGORITHME DE THOMSON                                 **\n");
-    // printf("****                                                                                         *\n");
-    // printf("***********                        3-brozzoski                            ****************\n");
-    // printf("****                                                                                         *\n");
-    // printf("********                          4-MINIMISATION                                  *********\n");
-    // printf("****                                                                                         *\n");
-    // printf("********                          5-CANONISATION                                  *********\n");
-    // printf("****                                                                                         *\n");
-    // printf("**                                6-DETERMINISATION                                        *\n");
-    // printf("*                                                                                         *\n");
-    // printf("*                               7-EPSILONE DETERMINISATION                              **\n");
-    // printf("*                                                                                     *\n");
-    // printf("*                          8-UNION D'AUTOMATE                                       *\n");
-    // printf("*                                                                                 *\n");
-    // printf("*                          9-INTERSECTION                                           *\n");
-    // printf("**                                                                                   **\n");
-    // printf("***                           10-COMPLETER                                       ***\n");
-    // printf("*****                                                                                ****\n");
-    // printf("***                           11-COMPLEMENTAIRE                                       ***\n");
-    // printf("*****                                                                                ****\n");
-    // printf("******                          12-MIROIR                                             *****\n");
-    // printf("*******                                                                           *********\n");
-    // printf("**********                          13-RECONNAISSANCE D'UN MOT                       *********\n");
-    // printf("*********                                                                           *********\n");
-    // printf("*******************************************************************************************\n");
-    //    char *tata = NULL;
-    //     printf("la taille est %d\n" , strlen(tata));
-    //    if(tata != NULL){
-    //    }
-    // list st1 = new_list();
-    // queue_insertion(st1 , "a");
-    // queue_insertion(st1 , NULL);
-    // list st2 = new_list();
-    // queue_insertion(st2, "a");
-    // queue_insertion(st2, "b");
-
-    // if(equal_state(st1,st2,0) == True){
-    //     printf("egale\n");
-    // }else{
-    //     printf("pas egale\n");
-    // }
-
     int user_rep = 1;
-    boolean is_new;
-    messenger = get_messenger();
-    config = get_config("../test.json");
-    print_config(config);
-    messenger->reception_path = config->request_path;
-    messenger->sending_path = config->response_path;
-
-    // Message message = {messenger->message.id , config->data_response_path , "instruction name"};
-    //send_result(messenger, message);
-    START:
-    is_new = check_new(messenger);
-
-    if (is_new == True)
-    {
-        printf("look there is news \n");
-        user_rep = receive_instruction(messenger);
-    }
-    else
-    {
-        printf("there is nothing \n");
-    }
-
-    printf("user rep %d\n" , user_rep);
     boolean restart = False;
     boolean rep = False;
 
@@ -351,12 +279,13 @@ MENU:
     char **trans = NULL;
     char *path = NULL;
     char *well_state;
+    char *word_path = NULL;
 
     list expression_list = NULL;
     list garbage = NULL;
     list word_list = NULL;
     list *result = NULL;
-    list mat_path = NULL;
+    list list_path = NULL;
     boolean is_afd = True;
 
     AFD afd = NULL;
@@ -365,131 +294,117 @@ MENU:
     AFD afd_result = NULL;
     AFN afn_result = NULL;
     AFD old_afd = NULL;
+    boolean is_new;
 
-    
-    // while (user_rep < 1 || user_rep > 15){
-    //     printf("QUE VOULEZ EXECUTER : ");
-    // }
-   
-    
+    messenger = get_messenger();
+    config = get_config("../config.json");
+    print_config(config);
+
+    Message message;
+    messenger->reception_path = config->request_path;
+    messenger->sending_path = config->response_path;
+
+START:
+    is_new = check_new(messenger);
+    if (is_new == True)
+    {
+        printf("look there is news \n");
+        user_rep = receive_instruction(messenger);
+        if (user_rep <= 0 || user_rep > 15)
+        {
+            goto QUIT;
+        }
+    }
+    else
+    {
+        printf("there is nothing \n");
+        goto END;
+    }
+
+    printf("user rep %d\n", user_rep);
+
     switch (user_rep)
     {
     case 1:
-        garbage = new_list();
-        expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
-
-        reg_expression = malloc(expression_list->length * sizeof(char *));
-
-        for (i = 0; i < expression_list->length; i++)
-        {
-            reg_expression[i] = get_element_list(expression_list, i);
-        }
-
-        afn = glushkov_algorithm(reg_expression, expression_list->length, garbage);
-        print_info_AFN(afn, print_trans_info);
-        
-        AFN_to_jason(afn , "afn.json");
-        afd = determinisation(afn, equal_st);
-
-        afd = rename_states(afd, True);
-
-        AFD_to_jason(afd , "afd.json");
-
-        print_info_AFD(afd, False, print_element_in_list);
-        print_AFD(afd, False, False, print_element_in_list, length_state);
-        free_AFD(afd, False);
-        free_elem_in_list(expression_list);
-        free_list(expression_list);
-        free(reg_expression);
-        free_AFN(afn);
-        break;
     case 2:
+        reg_expression = jason_to_word(messenger->message.dataPath);
+
         garbage = new_list();
-        expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
-
-        reg_expression = malloc(expression_list->length * sizeof(char *));
-
-        for (i = 0; i < expression_list->length; i++)
-        {
-            reg_expression[i] = get_element_list(expression_list, i);
+        if(user_rep == 1){
+            afn = glushkov_algorithm(reg_expression, calculate_length(reg_expression), garbage);
+            message = (Message){messenger->message.id, config->data_response_path, "glushkov"};
+        }else{
+            afn = thomson_algorithm(reg_expression, calculate_length(reg_expression), garbage);
+            message = (Message){messenger->message.id, config->data_response_path, "thomson"};
         }
 
-        afn = thomson_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
-        AFN_to_jason(afn, "afn.json");
+        AFN_to_jason(afn, config->data_response_path);
 
-        afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
-
-        afd = rename_states(afd, True);
-        AFD_to_jason(afd, "afd.json");
-
-        print_info_AFD(afd, False, print_element_in_list);
-        print_AFD(afd, False, False, print_element_in_list, length_state);
-        free_AFD(afd, False);
-        free_elem_in_list(expression_list);
-        free_list(expression_list);
-        free(reg_expression);
+        free_word(reg_expression);
         free_AFN(afn);
         break;
     case 3:
-        path = "/home/dimitri/Bureau/afd_test.txt";
         garbage = new_list();
-        afd = convert_file_to_AFD(path, garbage);
+        afd = jason_to_AFD("afd.json", garbage);
         brzozowski_AFD_to_REG(afd);
         free_AFD(afd, False);
-
         break;
     case 4:
-        path = "/home/dimitri/Bureau/afd3.txt";
         garbage = new_list();
-        afd = jason_to_AFD("./afd.json" , garbage);
+        afd = jason_to_AFD(messenger->message.dataPath, garbage);
         print_info_AFD(afd, False, print_element_in_list);
-        print_transitions_AFD(afd , print_trans_info);
+        print_transitions_AFD(afd, print_trans_info);
         afd_result = hopcroft_minimisation(afd, equal_label, print_element_in_list);
-        
-        afd_result = rename_states(afd_result, True);
-        //afd_result = brzozowski_minimisation(afd ,equal_label);
 
+        afd_result = rename_states(afd_result, True);
         print_info_AFD(afd_result, False, print_element_in_list);
         print_AFD(afd_result, False, False, print_element_in_list, length_state);
-        AFD_to_jason(afd_result, "afd_min.json");
+        AFD_to_jason(afd_result, config->data_response_path);
 
         free_AFD(afd, False);
-        free_AFD(afd_result , False);
-        printf("test ok");
+        free_AFD(afd_result, False);
+        message = (Message){messenger->message.id, config->data_response_path, "hopcroft determinisation"};
+
         break;
     case 5:
         garbage = new_list();
-        afd = jason_to_AFD("./afd_complet.json", garbage);
-        if(is_well_state_in_AFD(afd) == True){
-            printf("etat puit detecté\n");
-        }else{
-            printf("pas d'etat puit\n");
-        }
-        free_AFD(afd , False);
+        afd = jason_to_AFD(messenger->message.dataPath, garbage);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_transitions_AFD(afd, print_trans_info);
+        afd_result = brzozowski_minimisation(afd, equal_label);
+
+        print_info_AFD(afd_result, False, print_element_in_list);
+        print_AFD(afd_result, False, False, print_element_in_list, length_state);
+        AFD_to_jason(afd_result, config->data_response_path);
+
+        free_AFD(afd, False);
+        free_AFD(afd_result, False);
+        message = (Message){messenger->message.id, config->data_response_path, "brzozowski determinisation"};
         break;
     case 6:
     case 7:
-        path = "/home/dimitri/Bureau/automate_test.txt";
         garbage = new_list();
-        //afn = convert_file_to_AFN(path, garbage);
-        afn = jason_to_AFN("./afn.json" , garbage);
+        afn = jason_to_AFN(messenger->message.dataPath, garbage);
         print_info_AFN(afn, print_trans_info);
         if (user_rep == 6)
         {
             afd = determinisation(afn, equal_st);
+            message = (Message){messenger->message.id, config->data_response_path, "determinisation"};
         }
         else
         {
             afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
+            message = (Message){messenger->message.id, config->data_response_path, "epsilone determinisation"};
         }
-
+        afd = rename_states(afd, True);
+        AFD_to_jason(afd, config->data_response_path);
         printf("L'AUTOMATE DETERMINISTE CORRESPONDANT EST :\n");
 
-        print_info_AFD(afd, True, print_element_in_list);
-        print_AFD(afd, True, False, print_element_in_list, length_state);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_AFD(afd, False, False, print_element_in_list, length_state);
 
-        free_AFD(afd, True);
+        free_AFD(afd, False);
         free_AFN(afn);
         break;
     case 8:
@@ -526,7 +441,6 @@ MENU:
             }
 
             old_afd = afd_result;
-
 
             for (i = 2; i < nbr_automate; i++)
             {
@@ -601,78 +515,108 @@ MENU:
         break;
     case 10:
         well_state = "puit";
-        path = "/home/dimitri/Bureau/afd_test.txt";
-
         garbage = new_list();
 
-        afd = jason_to_AFD("./afd_min.json", garbage);
+        afd = jason_to_AFD(messenger->message.dataPath, garbage);
         completer_AFD(afd, well_state, equal_st);
         print_info_AFD(afd, False, print_element_in_list);
         print_AFD(afd, False, False, print_element_in_list, length_state);
-        AFD_to_jason(afd , "afd_complet.json");
+        AFD_to_jason(afd, config->data_response_path);
         free_AFD(afd, False);
+        message = (Message){messenger->message.id, config->data_response_path, "completion"};
         break;
     case 11:
         well_state = "puit";
-        path = "/home/dimitri/Bureau/afd_test.txt";
         garbage = new_list();
-        afd = convert_file_to_AFD(path, garbage);
+        afd = jason_to_AFD(messenger->message.dataPath, garbage);
         afd_result = complementaire_AFD(afd, well_state, equal_st);
 
         print_info_AFD(afd_result, False, print_element_in_list);
         print_AFD(afd_result, False, False, print_element_in_list, length_state);
 
+        AFD_to_jason(afd_result, config->data_response_path);
         free_AFD(afd_result, False);
         free_AFD(afd, False);
+        message = (Message){messenger->message.id, config->data_response_path, "complementaire"};
         break;
     case 12:
+    case 13:
         garbage = new_list();
-        is_afd = False;
-        if (is_afd == True)
+        if (user_rep == 12)
         {
-            path = "/home/dimitri/Bureau/afd_test.txt";
-            afd = convert_file_to_AFD(path, garbage);
+            afd = jason_to_AFD(messenger->message.dataPath, garbage);
+            print_info_AFD(afd, False, print_element_in_list);
+            print_transitions_AFD(afd, print_trans_info);
+
             afn_result = miroir_AFD(afd);
             free_AFD(afd, False);
+            message = (Message){messenger->message.id, config->data_response_path, "miroir AFD"};
         }
         else
         {
-            path = "/home/dimitri/Bureau/automate_test.txt";
-            afn = convert_file_to_AFN(path, garbage);
+            afn = jason_to_AFN(messenger->message.dataPath, garbage);
             print_info_AFN(afn, print_trans_info);
             afn_result = miroir_AFN(afn);
             free_AFN(afn);
+            message = (Message){messenger->message.id, config->data_response_path, "miroir AFN"};
         }
 
+        AFN_to_jason(afn_result, config->data_response_path);
         print_info_AFN(afn_result, print_trans_info);
         free_AFN(afn_result);
         break;
-    default:
+    case 14:
+    case 15:
         garbage = new_list();
-        path = "/home/dimitri/Bureau/automate_test.txt";
-        afn = convert_file_to_AFN(path, garbage);
-        print_info_AFN(afn, print_trans_info);
-        exp = calloc(255, sizeof(char));
-        scanf("%s", exp);
-        word = convert_to_word(exp);
-        mat_path = detect_AFN(afn , word , strlen(exp));
-        // if(verdic == True){
-        //     printf("reconnu!!!!!!\n");
-        // }else{
-        //     printf("non reconnu!!!!!!\n");
-        // }
-
-        for ( i = 0; i < mat_path->length; i++)
+        word_path = concat(messenger->message.dataPath, "/word.json", strlen(messenger->message.dataPath), strlen("/word.json"));
+        word = jason_to_word(word_path);
+        if (user_rep == 14)
         {
-            list temp_list = get_element_list(mat_path, i);
-            print_list(temp_list, print_element_in_list);
-            free_list(temp_list);
-            printf("\n");
+            path = concat(messenger->message.dataPath, "/afd.json", strlen(messenger->message.dataPath), strlen("/afd.json"));
+            printf("path automate %s \n" , path);
+            printf("path word %s \n", word_path);
+            afd = jason_to_AFD(path, garbage);
+            print_info_AFD(afd, False, print_element_in_list);
+            print_transitions_AFD(afd, print_trans_info);
+            list_path = detect_AFD(afd, word, calculate_length(word));
+            message = (Message){messenger->message.id, config->data_response_path, "reconnaissance AFD"};
+            for (i = 0; i < list_path->length; i++)
+            {
+                list temp_list = get_element_list(list_path, i);
+                print_list(temp_list, print_element_in_list);
+                printf("\n");
+            }
         }
-        
-        free_list(mat_path);
-        free(exp);
+        else
+        {
+            path = concat(messenger->message.dataPath, "/afn.json", strlen(messenger->message.dataPath), strlen("/afn.json"));
+            afn = jason_to_AFN(path, garbage);
+            print_info_AFN(afn, print_trans_info);
+            list_path = detect_AFN(afn, word, calculate_length(word));
+
+            message = (Message){messenger->message.id, config->data_response_path, "reconnaissance AFN"};
+
+            for (i = 0; i < list_path->length; i++)
+            {
+                list temp_list = get_element_list(list_path, i);
+                print_list(temp_list, print_element_in_list);
+                printf("\n");
+            }
+        }
+
+        path_to_jason(list_path, config->data_response_path);
+
+        for (i = 0; i < list_path->length; i++)
+        {
+            free_list(get_element_list(list_path, i));
+        }
+        free_list(list_path);
+        free(path);
+        free(word_path);
         free_word(word);
+        break;
+    default:
+        user_rep = -1;
         break;
     }
 
@@ -682,10 +626,15 @@ MENU:
     }
     free_list(garbage);
 
+    send_result(messenger, message);
+    free(messenger->message.dataPath);
+    free(messenger->message.name);
+END:
     goto START;
-    //user_rep = 0;
-    // } while (user_rep == 1);
-    free(messenger);
-    free(config);
-    return 0;
+
+QUIT:
+    free_messenger(messenger);
+    free_config(config);
+
+    return EXIT_SUCCESS;
 }

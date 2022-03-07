@@ -1,6 +1,9 @@
 #ifndef UTILITAIRE_C
 #define UTILITAIRE_C
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <cjson/cJSON.h>
 #include "../../header/algorithm/utilitaire.h"
 #include "../data_structure/linked_list.c"
 #include "../../source/data_structure/stack.c"
@@ -164,7 +167,7 @@ int get_nbre_label(char **expression, int length)
     return cmpt;
 }
 
-list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void *x, boolean l))
+list *detect_word(AFD afd, boolean sp_st, list word_list, void print_state(void *x, boolean l))
 {
     int i = 0, length = 0;
     boolean verdit;
@@ -176,8 +179,16 @@ list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void
         char **word = get_element_list(word_list, i);
         length = calculate_length(word);
 
-        //if(sp_state == False){
-        verdit = detect_AFD(afd, word, length);
+        // if(sp_state == False){
+        list tab_path = detect_AFD(afd, word, length);
+        list path = get_element_list(tab_path, 0);
+        for (i = 0; i < afd->nbre_finale_state; i++)
+        {
+            if (strcmp((char *)get_element_list(path, path->length - 1), afd->finale_state[i]) == 0)
+            {
+                return True;
+            }
+        }
         // }else{
         //     verdit = detect(afd, word, length, equal_special_state, equal_label);
         // }
@@ -190,6 +201,9 @@ list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void
         {
             head_insertion(result[1], word);
         }
+
+        free_list(get_element_list(tab_path, 0));
+        free_list(tab_path);
     }
     return result;
 }
@@ -202,6 +216,50 @@ int calculate_length(char **word)
         i++;
     }
     return i;
+}
+
+char **jason_to_word(char *path)
+{
+    FILE *file = fopen(path, "r");
+    if (file != NULL)
+    {
+        fseek(file, 0, SEEK_END);
+        long fsize = ftell(file);
+        rewind(file);
+
+        char *buffer = malloc(fsize + 1);
+        fread(buffer, fsize, 1, file);
+        fclose(file);
+        buffer[fsize] = 0;
+
+        cJSON *json_word = cJSON_Parse(buffer);
+        free(buffer);
+        cJSON *tab = cJSON_GetObjectItemCaseSensitive(json_word, "word");
+
+        cJSON *string = NULL;
+
+        int i = 0;
+        int size = cJSON_GetArraySize(tab);
+        char **main_word = calloc(size + 1, sizeof(char *));
+        cJSON_ArrayForEach(string, tab)
+        {
+            main_word[i] = calloc(strlen(string->valuestring), sizeof(char));
+            strcpy(main_word[i], string->valuestring);
+            i++;
+        }
+
+        main_word[size] = NULL;
+        for (i = 0; i < size; i++)
+        {
+            printf("%s " , main_word[i]);
+        }
+        printf("\n");
+        // strcpy(word , cJSON_GetStringValue(json_word));
+        cJSON_Delete(json_word);
+        return main_word;
+    }
+
+    return NULL;
 }
 
 char **convert_to_word(char *word)
@@ -387,7 +445,7 @@ AFN convert_file_to_AFN(char *path, list garbage)
                 state = calloc(strlen(token), sizeof(char));
                 strcpy(state, token);
                 final_state[i] = state;
-                //printf("%s" , state);
+                // printf("%s" , state);
                 token = strtok(NULL, ",");
                 head_insertion(garbage, state);
             }
@@ -436,7 +494,7 @@ AFN convert_file_to_AFN(char *path, list garbage)
 
 /*cette fonction permet de lire l'expression reguliere que l'utilisateur va entre
 au clavier*/
-list read_expression(int length ,char *path, boolean from_file)
+list read_expression(int length, char *path, boolean from_file)
 {
     int i = 0, j = 0;
     char *exp = NULL;
@@ -444,19 +502,21 @@ list read_expression(int length ,char *path, boolean from_file)
     list operande = new_list();
     boolean was_operator = False;
 
-    if(from_file == True){
-        FILE *file = fopen(path , "r");
-        char *line = calloc(length , sizeof(char));
-        fgets(line , length - 1 , file);
+    if (from_file == True)
+    {
+        FILE *file = fopen(path, "r");
+        char *line = calloc(length, sizeof(char));
+        fgets(line, length - 1, file);
         line[strlen(line) - 1] = '\0';
-        printf("%s\n" , line);
-        exp = calloc(strlen(line) , sizeof(char));
-        strcpy(exp , line);
+        // printf("%s\n" , line);
+        exp = calloc(strlen(line), sizeof(char));
+        strcpy(exp, line);
         fclose(file);
-    }else{
+    }
+    else
+    {
         scanf("%s", exp);
     }
-
 
     for (i = 0; exp[i] != '\0'; i++)
     {
@@ -523,8 +583,8 @@ list read_expression(int length ,char *path, boolean from_file)
         free(tmp_ch);
         tmp_ch = NULL;
     }
-
     queue_insertion(expression_list, tmp);
+
     free(exp);
     free_list(operande);
     return expression_list;
@@ -578,10 +638,41 @@ char **convert_to_transition(char *exp)
     return trans;
 }
 
+void path_to_jason(list path_list, char *road)
+{
+    int i = 0, j = 0;
+    cJSON *path_objet = cJSON_CreateObject();
+    cJSON *tab_path = cJSON_CreateArray();
+    cJSON_AddItemToObject(path_objet, "path list", tab_path);
+    char *name = "path";
+    for (i = 0; i < path_list->length; i++)
+    {
+        cJSON *path = cJSON_CreateArray();
+        list li = get_element_list(path_list, i);
+        for (j = 0; j < li->length; j++)
+        {
+            cJSON_AddItemToArray(path, cJSON_CreateString((char *)get_element_list(li, j)));
+        }
+        cJSON_AddItemToArray(tab_path, path);
+    }
+
+    char *result = cJSON_Print(path_objet);
+    cJSON_Delete(path_objet);
+
+    FILE *file = fopen(road, "w");
+
+    if (file == NULL)
+        exit(1);
+
+    fputs(result, file);
+    fclose(file);
+    free(result);
+}
+
 char *concat(char *ch1, char *ch2, int length1, int length2)
 {
-    char *ch_result = malloc((length1 + length2) * sizeof(char));
-    strcat(ch_result, ch1);
+    char *ch_result = malloc((length1 + length2 + 2) * sizeof(char));
+    strcpy(ch_result, ch1);
     strcat(ch_result, ch2);
 
     return ch_result;
@@ -595,7 +686,7 @@ void free_elem_in_list(list li)
         for (i = 0; i < li->length; i++)
         {
             char *tmp = get_element_list(li, i);
-            //printf("suppression de %s" , tmp);
+            // printf("suppression de %s" , tmp);
             free(tmp);
             tmp = NULL;
         }
@@ -670,7 +761,7 @@ void print_info_AFN(AFN afn, void print_info(void *src, void *lbl, void *dest))
         }
         printf("}\n");
     }
-    
+
     printf("les differentes transitions sont :\n\n");
     print_transitions_AFN(afn, print_info);
 }
@@ -681,7 +772,7 @@ void print_info_AFD(AFD afd, boolean state_list, void print_value_list(void *, b
     if (state_list == False)
     {
         char *initial = afd->initiale_state;
-        //char **finale_state = afc->finale_state;
+        // char **finale_state = afc->finale_state;
         printf("l'etat initiale est : %s\n", initial);
         printf("l'ensemble des etat finaux est : {");
         for (i = 0; i < afd->nbre_finale_state; i++)
@@ -712,7 +803,7 @@ void print_info_AFD(AFD afd, boolean state_list, void print_value_list(void *, b
         printf("l'ensemble des etat finaux est : { ");
         for (i = 0; i < afd->nbre_finale_state; i++)
         {
-            print_list(afd->finale_state[i] , print_value_list);
+            print_list(afd->finale_state[i], print_value_list);
             if (i < afd->nbre_finale_state - 1)
             {
                 printf(" , ");
@@ -722,7 +813,7 @@ void print_info_AFD(AFD afd, boolean state_list, void print_value_list(void *, b
         printf("}\n");
     }
     printf("la table de transition est :\n\n");
-    //print_transitions_AFD(afd, print_trans);
+    // print_transitions_AFD(afd, print_trans);
 }
 
 #endif

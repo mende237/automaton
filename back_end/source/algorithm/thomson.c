@@ -30,7 +30,6 @@ AFN thomson_algorithm(char **expression, int length, list garbage)
     for (i = 0; i < li_result->length; i++)
     {
         result[i] = get_element_list(li_result, i);
-
     }
 
     tree t = convert_post_to_thomson_tree(result, li_result->length , garbage);

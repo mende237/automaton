@@ -1,16 +1,17 @@
 #ifndef AFD_C
 #define AFD_C
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <cjson/cJSON.h>
+
 #include "../../header/algorithm/AFD.h"
 #include "../../header/data_structure/structure.h"
 #include "../../source/data_structure/stack.c"
 #include "../../source/data_structure/linked_list.c"
 #include "../../source/algorithm/function.c"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <cjson/cJSON.h>
 
 AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label)
 {
@@ -19,6 +20,8 @@ AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label)
     afd->nbre_label = nbre_label;
     afd->nbre_state = nbre_state;
     afd->nbre_finale_state = nbre_finale_state;
+    afd->mat_state = NULL;
+    afd->state_tab = NULL;
     afd->mat_trans = calloc(nbre_label * nbre_state , sizeof(void **));
     afd->finale_state = calloc(nbre_finale_state, sizeof(void *));
     afd->tab_labels = calloc(nbre_label, sizeof(void *));
@@ -85,8 +88,11 @@ void *delta_AFD(AFD afd, void *state, void *symbole)
 
 /*cette fonction teste si un mot donné est reconnu par un AFD (automate
 fini deterministe)*/
-boolean detect_AFD(const AFD afd, void *word, int size)
+list detect_AFD(const AFD afd, void *word, int size)
 {
+    list path = new_list();
+    list tab_path = new_list();
+
     void **mot = word;
     void *q0 = afd->initiale_state;
     int i = 0;
@@ -95,22 +101,27 @@ boolean detect_AFD(const AFD afd, void *word, int size)
     for (i = 0; i < size; i++)
     {
         void *symbole = mot[i];
+        queue_insertion(path, q);
+        queue_insertion(path, symbole);
         q = delta_AFD(afd, q, symbole);
 
         if (q == NULL)
         {
-            return False;
+            queue_insertion(tab_path, path);
+            return tab_path;
         }
+        // else
+        // {
+        // }
     }
 
-    for (i = 0; i < afd->nbre_finale_state; i++)
+    if (q != NULL)
     {
-        if (strcmp(q, afd->finale_state[i]) == 0)
-        {
-            return True;
-        }
+        queue_insertion(path, q);
     }
-    return False;
+
+    queue_insertion(tab_path , path);
+    return tab_path;
 }
 
 /*la fonction equal value permet de verifier l'egaliter entre l'element val et un
@@ -933,7 +944,7 @@ AFD rename_states(AFD afd, boolean permut)
     afd_result->mat_trans = mat_trans;
     free(afd_result->finale_state);
     afd_result->finale_state = finale_state;
-
+    list test = afd->state_tab[afd->nbre_state - 1];
     free_AFD(afd, True);
     // char *st1;
     // char *begin;
@@ -1718,7 +1729,6 @@ void free_AFD(AFD afd, boolean is_state_list)
         {
             if (is_state_list == True)
             {
-                free_list(afd->initiale_state);
                 list temp_list = afd->state_tab[afd->nbre_state - 1];
                 // on libere l'etat puit qui est dans le tableau des etats
                 if (is_empty_list(temp_list) == True || (temp_list->length >= 2 && get_element_list(temp_list, 0) == NULL && get_element_list(temp_list, 1) == NULL))
@@ -1730,6 +1740,7 @@ void free_AFD(AFD afd, boolean is_state_list)
                 {
                     free_transition(afd->mat_state[i], afd->nbre_label);
                 }
+                free_list(afd->initiale_state);
 
             }
             else
@@ -1739,6 +1750,7 @@ void free_AFD(AFD afd, boolean is_state_list)
                     free(afd->mat_state[i]);
                 }
             }
+            free(afd->state_tab);
         }
 
         for (i = 0; i < afd->nbre_label * afd->nbre_state; i++)
@@ -1753,7 +1765,6 @@ void free_AFD(AFD afd, boolean is_state_list)
 
         free(afd->mat_trans);
         free(afd->mat_state);
-        free(afd->state_tab);
         free(afd->tab_labels);
         free(afd->finale_state);
         free(afd);

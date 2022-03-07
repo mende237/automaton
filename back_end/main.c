@@ -2,12 +2,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "./source/algorithm/AFN.c"
 #include "./source/algorithm/AFD.c"
 #include "./source/data_structure/linked_list.c"
 #include "./source/algorithm/thomson.c"
 #include "./source/algorithm/glushkov.c"
 #include "./source/algorithm/utilitaire.c"
+#include "./source/algorithm/brzozowski.c"
+#include "./source/algorithm/hopcroft.c"
+
+#include "./source/inputOutput/messenger.c"
+#include "./source/inputOutput/configuration.c"
 
 char **add_data(int n, ...);
 void clearScreen();
@@ -16,13 +22,14 @@ void print_element_in_list(void *x, boolean last);
 void print_tree_info(void *x);
 void print_trans_info(void *src, void *lbl, void *dest);
 void print_trans_list_info(void *src, void *lbl, void *dest);
-int length_state_list(void *x);
+int length_state(void *x, boolean is_state_list);
 int length_label(void *c);
 
 boolean confirm_expression(char **reg_expression, int length);
 boolean confirm(int user_rep);
 boolean equal_special_state(void *st1, void *st2);
-boolean equal_st(void *st1, void *st2);
+boolean equal_label(void *lbl1, void *lbl2, ...);
+boolean equal_st(void *st1, void *st2, ...);
 
 void clearScreen()
 {
@@ -56,20 +63,6 @@ boolean confirm_expression(char **reg_expression, int length)
     return True;
 }
 
-boolean confirm(int user_rep)
-{
-
-    while (user_rep != 0 && user_rep != 1)
-    {
-        printf("ENTRER OUI = 1 NON = 0\n");
-        scanf("%d", &user_rep);
-    }
-    if (user_rep == 0)
-        return False;
-
-    return True;
-}
-
 int length_state(void *x, boolean is_state_list)
 {
     if (is_state_list == True)
@@ -81,7 +74,14 @@ int length_state(void *x, boolean is_state_list)
             for (i = 0; i < li->length; i++)
             {
                 char *tmp = get_element_list(li, i);
-                length += strlen(tmp);
+                if (tmp != NULL)
+                {
+                    length += strlen(tmp);
+                }
+                else
+                {
+                    length += 4;
+                }
             }
 
             length += li->length + 1;
@@ -94,14 +94,16 @@ int length_state(void *x, boolean is_state_list)
     return strlen(x) + 2;
 }
 
-int length_label(void *c){
+int length_label(void *c)
+{
     char *lbl = c;
     return strlen(lbl);
 }
 
-void print_label(void *val){
+void print_label(void *val)
+{
     char *ch = val;
-    printf("%s" , ch);
+    printf("%s", ch);
 }
 
 void print_trans_info(void *src, void *lbl, void *dest)
@@ -147,6 +149,11 @@ void print_info2(void *src, void *lbl, void *dest)
 void print_element_in_list(void *x, boolean last)
 {
     char *value = x;
+    if (value == NULL)
+    {
+        value = "vide";
+    }
+
     if (last == False)
     {
         printf("%s,", value);
@@ -175,7 +182,7 @@ void print_tree_info(void *x)
     }
 }
 
-boolean equal_st(void *st1, void *st2)
+boolean equal_st(void *st1, void *st2, ...)
 {
     char *ch1 = st1;
     char *ch2 = st2;
@@ -220,7 +227,7 @@ boolean equal_special_state(void *li1, void *li2)
     }
 }
 
-boolean equal_label(void *lbl1, void *lbl2)
+boolean equal_label(void *lbl1, void *lbl2, ...)
 {
     char *ch1 = lbl1;
     char *ch2 = lbl2;
@@ -251,27 +258,32 @@ char **add_data(int n, ...)
 
 int main()
 {
-MENU:
-    clearScreen();
-    printf("***************************************TP_AUTOMATE*****************************************\n");
-    printf("****************                                                           ****************\n");
-    printf("*******                          1-ALGORITHME DE GLUSHKOV                         *********\n");
-    printf("*****                                                                                ******\n");
-    printf("**                               2-ALGORITHME DE THOMSON                                 **\n");
-    printf("*                                                                                         *\n");
-    printf("*                                3-DETERMINISATION                                        *\n");
-    printf("*                                                                                         *\n");
-    printf("**                               4-EPSILONE DETERMINISATION                              **\n");
-    printf("*****                                                                                ******\n");
-    printf("*******                          5-RECONNAISSANCE D'UN MOT                        *********\n");
-    printf("****************                                                           ****************\n");
-    printf("*******************************************************************************************\n");
+    char *test1 = calloc(6 , sizeof(char));
+    test1[0] = 'a';
+    test1[1] = 'b';
+    test1[2] = 'c';
+    test1[3] = 'd';
+    test1[4] = 'e';
+    printf("before %s %d\n",test1 , (int)strlen(test1));
+    test1[strlen(test1)-1] = '\0';
+    test1[0] = '\n';
+    printf("after  %s %d\n", test1, (int)strlen(test1));
 
+    //test1 += 1;
+    // free(test1);
+    // char *test = calloc((strlen(test1)+5) , sizeof(char));
+    // strcpy(test , test1);
+    // strcat(test, " adad");
+    // free(test1);
+    // printf("%s\n" , test);
+
+    int user_rep = 12;
+    scanf("%d" , &user_rep);
+    printf("user rep %d\n", user_rep);
     boolean restart = False;
     boolean rep = False;
 
     int length = 0;
-    int user_rep = 1;
     int word_length = 0;
 
     int nbr_state = 2;
@@ -286,533 +298,360 @@ MENU:
     char **reg_expression = NULL;
     char **word = NULL;
     char **trans = NULL;
+    char *path = NULL;
+    char *well_state;
+    char *word_path = NULL;
 
     list expression_list = NULL;
     list garbage = NULL;
     list word_list = NULL;
     list *result = NULL;
-    list good_word = NULL;
-    list bad_word = NULL;
+    list list_path = NULL;
+    boolean is_afd = True;
 
     AFD afd = NULL;
     AFN afn = NULL;
 
-    do
-    {
-        printf("QUE VOULEZ EXECUTER : ");
-        scanf("%d", &user_rep);
-    } while (user_rep < 1 && user_rep > 5);
+    AFD afd_result = NULL;
+    AFN afn_result = NULL;
+    AFD old_afd = NULL;
 
-    // do
-    // {
     switch (user_rep)
     {
     case 1:
-    READ_EXPRESSION_G:
-        printf("\nENTRER L'EXPRESSION REGULIERE EN N'OMETTANT PAS LE SYMBOLE '.' \n");
-        expression_list = read_expression(255);
-
-        reg_expression = malloc(expression_list->length * sizeof(char *));
+        garbage = new_list();
+        expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
+        
+        //reg_expression = malloc(expression_list->length * sizeof(char *));
 
         for (i = 0; i < expression_list->length; i++)
         {
-            reg_expression[i] = get_element_list(expression_list, i);
+            //reg_expression[i] = get_element_list(expression_list, i);
+            printf("%s", (char *)get_element_list(expression_list, i));
         }
-        rep = confirm_expression(reg_expression, expression_list->length);
-        if (rep == False)
-            goto READ_EXPRESSION_G;
 
-        printf("\n");
-        afn = glushkov_algorithm(reg_expression, expression_list->length);
-        print_info_AFN(afn, print_trans_info);
+        // afn = glushkov_algorithm(reg_expression, expression_list->length, garbage);
+        // print_info_AFN(afn, print_trans_info);
 
-        printf("VOULEZ VOUS DETERMINISER CET AUTOMATE ?");
-        scanf("%d", &user_rep);
+        // AFN_to_jason(afn, "afn.json");
+        // afd = determinisation(afn, equal_st);
 
-        if (user_rep == 1)
-        {
-            afd = determinisation(afn,equal_st ,print_element_in_list);
+        // afd = rename_states(afd, True);
 
-            print_transitions_AFD(rename_states(afd, 1) , print_trans_info);
-        }
-        else
-        {
+        // AFD_to_jason(afd, "afd.json");
 
-            restart = True;
-            free_elem_in_list(expression_list);
-            free_list(expression_list);
-            free(reg_expression);
-            free_AFN(afn);
-            clearScreen();
-            goto MENU;
-        }
-        print_AFD(afd ,True, print_element_in_list , length_state);
+        // print_info_AFD(afd, False, print_element_in_list);
+        // print_AFD(afd, False, False, print_element_in_list, length_state);
+        // free_AFD(afd, False);
+        // free_elem_in_list(expression_list);
+        // free_list(expression_list);
+        // free(reg_expression);
+        // free_AFN(afn);
         break;
-        print_info_AFD(afd, True, print_element_in_list, print_trans_list_info);
-
-        //print_transitions_AFD(afd, print_trans_list_info);
-        printf("VOULEZ VOUS VERIFIER SI UN MOT EST RECONNU PAR CET AUTOMATE? :");
-        scanf("%d", &user_rep);
-        rep = confirm(user_rep);
-
-        if (user_rep == 1)
-        {
-        READ_WORD1:
-            word_list = new_list();
-            printf("ENTRER UNE LISTE DE MOTS DONT VOUS VOULEZ RECONNAITRE ENTRER end POUR ARRETER:\n");
-            do
-            {
-
-                exp = calloc(255, sizeof(char));
-                scanf("%s", exp);
-                if (strcmp(exp, "end") != 0)
-                {
-                    //on doit free chaque element de ce tableau
-                    word = convert_to_word(exp);
-                    head_insertion(word_list, word);
-                }
-            } while (strcmp(exp, "end") != 0);
-
-            result = detect_word(afd, True , equal_special_state, equal_label, word_list , print_element_in_list);
-            printf("\nL'ENSEMBLE DES MOTS RECONNU PAR CET AUTOMATE SONT :\n");
-            print_result(result[0]);
-            printf("L'ENSEMBLE DES MOTS QUI NE SONT PAS RECONNUS SONT :\n");
-            print_result(result[1]);
-            printf("VOULEZ VOUS RECONNAITRE D'AUTRE MOTS ? OUI = 1 NON = 0 ? : ");
-
-            scanf("%d", &user_rep);
-            if (confirm(user_rep) == False)
-            {
-                restart = True;
-            }
-            else
-            {
-                restart = False;
-            }
-
-            for (i = 0; i < word_list->length; i++)
-            {
-                free_word(get_element_list(word_list, i));
-            }
-
-            free_list(word_list);
-            free(result[0]);
-            free(result[1]);
-        }
-        else
-        {
-            restart = True;
-        }
-
-        clearScreen();
-        if (restart == True)
-        {
-            free_elem_in_list(expression_list);
-            free_list(expression_list);
-            free(reg_expression);
-            free_AFD(afd , True);
-            free_AFN(afn);
-            goto MENU;
-        }
-        else
-        {
-            clearScreen();
-            goto READ_WORD1;
-        }
-
-        break;
-
     case 2:
-    READ_EXPRESSION_T:
-        printf("\nENTRER L'EXPRESSION REGULIERE EN OMETTANT PAS LE SYMBOLE '.' \n");
+        garbage = new_list();
+        expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
 
-        expression_list = read_expression(255);
         reg_expression = malloc(expression_list->length * sizeof(char *));
 
         for (i = 0; i < expression_list->length; i++)
         {
             reg_expression[i] = get_element_list(expression_list, i);
         }
-        rep = confirm_expression(reg_expression, expression_list->length);
-        if (rep == False)
-            goto READ_EXPRESSION_T;
 
-        afn = thomson_algorithm(reg_expression, expression_list->length,print_trans_info);
+        afn = thomson_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
+        AFN_to_jason(afn, "afn.json");
 
-        printf("VOULEZ VOUS DETERMINISER CET AUTOMATE ?");
-        scanf("%d", &user_rep);
+        afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
 
-        if (user_rep == 1)
-        {
-            afd = epsilone_determinisation(afn,equal_st,print_element_in_list);
-            rename_states(afd, 1);
-        }
-        else
-        {
+        afd = rename_states(afd, True);
+        AFD_to_jason(afd, "afd.json");
 
-            free_elem_in_list(expression_list);
-            free_list(expression_list);
-            free(reg_expression);
-            free_AFN(afn);
-            clearScreen();
-            goto MENU;
-        }
-
-        print_info_AFD(afd, True, print_element_in_list, print_trans_list_info);
-        print_AFD(afd,True, print_element_in_list, length_state);
-
-        printf("VOULEZ VOUS VERIFIER SI UN MOT EST RECONNU PAR CET AUTOMATE? :");
-        scanf("%d", &user_rep);
-        rep = confirm(user_rep);
-
-        if (user_rep == 1)
-        {
-        READ_WORD2:
-            word_list = new_list();
-            printf("ENTRER UNE LISTE DE MOTS DONT VOUS VOULEZ RECONNAITRE ENTRER end POUR ARRETER:\n");
-            do
-            {
-
-                exp = calloc(255, sizeof(char));
-                scanf("%s", exp);
-                if (strcmp(exp, "end") != 0)
-                {
-                    //on doit free chaque element de ce tableau
-                    word = convert_to_word(exp);
-                    head_insertion(word_list, word);
-                }
-            } while (strcmp(exp, "end") != 0);
-
-            result = detect_word(afd,True, equal_special_state, equal_label, word_list , print_element_in_list);
-            printf("\nL'ENSEMBLE DES MOTS RECONNU PAR CET AUTOMATE SONT :\n");
-            print_result(result[0]);
-            printf("L'ENSEMBLE DES MOTS QUI NE SONT PAS RECONNUS SONT :\n");
-            print_result(result[1]);
-            printf("VOULEZ VOUS RECONNAITRE D'AUTRE MOTS ? OUI = 1 NON = 0 ? : ");
-
-            scanf("%d", &user_rep);
-            if (confirm(user_rep) == False)
-            {
-                restart = True;
-            }
-            else
-            {
-                restart = False;
-            }
-
-            for (i = 0; i < word_list->length; i++)
-            {
-                free_word(get_element_list(word_list, i));
-            }
-
-            free_list(word_list);
-            free(result[0]);
-            free(result[1]);
-        }
-        else
-        {
-            restart = True;
-        }
-
-        if (restart == True)
-        {
-            free_elem_in_list(expression_list);
-            free_list(expression_list);
-            free(reg_expression);
-            free_AFD(afd , True);
-            free_AFN(afn);
-            goto MENU;
-        }
-        else
-        {
-            clearScreen();
-            goto READ_WORD2;
-        }
+        print_info_AFD(afd, False, print_element_in_list);
+        print_AFD(afd, False, False, print_element_in_list, length_state);
+        free_AFD(afd, False);
+        free_elem_in_list(expression_list);
+        free_list(expression_list);
+        free(reg_expression);
+        free_AFN(afn);
         break;
     case 3:
-    case 4:
-    READ_AFN:
         garbage = new_list();
-        printf("ENTRER LE NOMBRE D'ETAT : ");
-        scanf("%d", &nbr_state);
-        printf("ENTRER LE NOMBRE D'ETAT INITIAUX : ");
-        scanf("%d", &nbr_initiale_state);
-        printf("ENTRER LE NOMBRE D'ETAT FINAUX : ");
-        scanf("%d", &nbr_finale_state);
-        printf("ENTRER LE NOMBRE D'ETIQUETTES DIFFERENTS : ");
-        scanf("%d", &nbr_label);
+        afd = jason_to_AFD("afd.json", garbage);
 
-        printf("\nENTRER VOS TRANSITIONS EXEMPLE 0,a,1 OU 0 ET 1 SONT DES ETATS ET A UN SYMBOLE\n");
-        printf("ENTRER end QUAND VOUS NE VOULEZ ARRETER\n");
+        // print_info_AFD(afd, False, print_element_in_list);
+        // print_transitions_AFD(afd, print_trans_info);
 
-        afn = new_AFN(nbr_state, nbr_initiale_state, nbr_finale_state, nbr_label, "ep");
+        exp = brzozowski_AFD_to_REG(afd);
+        free_AFD(afd, False);
+        free(exp);
+        break;
+    case 4:
+        garbage = new_list();
+        afd = jason_to_AFD("afd.json", garbage);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_transitions_AFD(afd, print_trans_info);
+        afd_result = hopcroft_minimisation(afd, equal_label, print_element_in_list);
 
-        do
-        {
-            exp = calloc(25, sizeof(char));
-            scanf("%s", exp);
-            if (strcmp(exp, "end") != 0)
-            {
-                trans = convert_to_transition(exp);
+        afd_result = rename_states(afd_result, True);
+        print_info_AFD(afd_result, False, print_element_in_list);
+        print_AFD(afd_result, False, False, print_element_in_list, length_state);
+        AFD_to_jason(afd_result, "afd_min.json");
 
-                head_insertion(garbage, trans[0]);
-                head_insertion(garbage, trans[1]);
-                head_insertion(garbage, trans[2]);
-                add_transition_AFN(afn, trans[0], trans[1], trans[2]);
-            }
-        } while (strcmp(exp, "end") != 0);
+        free_AFD(afd, False);
+        free_AFD(afd_result, False);
+        break;
+    case 5:
+        garbage = new_list();
+        afd = jason_to_AFD("afd.json", garbage);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_transitions_AFD(afd, print_trans_info);
+        afd_result = brzozowski_minimisation(afd, equal_label);
 
-        for (i = 0; i < nbr_initiale_state; i++)
-        {
-            state = calloc(25, sizeof(char));
-            printf("ENTRER L'ETAT INTITIALE : ");
-            scanf("%s", state);
-            afn->initiale_state[i] = state;
-            head_insertion(garbage, state);
-        }
-
-        for (i = 0; i < nbr_finale_state; i++)
-        {
-            state = calloc(25, sizeof(char));
-            printf("ENTRER L'ETAT FINALE : ");
-            scanf("%s", state);
-            afn->finale_state[i] = state;
-            head_insertion(garbage, state);
-        }
-
+        print_info_AFD(afd_result, False, print_element_in_list);
+        print_AFD(afd_result, False, False, print_element_in_list, length_state);
+        AFD_to_jason(afd_result, "afd_min.json");
+        free_AFD(afd, False);
+        free_AFD(afd_result, False);
+        break;
+    case 6:
+    case 7:
+        garbage = new_list();
+        // afn = convert_file_to_AFN(path, garbage);
+        afn = jason_to_AFN("afn.json", garbage);
         print_info_AFN(afn, print_trans_info);
-        printf("CONFIRMER QU'IL S'AGI BIEN DE VOTRE AUTOMATE OUI = 1 NON = 0 : ");
-        scanf("%d", &user_rep);
-        if (confirm(user_rep) == False)
+        if (user_rep == 6)
         {
-            for (i = 0; i < garbage->length; i++)
-            {
-                free(get_element_list(garbage, i));
-            }
-
-            free_list(garbage);
-            free_AFN(afn);
-            clearScreen();
-            goto READ_AFN;
-        }
-
-        if (user_rep == 3)
-        {
-            afd = determinisation(afn,equal_st,print_element_in_list);
+            // afd = rename_states(afd, True);
+            afd = determinisation(afn, equal_st);
         }
         else
         {
-            afd = epsilone_determinisation(afn, equal_st,print_element_in_list);
+            afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
         }
 
+        print_info_AFD(afd, True, print_element_in_list);
+        print_AFD(afd, True, False, print_element_in_list, length_state);
+
+        afd = rename_states(afd, True);
+        AFD_to_jason(afd, "afd.json");
         printf("L'AUTOMATE DETERMINISTE CORRESPONDANT EST :\n");
 
-        print_info_AFD(afd, True, print_element_in_list, print_trans_list_info);
-        print_AFD(afd, True , print_element_in_list, length_state);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_AFD(afd, False, False, print_element_in_list, length_state);
 
-        printf("VOULEZ VOUS VERIFIER SI UN MOT EST RECONNU PAR CET AUTOMATE? :");
-        scanf("%d", &user_rep);
-        rep = confirm(user_rep);
+        free_AFD(afd, False);
+        free_AFN(afn);
+        break;
+    case 8:
+    case 9:
+        garbage = new_list();
+        int nbr_automate = 3;
+        char **tab_path = calloc(nbr_automate, sizeof(char *));
+        tab_path[0] = "/home/dimitri/Bureau/afd1.txt";
+        tab_path[1] = "/home/dimitri/Bureau/afd_test.txt";
+        tab_path[2] = "/home/dimitri/Bureau/afd2.txt";
 
-        if (user_rep == 1)
+        boolean possible = True;
+        AFD *afd_tab = calloc(nbr_automate, sizeof(AFD));
+
+        for (i = 0; i < nbr_automate; i++)
         {
-        READ_WORD3:
-            word_list = new_list();
-            printf("ENTRER UNE LISTE DE MOTS DONT VOUS VOULEZ RECONNAITRE ENTRER end POUR ARRETER:\n");
-            do
+            afd_tab[i] = convert_file_to_AFD(tab_path[i], garbage);
+        }
+
+        if (user_rep == 8)
+        {
+            afd_result = union_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
+
+            // print_info_AFD(afd_result, True, print_element_in_list);
+            // print_AFD(afd_result, True, True, print_element_in_list, length_state);
+
+            afd_result = rename_states(afd_result, False);
+            // print_info_AFD(afd_result, False, print_element_in_list);
+            // print_AFD(afd_result, False, False, print_element_in_list, length_state);
+
+            for (i = 0; i < afd_result->nbre_state; i++)
             {
-
-                exp = calloc(255, sizeof(char));
-                scanf("%s", exp);
-                if (strcmp(exp, "end") != 0)
-                {
-                    //on doit free chaque element de ce tableau
-                    word = convert_to_word(exp);
-                    head_insertion(word_list, word);
-                }
-            } while (strcmp(exp, "end") != 0);
-
-            result = detect_word(afd ,True, equal_special_state, equal_label, word_list , print_element_in_list);
-            printf("\nL'ENSEMBLE DES MOTS RECONNU PAR CET AUTOMATE SONT :\n");
-            print_result(result[0]);
-            printf("L'ENSEMBLE DES MOTS QUI NE SONT PAS RECONNUS SONT :\n");
-            print_result(result[1]);
-            printf("VOULEZ VOUS RECONNAITRE D'AUTRE MOTS ? OUI = 1 NON = 0 ? : ");
-
-            for (i = 0; i < word_list->length; i++)
-            {
-                free_word(get_element_list(word_list, i));
+                queue_insertion(garbage, afd_result->state_tab[i]);
             }
-            free_list(word_list);
-            free(result[0]);
-            free(result[1]);
 
-            scanf("%d", &user_rep);
-            if (confirm(user_rep) == False)
+            old_afd = afd_result;
+
+            for (i = 2; i < nbr_automate; i++)
             {
-                restart = True;
+                afd_result = union_AFD(old_afd, afd_tab[i], print_element_in_list);
+                afd_result = rename_states(afd_result, False);
+                for (i = 0; i < afd_result->nbre_state + 1; i++)
+                {
+                    queue_insertion(garbage, afd_result->state_tab[i]);
+                }
+
+                free_AFD(old_afd, False);
+                old_afd = afd_result;
+            }
+        }
+        else
+        {
+            afd_result = intersection_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
+            if (afd_result->nbre_finale_state > 0)
+            {
+                afd_result = rename_states(afd_result, False);
+
+                for (i = 0; i < afd_result->nbre_state; i++)
+                {
+                    queue_insertion(garbage, afd_result->state_tab[i]);
+                }
             }
             else
             {
-                restart = False;
+                possible = False;
             }
-        }
-        else
-        {
-            restart = False;
+
+            if (possible == True)
+            {
+                old_afd = afd_result;
+                for (i = 2; i < nbr_automate; i++)
+                {
+                    afd_result = intersection_AFD(old_afd, afd_tab[i], print_element_in_list);
+                    if (afd_result->nbre_finale_state > 0)
+                    {
+                        afd_result = rename_states(afd_result, False);
+
+                        for (i = 0; i < afd_result->nbre_state + 1; i++)
+                        {
+                            queue_insertion(garbage, afd_result->state_tab[i]);
+                        }
+                        free_AFD(old_afd, False);
+                        old_afd = afd_result;
+                    }
+                    else
+                    {
+                        possible = False;
+                        free_AFD(afd_result, True);
+                        break;
+                    }
+                }
+            }
         }
 
-        if (restart == True)
+        if (possible == True)
         {
-            for (i = 0; i < garbage->length; i++)
-            {
-                free(get_element_list(garbage, i));
-            }
-            free_list(garbage);
-            free(afd);
-            free_AFN(afn);
-            goto MENU;
+            print_info_AFD(afd_result, False, print_element_in_list);
+            print_AFD(afd_result, False, False, print_element_in_list, length_state);
+        }
+
+        for (i = 0; i < nbr_automate; i++)
+        {
+            free_AFD(afd_tab[i], False);
+        }
+
+        free_AFD(afd_result, False);
+        free(afd_tab);
+        break;
+    case 10:
+        well_state = "puit";
+        garbage = new_list();
+
+        afd = jason_to_AFD("afd.json", garbage);
+        completer_AFD(afd, well_state, equal_st);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_AFD(afd, False, False, print_element_in_list, length_state);
+        AFD_to_jason(afd, "afd.json");
+        free_AFD(afd, False);
+        break;
+    case 11:
+        well_state = "puit";
+        garbage = new_list();
+        afd = jason_to_AFD("afd.json", garbage);
+        afd_result = complementaire_AFD(afd, well_state, equal_st);
+
+        print_info_AFD(afd_result, False, print_element_in_list);
+        print_AFD(afd_result, False, False, print_element_in_list, length_state);
+
+        AFD_to_jason(afd_result, "afd.json");
+        free_AFD(afd_result, False);
+        free_AFD(afd, False);
+        break;
+    case 12:
+    case 13:
+        garbage = new_list();
+        if (user_rep == 12)
+        {
+            afd = jason_to_AFD("afd.json", garbage);
+            print_info_AFD(afd, False, print_element_in_list);
+            print_transitions_AFD(afd, print_trans_info);
+
+            afn_result = miroir_AFD(afd);
+            free_AFD(afd, False);
         }
         else
         {
-            clearScreen();
-            goto READ_WORD3;
+            afn = jason_to_AFN(messenger->message.dataPath, garbage);
+            print_info_AFN(afn, print_trans_info);
+            afn_result = miroir_AFN(afn);
+            free_AFN(afn);
         }
+
+        AFN_to_jason(afn_result, "afn.json");
+        print_info_AFN(afn_result, print_trans_info);
+        free_AFN(afn_result);
+        break;
+    case 14:
+    case 15:
+        garbage = new_list();
+        word = jason_to_word("word.json");
+        if (user_rep == 14)
+        {
+            afd = jason_to_AFD("afd_min.json", garbage);
+            print_info_AFD(afd, False, print_element_in_list);
+            print_transitions_AFD(afd, print_trans_info);
+            list_path = detect_AFD(afd, word, calculate_length(word));
+            
+            for (i = 0; i < list_path->length; i++)
+            {
+                list temp_list = get_element_list(list_path, i);
+                print_list(temp_list, print_element_in_list);
+                printf("\n");
+            }
+        }
+        else
+        {
+            afn = jason_to_AFN("afn.json", garbage);
+            print_info_AFN(afn, print_trans_info);
+            list_path = detect_AFN(afn, word, calculate_length(word));
+
+            for (i = 0; i < list_path->length; i++)
+            {
+                list temp_list = get_element_list(list_path, i);
+                print_list(temp_list, print_element_in_list);
+                printf("\n");
+            }
+        }
+
+        path_to_jason(list_path, "test.json");
+
+        for (i = 0; i < list_path->length; i++)
+        {
+            free_list(get_element_list(list_path, i));
+        }
+        free_list(list_path);
+        free(path);
+        free(word_path);
+        free_word(word);
         break;
     default:
-    READ_AFD:
-        cmpt = 0;
-        garbage = new_list();
-        printf("ENTRER LE NOMBRE D'ETAT : ");
-        scanf("%d", &nbr_state);
-        printf("ENTRER LE NOMBRE D'ETAT FINAUX : ");
-        scanf("%d", &nbr_finale_state);
-        printf("ENTRER LE NOMBRE D'ETIQUETTES DIFFERENTS : ");
-        scanf("%d", &nbr_label);
-
-        printf("\nENTRER VOS TRANSITIONS EXEMPLE 0,a,1 OU 0 ET 1 SONT DES ETATS ET A UN SYMBOLE\n");
-        printf("ENTRER end QUAND VOUS NE VOULEZ ARRETER\n");
-
-        afd = new_AFD(nbr_state, nbr_label, nbr_finale_state);
-
-
-
-        do
-        {
-            exp = calloc(25, sizeof(char));
-            scanf("%s", exp);
-            if (strcmp(exp, "end") != 0)
-            {
-                trans = convert_to_transition(exp);
-
-                head_insertion(garbage, trans[0]);
-                head_insertion(garbage, trans[1]);
-                head_insertion(garbage, trans[2]);
-                add_transition_AFD(afd, trans[0], trans[1], trans[2], cmpt);
-                cmpt++;
-            }
-        } while (strcmp(exp, "end") != 0 && cmpt < nbr_label * nbr_state);
-
-        state = calloc(25, sizeof(char));
-        printf("ENTRER L'ETAT INTITIALE : ");
-        scanf("%s", state);
-        afd->initiale_state = state;
-        head_insertion(garbage, state);
-
-        for (i = 0; i < nbr_finale_state; i++)
-        {
-            state = calloc(25, sizeof(char));
-            printf("ENTRER L'ETAT FINALE : ");
-            scanf("%s", state);
-            afd->finale_state[i] = state;
-            head_insertion(garbage, state);
-        }
-        printf("\n");
-        print_info_AFD(afd, False, print_element_in_list, print_trans_info);
-        printf("CONFIRMER QU'IL S'AGI BIEN DE VOTRE AUTOMATE OUI = 1 NON = 0 : ");
-        scanf("%d", &user_rep);
-        
-        // miroir_AFD(afd);
-        // print_transitions_AFD(afd , print_trans_info);
-
-        if (confirm(user_rep) == False)
-        {
-            for (i = 0; i < garbage->length; i++)
-            {
-                free(get_element_list(garbage, i));
-            }
-
-            free_list(garbage);
-            free_AFD(afd , True);
-            clearScreen();
-            goto READ_AFD;
-        }
-
-    READ_WORD4:
-        word_list = new_list();
-        printf("ENTRER UNE LISTE DE MOTS DONT VOUS VOULEZ RECONNAITRE ENTRER end POUR ARRETER:\n");
-        do
-        {
-
-            exp = calloc(255, sizeof(char));
-            scanf("%s", exp);
-            if (strcmp(exp, "end") != 0)
-            {
-                //on doit free chaque element de ce tableau
-                word = convert_to_word(exp);
-                head_insertion(word_list, word);
-            }
-        } while (strcmp(exp, "end") != 0);
-
-        result = detect_word(afd,False ,equal_st, equal_label, word_list , print_element_in_list);
-        printf("\nL'ENSEMBLE DES MOTS RECONNU PAR CET AUTOMATE SONT :\n");
-        print_result(result[0]);
-        printf("L'ENSEMBLE DES MOTS QUI NE SONT PAS RECONNUS SONT :\n");
-        print_result(result[1]);
-        printf("VOULEZ VOUS RECONNAITRE D'AUTRE MOTS ? OUI = 1 NON = 0 ? : ");
-
-        scanf("%d", &user_rep);
-        if (confirm(user_rep) == False)
-        {
-            restart = True;
-        }
-        else
-        {
-            restart = False;
-        }
-
-        goto FREE_ALL3;
-        //avant de faire ca il faut free tout les elements de cette liste
-    FREE_ALL3:
-        for (i = 0; i < word_list->length; i++)
-        {
-            free_word(get_element_list(word_list, i));
-        }
-
-        free_list(word_list);
-        free(result[0]);
-        free(result[1]);
-        if (restart == True)
-        {
-            clearScreen();
-            for (i = 0; i < garbage->length; i++)
-            {
-                free(get_element_list(garbage, i));
-            }
-            free_list(garbage);
-            free(afd);
-            goto MENU;
-        }
-        else
-        {
-            clearScreen();
-            goto READ_WORD4;
-        }
+        user_rep = -1;
         break;
     }
-    //user_rep = 0;
-    // } while (user_rep == 1);
 
-    return 0;
+    for (i = 0; i < garbage->length; i++)
+    {
+        //printf("%s \n" , (char*)get_element_list(garbage, i));
+        free(get_element_list(garbage, i));
+    }
+    free_list(garbage);
+
+    return EXIT_SUCCESS;
 }

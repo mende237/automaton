@@ -29,12 +29,15 @@ AFD convert_file_to_AFD(char *path, list garbage);
 list *detect_word(AFD afd, boolean sp_st , list word_list, void print_state(void *x, boolean l));
 int calculate_length(char **word);
 char** convert_to_transition(char* exp);
+char** jason_to_word(char* path);
 char** convert_to_word(char *word);
 char* concat(char *ch1 , char *ch2 , int nbr1 , int nbr2);
+
 
 AFN read_AFN(char *path);
 void free_word(char** word);
 void free_elem_in_list(list li);
+void path_to_jason(list path_list, char *road);
 
 void print_result(list li);
 void print_info_AFN(AFN afn, void print_info(void *src, void *lbl, void *dest));

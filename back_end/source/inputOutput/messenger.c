@@ -5,33 +5,38 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "../../header/inputOuput/messenger.h"
-
+#include "./scheduler.c"
 
 Messenger *messenger = NULL;
 
-Messenger *get_messenger(){
-    if(messenger == NULL){
-        messenger = calloc(1 , sizeof(Messenger));
+Messenger *get_messenger()
+{
+    if (messenger == NULL)
+    {
+        messenger = calloc(1, sizeof(Messenger));
         messenger->previous_id = -1;
+        messenger->reception_path = NULL;
+        messenger->sending_path = NULL;
     }
 
     return messenger;
 }
 
-void send_result(Messenger *messenger , Message message){
+void send_result(Messenger *messenger, Message message)
+{
     cJSON *id = cJSON_CreateNumber(message.id);
     cJSON *data_path = cJSON_CreateString(message.dataPath);
 
     cJSON *instruction = cJSON_CreateObject();
-    cJSON_AddItemToObject(instruction , "id" , id);
+    cJSON_AddItemToObject(instruction, "id", id);
     cJSON_AddItemToObject(instruction, "data path", data_path);
 
     char *result = cJSON_Print(instruction);
     cJSON_Delete(instruction);
 
     FILE *file = fopen(messenger->sending_path, "w");
-
     if (file == NULL)
         exit(1);
 
@@ -40,59 +45,88 @@ void send_result(Messenger *messenger , Message message){
     free(result);
 }
 
-boolean check_new(Messenger *messenger){
-    cJSON *id = NULL ;
+boolean check_new(Messenger *messenger)
+{
+    cJSON *id = NULL;
     cJSON *data_path = NULL;
     cJSON *instruction = NULL;
     cJSON *name = NULL;
     FILE *file = NULL;
     do
     {
-        if(file = fopen(messenger->reception_path , "r")){
-            int lettre;
-            int size = 0;
-            if (file == NULL)
-                exit(1);
+        // DOWN_SEM_REQUEST();
+        file = fopen(messenger->reception_path, "r+");
+        if (file != NULL)
+        {
 
-            while ((lettre = fgetc(file)) != EOF)
-                size++;
-            fclose(file);
+            fseek(file, 0, SEEK_END);
+            long fsize = ftell(file);
+            rewind(file); 
 
-            file = fopen(messenger->reception_path , "r");
-            char *buffer = calloc(size, sizeof(char));
-            fread(buffer, size, 1, file);
+            char *buffer = malloc(fsize + 1);
+            fread(buffer, sizeof(char), fsize, file);
             fclose(file);
+            buffer[fsize] = 0;
 
             instruction = cJSON_Parse(buffer);
-            id = cJSON_GetObjectItemCaseSensitive(instruction , "id");
+            free(buffer);
+            id = cJSON_GetObjectItemCaseSensitive(instruction, "id");
             data_path = cJSON_GetObjectItemCaseSensitive(instruction, "data path");
             name = cJSON_GetObjectItemCaseSensitive(instruction, "name");
 
-            messenger->message.dataPath = calloc(strlen(data_path->valuestring) + 1, sizeof(char));
-            strcpy(messenger->message.dataPath , data_path->valuestring);
+            // printf("%d\n" , (int)strlen(data_path->valuestring));
+            if (data_path == NULL)
+            {
+                printf("coool erreur detecter la taille du buffer est %d\n", strlen(buffer));
+                //printf("number of byte %d\n" , a);
+                printf("boite de reception %s\n", messenger->reception_path);
+                printf("la position du curseur %d\n", ftell(file));
+                printf("%s\n", buffer);
+                printf("size %d\n", fsize);
+                if(file == NULL){
+                    printf("*******/////////null file************//////\n");
+                }
+                exit(1);
+            }
 
-            messenger->message.name = calloc(strlen(name->valuestring) + 1, sizeof(char));
-            strcpy(messenger->message.name , name->valuestring);
 
-            messenger->message.id = id->valueint;
+            if (id->valueint != messenger->previous_id)
+            {
+                messenger->message.name = malloc((strlen(name->valuestring) + 1) * sizeof *messenger->message.name);
+                strcpy(messenger->message.name, name->valuestring);
+
+                messenger->message.dataPath = malloc((strlen(data_path->valuestring) + 1) * sizeof *messenger->message.dataPath);
+                strcpy(messenger->message.dataPath, data_path->valuestring);
+
+                messenger->message.id = id->valueint;
+            }
+
             cJSON_Delete(instruction);
-        }else{
-            printf("le fichier %s n'exite pas\n" , messenger->reception_path);
+            printf("%d   %d  %d\n", messenger->previous_id, id->valueint , (int)fsize);
+
+            // sleep(1)
+        }
+        else
+        {
+            printf("le fichier %s n'exite pas\n", messenger->reception_path);
             return False;
         }
-
+        // UP_SEM_REQUEST();
     } while (id->valueint == messenger->previous_id);
 
-    messenger->previous_id = id->valueint;
+    messenger->previous_id = messenger->message.id;
+    printf("%s\n", messenger->message.dataPath);
     return True;
 }
 
 int receive_instruction(Messenger *messenger)
 {
-    if(strcmp(messenger->message.name , "glushkov") == 0){
+    if (strcmp(messenger->message.name, "glushkov") == 0)
+    {
         return 1;
     }
-    else if (strcmp(messenger->message.name, "thomson") == 0){
+    else if (strcmp(messenger->message.name, "thomson") == 0)
+    {
         return 2;
     }
     else if (strcmp(messenger->message.name, "AFD to REG") == 0)
@@ -123,7 +157,7 @@ int receive_instruction(Messenger *messenger)
     {
         return 9;
     }
-    else if (strcmp(messenger->message.name, "completer") == 0)
+    else if (strcmp(messenger->message.name, "completion") == 0)
     {
         return 10;
     }
@@ -146,9 +180,18 @@ int receive_instruction(Messenger *messenger)
     else if (strcmp(messenger->message.name, "reconnaissance AFN") == 0)
     {
         return 15;
-    }else{
+    }
+    else
+    {
         return 0;
     }
+}
+
+void free_messenger(Messenger *messenger)
+{
+    free(messenger->message.dataPath);
+    free(messenger->message.name);
+    free(messenger);
 }
 
 #endif

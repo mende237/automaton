@@ -18,5 +18,6 @@ Messenger *get_messenger();
 void send_result(Messenger *messenger , Message message);
 boolean check_new(Messenger *messenger);
 int receive_instruction(Messenger *messenger);
+void free_messenger(Messenger *messenger);
 
 #endif
