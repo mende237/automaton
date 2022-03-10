@@ -57,7 +57,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
     }
 
     printf("}\n");
-
+    j = 0;
     while (is_empty_list(L) == False)
     {
         Breaker *breaker = L->head->value;
@@ -73,6 +73,14 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
             list *data_temp = break_block(B, breaker, afd, equal_value, print_element_in_list);
             list B1 = data_temp[0];
             list B2 = data_temp[1];
+            printf("cassé en :\n");
+            printf("B1 : ");
+            print_list(B1, print_element_in_list);
+            printf("\n");
+            printf("B2 : ");
+            print_list(B2, print_element_in_list);
+            printf("\n");
+
             free(data_temp);
             if (is_empty_list(B1) == True || is_empty_list(B2) == True)
             {
@@ -86,11 +94,11 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
                 queue_insertion(pi, B1);
                 queue_insertion(pi, B2);
 
-                for (i = 0; i < afd->nbre_label; i++)
+                for (j = 0; j < afd->nbre_label; j++)
                 {
                     Breaker *breaker_temp = malloc(sizeof(Breaker));
                     breaker_temp->set = B;
-                    breaker_temp->label = afd->tab_labels[i];
+                    breaker_temp->label = afd->tab_labels[j];
 
                     int index = get_index_element_list(L, breaker_temp, equal_breaker);
                     if (index != -1)
@@ -98,11 +106,11 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
                         delete_element_list(L, index);
                         Breaker *breaker1 = malloc(sizeof(Breaker));
                         breaker1->set = B1;
-                        breaker1->label = afd->tab_labels[i];
+                        breaker1->label = afd->tab_labels[j];
 
                         Breaker *breaker2 = malloc(sizeof(Breaker));
                         breaker2->set = B2;
-                        breaker2->label = afd->tab_labels[i];
+                        breaker2->label = afd->tab_labels[j];
 
                         queue_insertion(L, breaker1);
                         queue_insertion(L, breaker2);
@@ -112,7 +120,7 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
                         list S0 = smallest_set(B1, B2);
                         Breaker *breaker0 = malloc(sizeof(Breaker));
                         breaker0->set = S0;
-                        breaker0->label = afd->tab_labels[i];
+                        breaker0->label = afd->tab_labels[j];
                         queue_insertion(L, breaker0);
                     }
                     free(breaker_temp);
@@ -131,6 +139,15 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         printf(" ; ");
     }
     printf("}\n");
+    
+    // printf("\nles classe d'equivalences sont \n");
+    // printf("{ ");
+    // for (i = 0; i < pi->length; i++)
+    // {
+    //     print_list(get_element_list(pi, i), print_element_in_list);
+    //     printf(" ; ");
+    // }
+    // printf("}\n");
 
     
 
@@ -304,19 +321,24 @@ AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ..
         }
     }
 
-    // printf("le nombre d'etat est %d\n" , pi->length);
-    // for (i = 0; i < pi->length; i++)
-    // {
-    //     print_list(states[i], print_element_in_list);
-    //     void **aux = mat_state[i];
-    //     printf("\t");
-    //     for (j = 0; j < afd->nbre_label; j++)
-    //     {
-    //         print_list(aux[j] , print_element_in_list);
-    //         printf("\t");
-    //     }
-    //     printf("\n");
-    // }
+    for (j = 0; j < afd->nbre_label; j++)
+    {
+        printf("\t%s" ,  afd->tab_labels[j]);
+    }
+    printf("\n");
+    printf("le nombre d'etat est %d\n" , pi->length);
+    for (i = 0; i < pi->length; i++)
+    {
+        print_list(states[i], print_element_in_list);
+        void **aux = mat_state[i];
+        printf("\t");
+        for (j = 0; j < afd->nbre_label; j++)
+        {
+            print_list(aux[j] , print_element_in_list);
+            printf("\t");
+        }
+        printf("\n");
+    }
 
     free_list(final_state_result);
     free_list(final_state_list);

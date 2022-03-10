@@ -378,10 +378,10 @@ int main()
         break;
     case 3:
         garbage = new_list();
-        afd = jason_to_AFD("afd.json", garbage);
+        afd = jason_to_AFD("afd_min.json", garbage);
 
-        // print_info_AFD(afd, False, print_element_in_list);
-        // print_transitions_AFD(afd, print_trans_info);
+        print_info_AFD(afd, False, print_element_in_list);
+        print_transitions_AFD(afd, print_trans_info);
 
         exp = brzozowski_AFD_to_REG(afd);
         free_AFD(afd, False);

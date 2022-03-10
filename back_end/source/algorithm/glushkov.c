@@ -21,6 +21,7 @@ AFN glushkov_algorithm(char **expression, int length, list garbage2)
         result[i] = get_element_list(li_result, i);
     }
     tree t = convert_post_to_glushkov_tree(result, li_result->length);
+    char *ep = null(t);
     list mat_succ = new_list();
 
     list state_list = new_list();
@@ -59,9 +60,10 @@ AFN glushkov_algorithm(char **expression, int length, list garbage2)
     initiale*/
     AFN afn = NULL;
 
-    if (strcmp(t->info, "*") == 0)
+    if (strcmp(ep , "ep") == 0)
     {
         afn = new_AFN(state_list->length, 1, (last_state->length + 1), nbre_label, "ep");
+        afn->finale_state[last_state->length] = "0";
     }
     else
     {
@@ -81,11 +83,6 @@ AFN glushkov_algorithm(char **expression, int length, list garbage2)
         sprintf(state, "%d", elem->index);
         afn->finale_state[i] = state;
         queue_insertion(garbage2, state);
-    }
-
-    if (strcmp(t->info, "*") == 0)
-    {
-        afn->finale_state[last_state->length] = "0";
     }
 
     for (i = 0; i < mat_succ->length; i++)
