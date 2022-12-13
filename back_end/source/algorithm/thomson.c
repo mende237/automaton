@@ -1,10 +1,10 @@
 #ifndef THOMSON_C
 #define THOMSON_C
 #include "../../header/algorithm/thomson.h"
-#include "../data_structure/linked_list.c"
-#include "utilitaire.c"
-#include "../data_structure/stack.c"
-#include "../data_structure/tree.c"
+#include "../../header/data_structure/linked_list.h"
+#include "../../header/algorithm/utilitaire.h"
+#include "../../header/data_structure/stack.h"
+#include "../../header/data_structure//tree.h"
 
 #include <stdlib.h>
 #include <math.h>

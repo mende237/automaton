@@ -2,10 +2,10 @@
 #define GLUSHKOV_C
 
 #include "../../header/algorithm/glushkov.h"
-#include "utilitaire.c"
-#include "../data_structure/linked_list.c"
-#include "../data_structure/stack.c"
-#include "../data_structure/tree.c"
+#include "../../header/data_structure/linked_list.h"
+#include "../../header/algorithm/utilitaire.h"
+#include "../../header/data_structure/stack.h"
+#include "../../header/data_structure//tree.h"
 #include <string.h>
 
 AFN glushkov_algorithm(char **expression, int length, list garbage2)

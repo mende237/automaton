@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "../../header/inputOuput/scheduler.h"
-#include "./configuration.c"
+#include "../../header/inputOutput/scheduler.h"
+#include "../../header/inputOutput/configuration.h"
 
 void DOWN_SEM_REQUEST(){
     int S = 0;

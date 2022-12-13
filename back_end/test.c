@@ -3,17 +3,18 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "./source/algorithm/AFN.c"
-#include "./source/algorithm/AFD.c"
-#include "./source/data_structure/linked_list.c"
-#include "./source/algorithm/thomson.c"
-#include "./source/algorithm/glushkov.c"
-#include "./source/algorithm/utilitaire.c"
-#include "./source/algorithm/brzozowski.c"
-#include "./source/algorithm/hopcroft.c"
+#include "./header/algorithm/AFN.h"
+#include "./header/algorithm/AFD.h"
+#include "./header/data_structure/linked_list.h"
+#include "./header/algorithm/thomson.h"
+#include "./header/algorithm/glushkov.h"
+#include "./header/algorithm/utilitaire.h"
+#include "./header/algorithm/brzozowski.h"
+#include "./header/algorithm/hopcroft.h"
 
-#include "./source/inputOutput/messenger.c"
-#include "./source/inputOutput/configuration.c"
+#include "./header/inputOutput/messenger.h"
+#include "./header/inputOutput/message.h"
+#include "./header/inputOutput/configuration.h"
 
 char **add_data(int n, ...);
 void clearScreen();

@@ -8,9 +8,9 @@
 
 #include "../../header/algorithm/AFD.h"
 #include "../../header/data_structure/structure.h"
-#include "../../source/data_structure/stack.c"
-#include "../../source/data_structure/linked_list.c"
-#include "../../source/algorithm/function.c"
+#include "../../header/data_structure/stack.h"
+#include "../../header/data_structure/linked_list.h"
+#include "../../header/algorithm/function.h"
 
 
 AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label)

@@ -1,8 +1,8 @@
 #ifndef AFN_C
 #define AFN_C
 #include "../../header/algorithm/AFN.h"
-#include "../../source/data_structure/linked_list.c"
-#include "../../source/data_structure/stack.c"
+#include "../../header/data_structure/linked_list.h"
+#include "../../header/data_structure/stack.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

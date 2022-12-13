@@ -6,8 +6,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "../../header/inputOuput/messenger.h"
-#include "./scheduler.c"
+#include "../../header/inputOutput/messenger.h"
+#include "../../header/inputOutput/scheduler.h"
 
 Messenger *messenger = NULL;
 

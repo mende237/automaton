@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <cjson/cJSON.h>
 #include "../../header/algorithm/utilitaire.h"
-#include "../data_structure/linked_list.c"
-#include "../../source/data_structure/stack.c"
-#include "AFN.c"
-#include "AFD.c"
+#include "../../header/data_structure/linked_list.h"
+#include "../../header/data_structure/stack.h"
+#include "../../header/algorithm/AFD.h"
+#include "../../header/algorithm/AFN.h"
 
 list convert_inf_to_post(char **expression, int length)
 {

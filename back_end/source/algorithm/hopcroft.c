@@ -5,9 +5,9 @@
 #include <string.h>
 
 #include "../../header/algorithm/hopcroft.h"
-#include "../data_structure/linked_list.c"
-#include "../data_structure/stack.c"
-#include "../algorithm/function.c"
+#include "../../header/data_structure/linked_list.h"
+#include "../../header/data_structure/stack.h"
+#include "../../header/algorithm/function.h"
 
 AFD hopcroft_minimisation(AFD afd, boolean equal_value(void *lb1, void *lb2 , ...), void print_element_in_list(void *x, boolean last))
 {

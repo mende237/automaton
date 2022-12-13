@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <cjson/cJSON.h>
-#include "../../header/inputOuput/configuration.h"
+#include "../../header/inputOutput/configuration.h"
 
 Configuration *config = NULL;
 

@@ -10,6 +10,10 @@
         "cstdlib": "c",
         "limits": "c",
         "type_traits": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "brzozowski.h": "c",
+        "stack.h": "c",
+        "structure.h": "c",
+        "function.h": "c"
     }
 }
