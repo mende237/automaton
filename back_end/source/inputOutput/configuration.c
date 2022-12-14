@@ -17,8 +17,10 @@ Configuration *get_config(char *path)
         FILE *file = fopen(path, "r");
         int lettre;
         int size = 0;
-        if (file == NULL)
+        if (file == NULL){
+            printf("file %s doesn't exist\n" , path);
             exit(1);
+        }
 
         while ((lettre = fgetc(file)) != EOF)
             size++;

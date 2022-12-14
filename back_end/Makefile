@@ -6,8 +6,8 @@ interface: main_interface.c
 consol: main_consol.c
 	$(CC) -g -c -w main_consol.c -o main.o
 
-final: AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
-	$(CC) -g main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o messenger.o configuration.o brzozowski.o hopcroft.o function.o stack.o tree.o -lm -lcjson -o test.o
+final: main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
+	$(CC) -g main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o messenger.o configuration.o brzozowski.o hopcroft.o function.o stack.o tree.o -lm -lcjson -o out
 
 
 AFN.o: ./source/algorithm/AFN.c ./header/algorithm/AFN.h ./header/data_structure/structure.h linked_list.o stack.o
@@ -54,5 +54,6 @@ utilitaire.o: ./source/algorithm/utilitaire.c ./header/algorithm/utilitaire.h AF
 
 clean:
 	rm -rf *.o
+	
 mrproper:clean
 	rm -rf main
