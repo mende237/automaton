@@ -1,11 +1,14 @@
 CC = /usr/bin/gcc-9
 
-all:final
-final: main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
-	$(CC) -g main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o -lm -o test.o
+interface: main_interface.c
+	$(CC) -g -c -w main_interface.c -o main.o
 
-main.o: test.c 
-	$(CC) -g -c -w test.c -o main.o
+consol: main_consol.c
+	$(CC) -g -c -w main_consol.c -o main.o
+
+final: AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
+	$(CC) -g main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o messenger.o configuration.o brzozowski.o hopcroft.o function.o stack.o tree.o -lm -lcjson -o test.o
+
 
 AFN.o: ./source/algorithm/AFN.c ./header/algorithm/AFN.h ./header/data_structure/structure.h linked_list.o stack.o
 	$(CC) -g -c -w ./source/algorithm/AFN.c -o AFN.o

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "../../header/algorithm/brzozowski.h"
+#include "../../header/algorithm/function.h"
 
 AFD brzozowski_minimisation(AFD afd, boolean equal_value(void *st1, void *st2, ...))
 {
@@ -561,7 +562,7 @@ static char *remove_bracket(char *ch){
         int i = 0;
         char *result = calloc(strlen(ch) - 1 , sizeof(char));
         ch[strlen(ch) - 1] = '\0';
-        for (i = 1; i < strlen(ch); i++)
+        for (i = 1; i < (int) strlen(ch); i++)
         {
             result[i-1] = ch[i];
         }

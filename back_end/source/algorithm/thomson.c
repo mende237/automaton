@@ -4,7 +4,7 @@
 #include "../../header/data_structure/linked_list.h"
 #include "../../header/algorithm/utilitaire.h"
 #include "../../header/data_structure/stack.h"
-#include "../../header/data_structure//tree.h"
+#include "../../header/data_structure/tree.h"
 
 #include <stdlib.h>
 #include <math.h>
