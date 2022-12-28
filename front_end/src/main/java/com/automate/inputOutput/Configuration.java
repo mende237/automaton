@@ -34,8 +34,8 @@ public class Configuration {
             Configuration.responsePath = obj.getString("response path");
             Configuration.dataRequestPath = obj.getString("data request path");
             Configuration.dataResponsePath = obj.getString("data reponse path");
-            Configuration.pathSemRequest = obj.getString("path semaphore request");
-            Configuration.pathSemResponse = obj.getString("path semaphore response");
+            // Configuration.pathSemRequest = obj.getString("path semaphore request");
+            // Configuration.pathSemResponse = obj.getString("path semaphore response");
             Configuration.imagePath = obj.getString("image path");
         }
 

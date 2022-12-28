@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.MainController">
+   <children>
+      <BorderPane layoutX="87.0" layoutY="73.0" prefHeight="520.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <SplitPane fx:id="splitPane" dividerPositions="0.10288461538461538">
+               <items>
+                  <AnchorPane minHeight="200.0" minWidth="50.0" prefHeight="160.0" prefWidth="500.0">
+                     <children>
+                        <TreeView fx:id="treeView" prefHeight="273.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity" />
+               </items>
+            </SplitPane>
+         </center>
+         <top>
+            <AnchorPane prefHeight="224.0" prefWidth="765.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="228.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <MenuBar>
+                           <menus>
+                              <Menu mnemonicParsing="false" text="File">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Close" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Edit">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Delete" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Help">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="About" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="about">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                 </items>
+                              </Menu>
+                           </menus>
+                        </MenuBar>
+                        <TabPane prefHeight="200.0" prefWidth="660.0" tabClosingPolicy="UNAVAILABLE">
+                           <tabs>
+                              <Tab text="accueil">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <ToolBar prefHeight="76.0" prefWidth="660.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <items>
+                                                <AnchorPane prefHeight="156.0" prefWidth="292.0">
+                                                   <children>
+                                                      <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <GridPane alignment="CENTER" hgap="5.0" prefHeight="138.0" prefWidth="250.0" vgap="5.0">
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="155.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
+                                                               <children>
+                                                                  <Button id="btnDeterminisation" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeterminisationView" prefHeight="12.0" prefWidth="152.0" text="determinisation" textAlignment="CENTER">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="28.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/DETERMINISQTION.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnGlushkov" fx:id="btnGlushkov" mnemonicParsing="false" onAction="#handleGlushkovView" prefHeight="25.0" prefWidth="135.0" text="glushkov" GridPane.columnIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/glushkow.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnThomson" mnemonicParsing="false" onAction="#handleThomsonView" prefHeight="40.0" prefWidth="148.0" text="thomson" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="31.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/thompson.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" onAction="#handleMinimisationView" prefHeight="53.0" prefWidth="187.0" text="minimisation" GridPane.rowIndex="2">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="32.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/MIN.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="214.0" text="brozzoski" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="30.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/REGEX.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation" mnemonicParsing="false" onAction="#handleEpDeterminisationView" prefHeight="60.0" prefWidth="158.0" text="determinisation" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="30.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/E.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </GridPane>
+                                                            <Label text="transformation" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                                <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="6.0" />
+                                                <AnchorPane prefHeight="156.0" prefWidth="304.0">
+                                                   <children>
+                                                      <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <GridPane alignment="CENTER" prefHeight="135.0" prefWidth="191.0">
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="162.0" minWidth="10.0" prefWidth="162.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="76.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
+                                                               <children>
+                                                                  <Button id="btnUnion" fx:id="btnUnion" mnemonicParsing="false" prefHeight="37.0" prefWidth="151.0" text="union">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="41.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/UNION.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id=" btnIntersection" fx:id="btnIntersection" mnemonicParsing="false" text="intersection" GridPane.columnIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="41.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/INTER.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button fx:id="btnComplementaire" mnemonicParsing="false" onAction="#handleComplementaireView" text="complementaire" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView id="btnComplementaire" fitHeight="29.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/complementaire.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnMiroir" fx:id="btnMiroire" mnemonicParsing="false" onAction="#handleMiroirView" prefHeight="30.0" prefWidth="132.0" text="miroir" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="30.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/MIRROR.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </GridPane>
+                                                            <Label text="cloture" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                                <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                <AnchorPane prefHeight="156.0" prefWidth="308.0">
+                                                   <children>
+                                                      <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label contentDisplay="GRAPHIC_ONLY" layoutX="129.0" prefHeight="51.0" prefWidth="43.0" text="Label">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/RECONNAISSANCE.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Label>
+                                                                  <Button id="btnAfdReconnaissance" contentDisplay="GRAPHIC_ONLY" layoutX="14.0" layoutY="61.0" mnemonicParsing="false" onAction="#handleReconnaissanceAFD_View" prefHeight="46.0" prefWidth="94.0">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="38.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/AFD.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" onAction="#handleReconnaissanceAFN_View" prefHeight="45.0" prefWidth="90.0">
+                                                                     <graphic>
+                                                                        <ImageView id="btnAfnReconnaissance" fitHeight="42.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/AFN.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Line endX="31.0" layoutX="90.0" layoutY="26.0" startX="-20.0" />
+                                                                  <Line endX="23.0" layoutX="223.0" layoutY="27.0" startX="-34.0" />
+                                                                  <Line endX="29.5" endY="25.0" layoutX="40.0" layoutY="36.0" startX="29.5" startY="-10.0" />
+                                                                  <Line endX="-1.0" endY="18.0" layoutX="247.0" layoutY="44.0" startX="-0.5" startY="-16.5" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Label text="reconnaissance" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                                <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                             </items>
+                                          </ToolBar>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab text="creation">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                              <Tab text="edition">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </top>
+         <bottom>
+            <AnchorPane prefHeight="21.0" prefWidth="1042.0" BorderPane.alignment="CENTER" />
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

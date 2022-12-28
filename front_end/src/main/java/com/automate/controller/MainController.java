@@ -131,7 +131,7 @@ public class MainController extends Controller implements Initializable {
 
         });
 
-        icon = new Image(getClass().getResourceAsStream("../../../ressource/icon/lettre-d.png"));
+        icon = new Image(getClass().getResourceAsStream("/icon/lettre-d.png"));
         imgView = new ImageView(icon);
         imgView.setFitHeight(16);
         imgView.setFitWidth(16);
@@ -144,7 +144,7 @@ public class MainController extends Controller implements Initializable {
         for (int i = 0; i < this.tabAFD.size(); i++) {
             makeBranch(this.tabAFD.get(i).getName(), afd, 1);
         }
-        icon = new Image(getClass().getResourceAsStream("../../../ressource/icon/lettre-n.png"));
+        icon = new Image(getClass().getResourceAsStream("/icon/lettre-n.png"));
         imgView = new ImageView(icon);
         imgView.setFitHeight(20);
         imgView.setFitWidth(20);
@@ -154,7 +154,7 @@ public class MainController extends Controller implements Initializable {
         for (int i = 0; i < this.tabAFN.size(); i++) {
             makeBranch(this.tabAFN.get(i).getName(), afn, 2);
         }
-        icon = new Image(getClass().getResourceAsStream("../../../ressource/icon/lettre-n.png"));
+        icon = new Image(getClass().getResourceAsStream("/icon/lettre-n.png"));
         imgView = new ImageView(icon);
         imgView.setFitHeight(20);
         imgView.setFitWidth(20);
@@ -214,7 +214,7 @@ public class MainController extends Controller implements Initializable {
                 case AUTOMATE_VIEW:
                     ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
                     FXMLLoader loader = null;
-                    loader = new FXMLLoader(getClass().getResource("../../../ressource/window/view.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/window/view.fxml"));
                     loader.setControllerFactory(c -> {
                         return ViewController.getViewController(mediator);
                     });
@@ -269,7 +269,7 @@ public class MainController extends Controller implements Initializable {
         // Path path = Paths.get("src/ressource/test/convertView.fxml");
         // System.out.println(path.toRealPath());
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
             return ConvertController.getConvertController(mediator, Algorithm.DERTIMINISATION);
@@ -294,7 +294,7 @@ public class MainController extends Controller implements Initializable {
     void handleComplementaireView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
             return ConvertController.getConvertController(mediator, Algorithm.COMPLEMENTAIRE);
@@ -320,7 +320,7 @@ public class MainController extends Controller implements Initializable {
     void handleEpDeterminisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
             return ConvertController.getConvertController(mediator, Algorithm.EP_DERTIMINISATION);
@@ -346,7 +346,7 @@ public class MainController extends Controller implements Initializable {
     void handleMinimisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
             return ConvertController.getConvertController(mediator, Algorithm.MINIMISATION_B);
@@ -372,7 +372,7 @@ public class MainController extends Controller implements Initializable {
     void handleMiroirView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/convertView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
         loader.setControllerFactory(c -> {
             return ConvertController.getConvertController(mediator, Algorithm.MIROIR_AFD);
@@ -397,7 +397,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void handleGlushkovView(ActionEvent event) {
         try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/regToAfnView.fxml"));
+            AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
             // this.mainContainer = root;
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
@@ -419,7 +419,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void handleThomsonView(ActionEvent event) {
         try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("../../../ressource/window/regToAfnView.fxml"));
+            AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
             // this.mainContainer = root;
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
@@ -441,7 +441,7 @@ public class MainController extends Controller implements Initializable {
         try {
             this.vType = viewType.RECONNAISSANCE_VIEW;
             ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/reconnaissance.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/reconnaissance.fxml"));
 
             loader.setControllerFactory(c -> {
                 return ReconnaissanceController.getReconnaissanceController(mediator , Algorithm.RECONNAISSANCE_AFD);
@@ -468,7 +468,7 @@ public class MainController extends Controller implements Initializable {
         try {
             this.vType = viewType.RECONNAISSANCE_VIEW;
             ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../ressource/window/reconnaissance.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/reconnaissance.fxml"));
 
             loader.setControllerFactory(c -> {
                 return ReconnaissanceController.getReconnaissanceController(mediator, Algorithm.RECONNAISSANCE_AFN);
@@ -494,9 +494,9 @@ public class MainController extends Controller implements Initializable {
         Image icon;
         ImageView imgView;
         if (type == 1) {
-            icon = new Image(getClass().getResourceAsStream("../../../ressource/icon/afd_icon.png"));
+            icon = new Image(getClass().getResourceAsStream("/icon/afd_icon.png"));
         } else {
-            icon = new Image(getClass().getResourceAsStream("../../../ressource/icon/afn_icon.png"));
+            icon = new Image(getClass().getResourceAsStream("/icon/afn_icon.png"));
         }
 
         imgView = new ImageView(icon);

@@ -32,15 +32,13 @@ public class App extends Application {
             config = Configuration.getConfiguration("../config.json");
             System.out.println(config);
         } catch (FileNotFoundException e) {
-            //TODO: handle exception
+            System.err.println("file not found");
         }
         
-        // messenger.setSendingPath(config.getRequestPath());
-        // messenger.setReceptionPath(config.getResponsePath());
-        // App.reset();
-        // launch();
-
-        //a decommenté
+        messenger.setSendingPath(config.getRequestPath());
+        messenger.setReceptionPath(config.getResponsePath());
+        App.reset();
+        launch();
 
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -96,11 +94,12 @@ public class App extends Application {
         // System.out.println(App.class.getResource("App.class"));
         // System.out.println(App.class.getResource("test1.txt"));
         // System.out.println("traverser");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("./ressource/icon/beepbeep.png")));
+        
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
         stage.setTitle("beep-beep");
-        String css = this.getClass().getResource("ressource/style/caspian.css").toExternalForm();
+        String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ressource/window/mainView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView.fxml"));
 
         loader.setControllerFactory(c -> {
             return new MainController(mediator);
@@ -127,27 +126,27 @@ public class App extends Application {
         file.delete();
         file = new File(config.getDataResponsePath());
         file.delete();
-        FileWriter fw;
+        // FileWriter fw;
 
-        file = new File(config.getPathSemRequest());
-        try {
-            fw = new FileWriter(file);
-            fw.write('1');
-            fw.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // file = new File(config.getPathSemRequest());
+        // try {
+        //     fw = new FileWriter(file);
+        //     fw.write('1');
+        //     fw.close();
+        // } catch (IOException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
         
-        file = new File(config.getPathSemResponse());
-        try {
-            fw = new FileWriter(file);
-            fw.write('1');
-            fw.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // file = new File(config.getPathSemResponse());
+        // try {
+        //     fw = new FileWriter(file);
+        //     fw.write('1');
+        //     fw.close();
+        // } catch (IOException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
 
     }
 
