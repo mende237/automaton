@@ -202,7 +202,7 @@
                                                                   </Button>
                                                                </children>
                                                             </GridPane>
-                                                            <Label text="cloture" />
+                                                            <Label text="CLOSURE" />
                                                          </children>
                                                       </VBox>
                                                    </children>
@@ -261,7 +261,107 @@
                               </Tab>
                               <Tab text="creation">
                                  <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <ToolBar prefHeight="169.0" prefWidth="598.0">
+                                             <items>
+                                                <AnchorPane prefHeight="156.0" prefWidth="292.0">
+                                                   <children>
+                                                      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <GridPane alignment="CENTER" hgap="5.0" prefHeight="138.0" prefWidth="250.0" vgap="5.0">
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="155.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
+                                                               <children>
+                                                                  <Button id="btnDeterminisation" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeterminisationView" prefHeight="12.0" prefWidth="152.0" textAlignment="CENTER">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/undo.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnGlushkov" fx:id="btnGlushkov1" mnemonicParsing="false" onAction="#handleGlushkovView" prefHeight="25.0" prefWidth="135.0" GridPane.columnIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/redo.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnThomson" mnemonicParsing="false" onAction="#handleThomsonView" prefHeight="40.0" prefWidth="148.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/circle.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" onAction="#handleMinimisationView" prefHeight="53.0" prefWidth="187.0" GridPane.columnIndex="2">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/cut.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="214.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/circle(1).png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation1" mnemonicParsing="false" onAction="#handleEpDeterminisationView" prefHeight="60.0" prefWidth="158.0" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/ellipse.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="214.0" GridPane.columnIndex="3">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/nodes.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="214.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icon/new-moon.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </GridPane>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </AnchorPane>
+                                             </items>
+                                          </ToolBar>
+                                       </children></AnchorPane>
                                  </content>
                               </Tab>
                               <Tab text="edition">

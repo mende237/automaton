@@ -97,7 +97,7 @@ public class App extends Application {
         
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
         stage.setTitle("beep-beep");
-        String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
+        // String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView.fxml"));
 
