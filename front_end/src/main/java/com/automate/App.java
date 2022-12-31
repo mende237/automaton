@@ -108,7 +108,7 @@ public class App extends Application {
         
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(css);
+        // scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
     }
