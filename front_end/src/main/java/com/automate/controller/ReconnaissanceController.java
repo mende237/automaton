@@ -102,13 +102,13 @@ public class ReconnaissanceController extends Controller implements Initializabl
 
             switch (this.algorithmType) {
                 case RECONNAISSANCE_AFD:
-                    destination = Paths.get(config.getDataRequestPath() + "/afd.json");
+                    destination = Paths.get(config.getDataRequestPath() + File.separator + "afd.json");
                     Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
                     instruction = new Instruction("reconnaissance AFD", config.getDataRequestPath());
                     this.handleReconnaissance(instruction);
                     break;
                 case RECONNAISSANCE_AFN:
-                    destination = Paths.get(config.getDataRequestPath() + "/afn.json");
+                    destination = Paths.get(config.getDataRequestPath() + File.separator + "afn.json");
                     Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
                     instruction = new Instruction("reconnaissance AFN", config.getDataRequestPath());
                     this.handleReconnaissance(instruction);
@@ -168,7 +168,7 @@ public class ReconnaissanceController extends Controller implements Initializabl
                 e.printStackTrace();
             }
 
-            String path = config.getImagePath() + "/automate.png";
+            String path = config.getImagePath() + File.separator + "automate.png";
             try {
                 Graphviz.fromGraph(mg).width(1500).render(Format.PNG).toFile(new File(path));
             } catch (IOException e) {

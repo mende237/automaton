@@ -29,7 +29,9 @@ public class App extends Application {
 
     public static void main(String args[]) throws IOException {
         try {
-            config = Configuration.getConfiguration("../config.json");
+
+            File file = new File(".." + File.separator + "config.json");
+            config = Configuration.getConfiguration(file.toString());
             System.out.println(config);
         } catch (FileNotFoundException e) {
             System.err.println("file not found");
@@ -39,7 +41,6 @@ public class App extends Application {
         messenger.setReceptionPath(config.getResponsePath());
         App.reset();
         launch();
-
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
         // Graph g =

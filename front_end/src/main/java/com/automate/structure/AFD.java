@@ -91,13 +91,12 @@ public class AFD extends Automate {
     public void makeImage(String path) {
         Graph g = markeGraph();
         try {
-          
+            path = path.replace("\\", "/");
             Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
-        } catch (IOException e) {
+       } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("test");
 
     }
 
@@ -264,15 +263,19 @@ public class AFD extends Automate {
     }
 
     public static void main(String[] args) {
-        AFD afd = null;
-        try {
-            afd = AFD.jsonToAFD("/home/dimitri/automate_manip/back_end/afd.json", false);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        afd.makeImage("./test.png");
-        System.out.println(afd);
+        // AFD afd = null;
+        // try {
+        //     afd = AFD.jsonToAFD("/home/dimitri/automate_manip/back_end/afd.json", false);
+        // } catch (FileNotFoundException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
+        // afd.makeImage("./test.png");
+        // System.out.println(afd);
+
+        String test = "tata\\titi\\toto";
+        test = test.replace("\\", "/");
+        System.out.println(test);
     }
 
    
