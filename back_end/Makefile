@@ -1,21 +1,30 @@
+WINDOW_CC = C:\MinGW\bin\gcc
+LINUX_CC = /usr/bin/gcc-9
+
+WINDOW_DELETE_FILES = del
+LINUX_DELETE_FILES = rm -rf
+
 ifeq ($(OS),Windows_NT)
-    CC = C:\MinGW\bin\gcc
+    CC = $(WINDOW_CC)
+    DELETE_FILES = $(WINDOW_DELETE_FILES)
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)
-        CC = /usr/bin/gcc-9
+        CC = $(LINUX_CC)
+        DELETE_FILES = $(LINUX_DELETE_FILES)
     endif
 endif
 
-
-interface: main_interface.c 
+interface: main_interface.c
 	$(CC) -g -c -w main_interface.c -o main.o
+	make temp
 
-consol: main_consol.c
+consol: main_consol.c 
 	$(CC) -g -c -w main_consol.c -o main.o
+	make temp
 
 temp: AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
-	$(CC) -g main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o messenger.o configuration.o brzozowski.o hopcroft.o function.o stack.o tree.o -lm -lcjson -o out
+	$(CC) -g -w main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o messenger.o configuration.o brzozowski.o hopcroft.o function.o stack.o tree.o -lm -lcjson -o main
 
 
 AFN.o: ./source/algorithm/AFN.c ./header/algorithm/AFN.h ./header/data_structure/structure.h linked_list.o stack.o
@@ -61,7 +70,7 @@ utilitaire.o: ./source/algorithm/utilitaire.c ./header/algorithm/utilitaire.h AF
 	$(CC) -g -c -w ./source/algorithm/utilitaire.c -o utilitaire.o
 
 clean:
-	rm -rf *.o
+	$(DELETE_FILES) *.o
 
 mrproper:clean
-	rm -rf main
+	$(DELETE_FILES) main

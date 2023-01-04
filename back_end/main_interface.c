@@ -298,6 +298,7 @@ int main()
     boolean is_new;
 
     messenger = get_messenger();
+    printf("alive........");
     config = get_config("../config.json");
     print_config(config);
 

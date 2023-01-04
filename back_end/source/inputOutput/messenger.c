@@ -111,6 +111,8 @@ boolean check_new(Messenger *messenger)
             printf("le fichier %s n'exite pas\n", messenger->reception_path);
             return False;
         }
+
+        sleep(1);
         // UP_SEM_REQUEST();
     } while (id->valueint == messenger->previous_id);
 
