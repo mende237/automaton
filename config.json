@@ -1,0 +1,9 @@
+{
+    
+    "data request path": "C:\\Users\\hp\\Documents\\beep-beep\\.communication\\.data_request",
+    "data reponse path": "C:\\Users\\hp\\Documents\\beep-beep\\.communication\\.data_response\\data.json",
+    "request path": "C:\\Users\\hp\\Documents\\beep-beep\\.communication\\.data_response\\request.json",
+    "response path": "C:\\Users\\hp\\Documents\\beep-beep\\.communication\\.response\\response.json",
+    "image path" : "C:\\Users\\hp\\Documents\\beep-beep\\.communication\\.images",
+    "save path":"C:\\Users\\hp\\Documents\\beep-beep\\save"
+}
