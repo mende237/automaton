@@ -16,6 +16,7 @@ public class Configuration {
     private static String imagePath;
     private static String pathSemRequest;
     private static String pathSemResponse;
+    private static String pathSave;
 
     
    
@@ -34,6 +35,7 @@ public class Configuration {
             Configuration.responsePath = obj.getString("response path");
             Configuration.dataRequestPath = obj.getString("data request path");
             Configuration.dataResponsePath = obj.getString("data reponse path");
+            Configuration.pathSave = obj.getString("save path");
             // Configuration.pathSemRequest = obj.getString("path semaphore request");
             // Configuration.pathSemResponse = obj.getString("path semaphore response");
             Configuration.imagePath = obj.getString("image path");
@@ -99,6 +101,9 @@ public class Configuration {
         return Configuration.dataResponsePath;
     }
 
+    public String getSavePath() {
+        return Configuration.pathSave;
+    }
     public void setDataResponsePath(String dataResponsePath) {
         Configuration.dataResponsePath = dataResponsePath;
     }

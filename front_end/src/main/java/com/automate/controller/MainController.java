@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.automate.inputOutput.Configuration;
 import com.automate.inputOutput.Scheduler;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
@@ -53,8 +54,8 @@ public class MainController extends Controller implements Initializable {
     private int nbrEpAFN;
     private TreeItem<String> root, afd, afn, epAfn;
 
-    private String path = "/home/dimitri/Documents/beep-beep/save";
-    private String imagePath = "/home/dimitri/Documents/beep-beep/.communication/.images";
+    //private String path = "/home/dimitri/Documents/beep-beep/save";
+    //private String imagePath = "/home/dimitri/Documents/beep-beep/.communication/.images";
     private ArrayList<AFD> tabAFD;
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
@@ -88,7 +89,7 @@ public class MainController extends Controller implements Initializable {
             this.tabEpAFN = new ArrayList<>();
             ArrayList<Automate> tempTab;
             // chargement des afd
-            tempTab = loadData(new File(this.path + "/afd"), true);
+            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "afd"), true);
             for (int i = 0; i < tempTab.size(); i++) {
                 this.tabAFD.add((AFD) tempTab.get(i));
             }
@@ -98,7 +99,7 @@ public class MainController extends Controller implements Initializable {
             // }
 
             // chargement des afn
-            tempTab = loadData(new File(this.path + "/afn"), false);
+            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "afn"), false);
             for (int i = 0; i < tempTab.size(); i++) {
                 this.tabAFN.add((AFN) tempTab.get(i));
             }
@@ -108,7 +109,7 @@ public class MainController extends Controller implements Initializable {
             // }
 
             // chargement des epAFN
-            tempTab = loadData(new File(this.path + "/ep-afn"), false);
+            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "ep-afn"), false);
             for (int i = 0; i < tempTab.size(); i++) {
                 this.tabEpAFN.add((AFN) tempTab.get(i));
             }
@@ -181,21 +182,22 @@ public class MainController extends Controller implements Initializable {
                 int indexParent = getTreeItemIndex(item.getParent());
 
                 // Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
-                String pathCurrentImage = this.imagePath;
+                String pathCurrentImage = Configuration.getConfiguration().getImagePath();
                 Automate automate = null;
                 if (indexParent == 0) {// dans ce cas on doit afficher un afd
                     automate = this.tabAFD.get(itemIndex);
-                    pathCurrentImage += "/afd.png";
+                    pathCurrentImage += File.separator +  "afd.png";
                     automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
+                    System.out.println(pathCurrentImage);
                 } else if (indexParent == 1) {// dans ce cas on doit afficher un afn
                     automate = this.tabAFN.get(itemIndex);
-                    pathCurrentImage += "/afn.png";
+                    pathCurrentImage += File.separator + "afn.png";
                     automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 } else {//
                     automate = this.tabEpAFN.get(itemIndex);
-                    pathCurrentImage += "/ep-afn.png";
+                    pathCurrentImage += File.separator + "ep-afn.png";
                     automate.makeImage(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 }

@@ -197,8 +197,8 @@ public class ConvertController extends Controller implements Initializable {
                 }else{
                     automate = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
                 }
-                automate.makeImage(config.getImagePath() + "/afd.png");
-                File file = new File(config.getImagePath() + "/afd.png");
+                automate.makeImage(config.getImagePath() + File.separator + "afd.png");
+                File file = new File(config.getImagePath() + File.separator + "afd.png");
                 Image image = new Image(file.toURI().toString());
                 this.imageViewResult.setImage(image);
             } catch (FileNotFoundException | JSONException e) {

@@ -48,11 +48,11 @@ Configuration *get_config(char *path)
         config->data_response_path = calloc(strlen(data_response_path->valuestring) + 1, sizeof(char));
         strcpy(config->data_response_path, data_response_path->valuestring);
 
-        config->path_sem_request = calloc(strlen(path_sem_request->valuestring) + 1, sizeof(char));
-        strcpy(config->path_sem_request, path_sem_request->valuestring);
+        // config->path_sem_request = calloc(strlen(path_sem_request->valuestring) + 1, sizeof(char));
+        // strcpy(config->path_sem_request, path_sem_request->valuestring);
 
-        config->path_sem_response = calloc(strlen(path_sem_response->valuestring) + 1, sizeof(char));
-        strcpy(config->path_sem_response, path_sem_response->valuestring);
+        // config->path_sem_response = calloc(strlen(path_sem_response->valuestring) + 1, sizeof(char));
+        // strcpy(config->path_sem_response, path_sem_response->valuestring);
 
         config->request_path = calloc(strlen(request->valuestring) + 1, sizeof(char));
         strcpy(config->request_path, request->valuestring);
