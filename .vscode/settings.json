@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "linked_list.h": "c",
+        "stack.h": "c",
+        "function.h": "c",
+        "cstdarg": "cpp"
+    }
+}
