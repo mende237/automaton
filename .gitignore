@@ -1,4 +1,4 @@
-.vscode
-./back_end/.vscode
-./front_end/.vscode
+.vscode/
+./back_end/.vscode/
+./front_end/.vscode/
 ./front_end/target/
