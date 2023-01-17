@@ -1,12 +1,20 @@
-CC = /usr/bin/gcc-9
+ifeq ($(OS),Windows_NT)
+    CC = C:\MinGW\bin\gcc
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        CC = /usr/bin/gcc-9
+    endif
+endif
 
-interface: main_interface.c
+
+interface: main_interface.c 
 	$(CC) -g -c -w main_interface.c -o main.o
 
 consol: main_consol.c
 	$(CC) -g -c -w main_consol.c -o main.o
 
-final: main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
+temp: AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o brzozowski.o hopcroft.o messenger.o configuration.o
 	$(CC) -g main.o AFN.o AFD.o linked_list.o thomson.o glushkov.o utilitaire.o messenger.o configuration.o brzozowski.o hopcroft.o function.o stack.o tree.o -lm -lcjson -o out
 
 
@@ -54,6 +62,6 @@ utilitaire.o: ./source/algorithm/utilitaire.c ./header/algorithm/utilitaire.h AF
 
 clean:
 	rm -rf *.o
-	
+
 mrproper:clean
 	rm -rf main
