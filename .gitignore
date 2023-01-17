@@ -2,3 +2,4 @@
 ./back_end/.vscode/
 ./front_end/.vscode/
 ./front_end/target/
+*.o
