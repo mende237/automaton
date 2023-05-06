@@ -632,6 +632,7 @@ START:
     free(messenger->message.dataPath);
     free(messenger->message.name);
 END:
+    sleep(1);
     goto START;
 
 QUIT:

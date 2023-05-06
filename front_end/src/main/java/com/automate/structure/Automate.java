@@ -2,6 +2,8 @@ package com.automate.structure;
 
 import static guru.nidi.graphviz.model.Factory.*;
 
+import java.util.ArrayList;
+
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.attribute.Shape;
@@ -17,10 +19,18 @@ public abstract class Automate {
    
     protected String finalStateTab[];
     protected String tabLabel[];
-
+    protected Graph graph;
+    
+    protected ArrayList<String> dinamicFinalStateTab;
+    protected ArrayList<String> dinamicTabLabel;
+     
     /*******************************************
      * constructor
      *************************************************/
+    public Automate(){
+
+    }
+
     public Automate(String tabLabel[] , int nbrState, String finalStateTab[] , String name, String description , String path) {
         this(tabLabel , nbrState , finalStateTab , path);
         this.name = name;
@@ -95,6 +105,7 @@ public abstract class Automate {
     public abstract void save(String path);
     public abstract Graph markeGraph();
     public abstract void makeImage(String path);
+    public abstract void addTransitionToGraph(Transition transition);
 
     protected Node addState(State state) {
         switch (state.getType()) {

@@ -6,6 +6,7 @@ import static guru.nidi.graphviz.model.Factory.to;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import guru.nidi.graphviz.model.Graph;
 
 public class AFD extends Automate {
     private Transition matTrans[] = null;
+    private LinkedList<Transition> dinimicMatTrans;
     private String initialState = null;
 
     /****************************************
@@ -67,6 +69,12 @@ public class AFD extends Automate {
     public void addTransition(State begin, String label, State end) {
         this.matTrans[cmpt] = new Transition(begin, label, end);
         super.cmpt++;
+    }
+
+    @Override
+    public void addTransitionToGraph(Transition transition) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
     }
 
     @Override
@@ -277,6 +285,8 @@ public class AFD extends Automate {
         test = test.replace("\\", "/");
         System.out.println(test);
     }
+
+
 
    
 }

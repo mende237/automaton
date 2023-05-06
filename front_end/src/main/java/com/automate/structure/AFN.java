@@ -6,6 +6,7 @@ import static guru.nidi.graphviz.model.Factory.to;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -23,11 +24,17 @@ import guru.nidi.graphviz.model.Graph;
 public class AFN extends Automate {
     private LinkedList<Transition> matTrans;
     private String initialStateTab[];
+    protected ArrayList<String> dinamicInitialState;
     private String epsilone;
+
 
     /**************************************
      * constructor
      *****************************************/
+    public AFN(){
+        super();
+    }
+
     public AFN(String tabLabel[], String epsilone, int nbrState, String finalStateTab[],
             String initialStateTab[], String name, String description) {
         super(tabLabel, nbrState, finalStateTab, name, description);
@@ -73,6 +80,12 @@ public class AFN extends Automate {
     public void addTransition(State begin, String label, State end) {
         Transition trans = new Transition(begin, label, end);
         this.matTrans.add(trans);
+    }
+
+    @Override
+    public void addTransitionToGraph(Transition transition) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
     }
 
     public static AFN jsonToAFN(String filePath, boolean readInfo) throws FileNotFoundException {

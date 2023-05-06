@@ -32,7 +32,14 @@
                         <TreeView fx:id="treeView" prefHeight="273.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity" />
+                  <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity">
+                     <children>
+                        <BorderPane prefHeight="273.0" prefWidth="930.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <bottom>
+                              <AnchorPane prefHeight="47.0" prefWidth="930.0" BorderPane.alignment="CENTER" />
+                           </bottom>
+                        </BorderPane>
+                     </children></AnchorPane>
                </items>
             </SplitPane>
          </center>
@@ -75,12 +82,12 @@
                                              <items>
                                                 <AnchorPane prefHeight="156.0" prefWidth="292.0">
                                                    <children>
-                                                      <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <VBox alignment="BOTTOM_CENTER" prefHeight="156.0" prefWidth="314.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <GridPane alignment="CENTER" hgap="5.0" prefHeight="138.0" prefWidth="250.0" vgap="5.0">
+                                                            <GridPane alignment="CENTER" hgap="5.0" prefHeight="130.0" prefWidth="261.0" vgap="5.0">
                                                                <columnConstraints>
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="155.0" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="97.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="97.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="137.0" />
                                                                </columnConstraints>
                                                                <rowConstraints>
@@ -88,7 +95,7 @@
                                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                </rowConstraints>
                                                                <children>
-                                                                  <Button id="btnDeterminisation" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeterminisationView" prefHeight="12.0" prefWidth="152.0" textAlignment="CENTER">
+                                                                  <Button id="btnDeterminisation" alignment="CENTER" mnemonicParsing="false" onAction="#handleDeterminisationView" prefHeight="12.0" prefWidth="108.0" textAlignment="CENTER">
                                                                      <graphic>
                                                                         <ImageView fitHeight="50.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -149,7 +156,7 @@
                                                       </VBox>
                                                    </children>
                                                 </AnchorPane>
-                                                <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="6.0" />
+                                                <Separator orientation="VERTICAL" prefHeight="156.0" prefWidth="12.0" />
                                                 <AnchorPane prefHeight="156.0" prefWidth="304.0">
                                                    <children>
                                                       <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
