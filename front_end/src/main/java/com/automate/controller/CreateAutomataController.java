@@ -1,18 +1,27 @@
 package com.automate.controller;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import com.automate.structure.State;
 import com.automate.structure.StateType;
 import com.utils.CircleTableCell;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,6 +35,13 @@ import javafx.scene.layout.Pane;
 public class CreateAutomataController implements Initializable{
 
     @FXML
+    private SplitPane splitPane;
+
+    
+    @FXML
+    private Label alphabetLabel;
+    
+    @FXML
     private HBox alphabetBox;
 
     @FXML
@@ -35,7 +51,7 @@ public class CreateAutomataController implements Initializable{
     private ComboBox<State> deleteStateComboBox;
 
     @FXML
-    private ComboBox<?> deleteSymbolComboBox;
+    private ComboBox<String> deleteSymbolComboBox;
 
     @FXML
     private ComboBox<?> deleteTransitionComboBox;
@@ -53,13 +69,13 @@ public class CreateAutomataController implements Initializable{
     private TextField newSymbolTextField;
 
     @FXML
-    private ComboBox<?> newTransitionFromComboBox;
+    private ComboBox<State> newTransitionFromComboBox;
 
     @FXML
-    private ComboBox<?> newTransitionInputComboBox;
+    private ComboBox<String> newTransitionInputComboBox;
 
     @FXML
-    private ComboBox<?> newTransitionToComboBox;
+    private ComboBox<State> newTransitionToComboBox;
 
     @FXML
     private TableColumn<String , String> stateNameColumn;
@@ -82,12 +98,18 @@ public class CreateAutomataController implements Initializable{
 
     // Une liste observable d'états qui sera affichée dans le TableView
     private ObservableList<State> statesList = FXCollections.observableArrayList();
+    private ObservableList<String> alphabetList;
+
+    private Map<State, Node> stateNodes = new HashMap<>();
+
+    // private List<String> alphabet = new ArrayList<>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // stateNameColumn.setCellFactory(column -> new CircleTableCell<String>());
-
+        stateNameColumn.setCellFactory(column -> new CircleTableCell<String>());
+        statesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        transitionsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Configurer les colonnes du TableView
         stateNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -149,7 +171,61 @@ public class CreateAutomataController implements Initializable{
         // Lier la liste d'états au TableView
         statesTableView.setItems(statesList);
         deleteStateComboBox.setItems(statesList);
+
+        alphabetList = FXCollections.observableArrayList();
+        // alphabetList.addListener((ListChangeListener<String>) c -> updateAlphabetLabel());
+
+
+        updateTransitionComboBoxes(); // Mettre à jour les ComboBox au démarrage
+        statesTableView.getItems().addListener((ListChangeListener<State>) change -> {
+            while (change.next()) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    updateTransitionComboBoxes(); // Mettre à jour les ComboBox à chaque modification de la liste des états
+                    updateInputComboBox(); // Mettre à jour la ComboBox à chaque modification de la liste des symboles de l'alphabet
+                }
+            }
+        });
+
+
+        updateInputComboBox(); // Mettre à jour la ComboBox au démarrage
+        updateAlphabetLabel();
+        alphabetList.addListener((ListChangeListener<String>) change -> {
+            while (change.next()) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    updateInputComboBox(); // Mettre à jour la ComboBox à chaque modification de la liste des symboles de l'alphabet
+                    updateAlphabetLabel();
+                }
+            }
+        });   
+        
+        addSplitPaneListener();
     }
+
+
+    private void addSplitPaneListener() {
+        splitPane.widthProperty().addListener((observable, oldWidth, newWidth) -> {
+            statesTableView.setPrefWidth(newWidth.doubleValue() * 0.4);
+            transitionsTableView.setPrefWidth(newWidth.doubleValue() * 0.4);
+        });
+    }
+
+    private void updateAlphabetLabel() {
+        String alphabet = String.join(", ", alphabetList);
+        alphabetLabel.setText("Alphabet: " + alphabet);
+    }
+
+    private void updateInputComboBox() {
+        newTransitionInputComboBox.setItems(FXCollections.observableArrayList(alphabetList));
+        deleteSymbolComboBox.setItems(FXCollections.observableArrayList(alphabetList));
+    }
+
+    private void updateTransitionComboBoxes() {
+        List<State> states = statesTableView.getItems().stream().collect(Collectors.toList());
+        newTransitionFromComboBox.setItems(FXCollections.observableArrayList(states));
+        newTransitionToComboBox.setItems(FXCollections.observableArrayList(states));
+        deleteStateComboBox.setItems(FXCollections.observableArrayList(states));
+    }
+    
 
     @FXML
     private void handleAddStateButtonClick(ActionEvent event) {
@@ -178,8 +254,14 @@ public class CreateAutomataController implements Initializable{
 
 
     @FXML
-    void handleAddSymbolButtonClick(ActionEvent event) {
-
+    private void handleAddSymbolButtonClick() {
+        String newSymbol = newSymbolTextField.getText().trim();
+        if (!newSymbol.isEmpty() && !alphabetList.contains(newSymbol)) {
+            alphabetList.add(newSymbol);
+            newSymbolTextField.clear();
+            // deleteSymbolComboBox.getItems().add(newSymbol); // Ajouter le nouveau symbole à la ComboBox
+            // updateAlphabetLabel();
+        }
     }
 
     @FXML
@@ -188,8 +270,14 @@ public class CreateAutomataController implements Initializable{
     }
 
     @FXML
-    void handleDeleteSymbolButtonClick(ActionEvent event) {
-
+    private void handleDeleteSymbolButtonClick(ActionEvent event) {
+        String selectedSymbol = deleteSymbolComboBox.getSelectionModel().getSelectedItem();
+        if (selectedSymbol != null) {
+            alphabetList.remove(selectedSymbol);
+            deleteSymbolComboBox.getItems().remove(selectedSymbol); // Supprimer le symbole de la ComboBox
+            deleteSymbolComboBox.getSelectionModel().clearSelection();
+            updateAlphabetLabel(); // Mettre à jour le texte du Label "alphabetLabel"
+        }
     }
 
     @FXML

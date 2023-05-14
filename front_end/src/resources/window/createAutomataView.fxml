@@ -15,9 +15,9 @@
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.CreateAutomataController">
     <center>
-        <SplitPane dividerPositions="0.5, 0.5" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+        <SplitPane fx:id="splitPane" dividerPositions="0.5, 0.5" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
             <items>
-                <VBox spacing="10.0" styleClass="left-panel">
+                <VBox spacing="10.0" VBox.vgrow="ALWAYS" styleClass="left-panel">
                     <Label styleClass="panel-label" text="States" />
                     <TableView fx:id="statesTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
                         <columns>
@@ -25,6 +25,7 @@
                             <TableColumn fx:id="isInitialStateColumn" editable="true" text="Initial" />
                             <TableColumn fx:id="isFinalStateColumn" editable="true" text="Final" />
                         </columns>
+                        
                     </TableView>
                     <HBox spacing="10.0">
                         <TextField fx:id="newStateNameTextField" promptText="New State Name" />
@@ -38,7 +39,7 @@
                 <ScrollPane fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
                     <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0" />
                 </ScrollPane>
-                <VBox spacing="10.0" styleClass="right-panel">
+                <VBox spacing="10.0" VBox.vgrow="ALWAYS" styleClass="right-panel">
                     <Label styleClass="panel-label" text="Transitions" />
                     <TableView fx:id="transitionsTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
                         <columns>
@@ -63,7 +64,7 @@
     </center>
     <bottom>
         <VBox alignment="CENTER" spacing="10.0" styleClass="top-panel">
-            <Label styleClass="panel-label" text="Alphabet" />
+            <Label fx:id="alphabetLabel" styleClass="panel-label" text="Alphabet" />
             <HBox fx:id="alphabetBox" alignment="CENTER" spacing="10.0" styleClass="alphabet-box">
                 <TextField fx:id="newSymbolTextField" promptText="New Symbol" />
                 <Button onAction="#handleAddSymbolButtonClick" text="Add Symbol" />

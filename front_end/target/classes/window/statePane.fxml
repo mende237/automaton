@@ -1,0 +1,4 @@
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml/1">
+    <Circle fx:id="stateCircle" radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.0" />
+    <Label fx:id="stateLabel" layoutX="12.0" layoutY="12.0" text="State" />
+</fx:root>

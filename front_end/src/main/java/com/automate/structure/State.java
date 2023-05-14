@@ -2,14 +2,27 @@ package com.automate.structure;
 
 public class State {
     private String name;
-    public boolean finalState = true;
-    public boolean initial = false;
+    private boolean finalState = true;
+    private boolean initial = false;
 
     private StateType type;
     
     public State(String name , StateType type){
         this.name = name;
         this.type = type;
+        if(type == StateType.FINAL){
+            initial = false;
+            finalState = true;
+        }else if(type == StateType.FINAL_INITIAL){
+            initial = true;
+            finalState = true;
+        }else if(type == StateType.INITIAL){
+            initial = true;
+            finalState = false;
+        }else{
+            initial = false;
+            finalState = false;
+        }
     }
 
     public State(String name) {
