@@ -19,6 +19,7 @@ com/automate/structure/Automate$1.class
 com/automate/controller/MainController$1.class
 com/automate/controller/Mediator.class
 com/automate/controller/ReconnaissanceController.class
+com/automate/controller/TestController.class
 com/automate/inputOutput/Instruction.class
 com/automate/controller/MainController$viewType.class
 com/automate/controller/ConvertController$1.class

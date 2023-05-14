@@ -21,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -28,18 +29,18 @@ public class App extends Application {
     public static Messenger messenger = Messenger.getMessenger();
 
     public static void main(String args[]) throws IOException {
-        try {
+        // try {
 
-            File file = new File(".." + File.separator + "config.json");
-            config = Configuration.getConfiguration(file.toString());
-            System.out.println(config);
-        } catch (FileNotFoundException e) {
-            System.err.println("file not found");
-        }
+        //     File file = new File(".." + File.separator + "config.json");
+        //     config = Configuration.getConfiguration(file.toString());
+        //     System.out.println(config);
+        // } catch (FileNotFoundException e) {
+        //     System.err.println("file not found");
+        // }
         
-        messenger.setSendingPath(config.getRequestPath());
-        messenger.setReceptionPath(config.getResponsePath());
-        App.reset();
+        // messenger.setSendingPath(config.getRequestPath());
+        // messenger.setReceptionPath(config.getResponsePath());
+        // App.reset();
         launch();
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -96,19 +97,29 @@ public class App extends Application {
         // System.out.println(App.class.getResource("test1.txt"));
         // System.out.println("traverser");
         
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
-        stage.setTitle("beep-beep");
-        // String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
-        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView.fxml"));
+        // stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
+        // stage.setTitle("beep-beep");
+        // // String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
+        // ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+        // FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView.fxml"));
 
-        loader.setControllerFactory(c -> {
-            return new MainController(mediator);
-        });
-        AnchorPane root = loader.load();
+        // loader.setControllerFactory(c -> {
+        //     return new MainController(mediator);
+        // });
+        // AnchorPane root = loader.load();
+        
+        // //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
+        // Scene scene = new Scene(root);
+        // // scene.getStylesheets().add(css);
+        // stage.setScene(scene);
+        // stage.show();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/test9.fxml"));
+        BorderPane root = loader.load();
         
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/window/style2.css").toExternalForm());
         // scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();

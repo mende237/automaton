@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <SplitPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+            <items>
+                <VBox spacing="10.0" styleClass="left-panel">
+                    <Label styleClass="panel-label" text="States" />
+                    <TableView fx:id="statesTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="stateNameColumn" editable="true" text="Name" />
+                            <TableColumn fx:id="isInitialStateColumn" editable="true" text="Initial" />
+                            <TableColumn fx:id="isFinalStateColumn" editable="true" text="Final" />
+                        </columns>
+                    </TableView>
+                    <HBox spacing="10.0">
+                        <TextField fx:id="newStateNameTextField" promptText="New State Name" />
+                        <Button onAction="#handleAddStateButtonClick" text="Add State" />
+                    </HBox>
+                    <HBox spacing="10.0">
+                        <ComboBox fx:id="deleteStateComboBox" promptText="Select State to Delete" />
+                        <Button onAction="#handleDeleteStateButtonClick" text="Delete State" />
+                    </HBox>
+                </VBox>
+                <ScrollPane prefViewportWidth="400.0" prefViewportHeight="400.0" fitToWidth="true">
+                    <Pane fx:id="automatonPane" prefWidth="400.0" prefHeight="400.0" minHeight="400.0" minWidth="400.0"/>
+                </ScrollPane>
+                <VBox spacing="10.0" styleClass="right-panel">
+                    <Label text="Transitions" styleClass="panel-label"/>
+                    <TableView fx:id="transitionsTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="transitionFromColumn" text="From" editable="false"/>
+                            <TableColumn fx:id="transitionInputColumn" text="Input" editable="false"/>
+                            <TableColumn fx:id="transitionToColumn" text="To" editable="false"/>
+                        </columns>
+                    </TableView>
+                    <HBox spacing="10.0">
+                        <ComboBox fx:id="newTransitionFromComboBox" promptText="From State" />
+                        <ComboBox fx:id="newTransitionToComboBox" promptText="To State" />
+                        <ComboBox fx:id="newTransitionInputComboBox" promptText="Input Symbol" />
+                        <Button text="Add Transition" onAction="#handleAddTransitionButtonClick"/>
+                    </HBox>
+                    <HBox spacing="10.0">
+                        <ComboBox fx:id="deleteTransitionComboBox" promptText="Select Transition to Delete"/>
+                        <Button text="Delete Transition" onAction="#handleDeleteTransitionButtonClick"/>
+                    </HBox>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+    <bottom>
+        <VBox spacing="10.0" styleClass="top-panel" alignment="CENTER">
+            <Label text="Alphabet" styleClass="panel-label"/>
+            <HBox fx:id="alphabetBox" spacing="10.0" styleClass="alphabet-box" alignment="CENTER">
+                <TextField fx:id="newSymbolTextField" promptText="New Symbol" />
+                <Button text="Add Symbol" onAction="#handleAddSymbolButtonClick"/>
+                <ComboBox fx:id="deleteSymbolComboBox" promptText="Select Symbol to Delete"/>
+                <Button text="Delete Symbol" onAction="#handleDeleteSymbolButtonClick"/>
+            </HBox>
+        </VBox>
+    </bottom>
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+</BorderPane>

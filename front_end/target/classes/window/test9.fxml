@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.TestController">
+    <top>
+        <MenuBar>
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem text="Open" />
+                        <MenuItem text="Save" />
+                        <MenuItem text="Exit" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <left>
+        <VBox spacing="10.0" styleClass="left-panel">
+            <Label styleClass="panel-label" text="States" />
+            <TableView fx:id="statesTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="stateNameColumn" editable="true" text="Name" />
+                    <TableColumn fx:id="isInitialStateColumn" editable="true" text="Initial" />
+                    <TableColumn fx:id="isFinalStateColumn" editable="true" text="Final" />
+                </columns>
+            </TableView>
+            <HBox spacing="10.0">
+                <TextField fx:id="newStateNameTextField" promptText="New State Name" />
+                <Button onAction="#handleAddStateButtonClick" text="Add State" />
+            </HBox>
+            <HBox spacing="10.0">
+                <ComboBox fx:id="deleteStateComboBox" promptText="Select State to Delete" />
+                <Button onAction="#handleDeleteStateButtonClick" text="Delete State" />
+            </HBox>
+        </VBox>
+    </left>
+    <center>
+        <ScrollPane fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
+            <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0">
+                <HBox>
+                    <Region fx:id="leftRegion" onMouseDragged="#handleLeftRegionDragged" onMousePressed="#handleLeftRegionPressed" prefHeight="400.0" prefWidth="10.0" style="-fx-background-color: transparent;" />
+                    <Region fx:id="rightRegion" onMouseDragged="#handleRightRegionDragged" onMousePressed="#handleRightRegionPressed" prefHeight="400.0" prefWidth="10.0" style="-fx-background-color: transparent;" />
+                </HBox>
+            </Pane>
+        </ScrollPane>
+    </center>
+    <right>
+        <VBox spacing="10.0" styleClass="right-panel">
+            <Label styleClass="panel-label" text="Transitions" />
+            <TableView fx:id="transitionsTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="transitionFromColumn" editable="false" text="From" />
+                    <TableColumn fx:id="transitionInputColumn" editable="false" text="Input" />
+                    <TableColumn fx:id="transitionToColumn" editable="false" text="To" />
+                </columns>
+            </TableView>
+            <HBox spacing="10.0">
+                <ComboBox fx:id="newTransitionFromComboBox" promptText="From State" />
+                <ComboBox fx:id="newTransitionToComboBox" promptText="To State" />
+                <ComboBox fx:id="newTransitionInputComboBox" promptText="Input Symbol" />
+                <Button onAction="#handleAddTransitionButtonClick" text="Add Transition" />
+            </HBox>
+            <HBox spacing="10.0">
+                <ComboBox fx:id="deleteTransitionComboBox" promptText="Select Transition to Delete" />
+                <Button onAction="#handleDeleteTransitionButtonClick" text="Delete Transition" />
+            </HBox>
+        </VBox>
+    </right>
+    <bottom>
+        <VBox alignment="CENTER" styleClass="bottom-panel">
+            <Label styleClass="panel-label" text="Alphabet" />
+            <HBox fx:id="alphabetBox" alignment="CENTER" spacing="10.0" styleClass="alphabet-box">
+                <TextField fx:id="newSymbolTextField" promptText="New Symbol" />
+                <Button onAction="#handleAddSymbolButtonClick" text="Add Symbol" />
+                <ComboBox fx:id="deleteSymbolComboBox" promptText="Select Symbol to Delete" />
+                <Button onAction="#handleDeleteSymbolButtonClick" text="Delete Symbol" />
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>
