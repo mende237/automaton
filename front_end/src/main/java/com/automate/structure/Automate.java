@@ -110,15 +110,15 @@ public abstract class Automate {
     protected Node addState(State state) {
         switch (state.getType()) {
             case INITIAL:
-                return node(state.getValue()).with(Style.FILLED , Color.rgb("#b5fed9").fill());
+                return node(state.getName()).with(Style.FILLED , Color.rgb("#b5fed9").fill());
             case FINAL:
-                return node(state.getValue()).with(Style.FILLED , Shape.DOUBLE_CIRCLE, Color.rgb("#e2cbc1").fill());
+                return node(state.getName()).with(Style.FILLED , Shape.DOUBLE_CIRCLE, Color.rgb("#e2cbc1").fill());
             case WELL:
-                return node(state.getValue()).with(Style.FILLED , Color.GRAY.fill());
+                return node(state.getName()).with(Style.FILLED , Color.GRAY.fill());
             case FINAL_INITIAL:
-                return node(state.getValue()).with(Style.FILLED, Shape.DOUBLE_CIRCLE, Color.rgb("#b5fed9").fill());
+                return node(state.getName()).with(Style.FILLED, Shape.DOUBLE_CIRCLE, Color.rgb("#b5fed9").fill());
             default:
-                return node(state.getValue()).with(Style.FILLED , Color.rgb("#87CEEB").fill());
+                return node(state.getName()).with(Style.FILLED , Color.rgb("#87CEEB").fill());
         }
     }
 

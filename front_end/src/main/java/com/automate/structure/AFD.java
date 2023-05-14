@@ -159,15 +159,15 @@ public class AFD extends Automate {
                 State tempState1 = (State) transitions[j][0];
                 State tempState2 = (State) transitions[j][2];
 
-                if (finalStates[i].equalsIgnoreCase(tempState1.getValue()) == true) {
+                if (finalStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
                     tempState1.setType(StateType.FINAL);
                 }
 
-                if (finalStates[i].equalsIgnoreCase(tempState2.getValue()) == true) {
+                if (finalStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
                     tempState2.setType(StateType.FINAL);
                 }
 
-                if (initialState.equalsIgnoreCase(tempState1.getValue()) == true) {
+                if (initialState.equalsIgnoreCase(tempState1.getName()) == true) {
                     if (tempState1.getType() == StateType.FINAL || tempState1
                             .getType() == StateType.FINAL_INITIAL) {
                         tempState1.setType(StateType.FINAL_INITIAL);
@@ -176,7 +176,7 @@ public class AFD extends Automate {
                     }
                 }
 
-                if (initialState.equalsIgnoreCase(tempState2.getValue()) == true) {
+                if (initialState.equalsIgnoreCase(tempState2.getName()) == true) {
                     if (tempState2.getType() == StateType.FINAL || tempState1
                             .getType() == StateType.FINAL_INITIAL) {
                         tempState2.setType(StateType.FINAL_INITIAL);
@@ -191,19 +191,19 @@ public class AFD extends Automate {
         for (int i = transitions.length - alphabet.length; i < transitions.length; i++) {
             State begin = (State) transitions[i][0];
             State end = (State) transitions[i][2];
-            if (begin.getValue().equalsIgnoreCase(end.getValue()) == false) {
+            if (begin.getName().equalsIgnoreCase(end.getName()) == false) {
                 isWellState = false;
                 break;
             }
         }
 
         State wellState = (State) transitions[transitions.length - 1][0];
-        if (wellState.getValue().equalsIgnoreCase(initialState) == true) {
+        if (wellState.getName().equalsIgnoreCase(initialState) == true) {
             isWellState = false;
         }
 
         for (int i = 0; i < finalStates.length; i++) {
-            if (wellState.getValue().equalsIgnoreCase(finalStates[i]) == true) {
+            if (wellState.getName().equalsIgnoreCase(finalStates[i]) == true) {
                 isWellState = false;
                 break;
             }
@@ -213,13 +213,13 @@ public class AFD extends Automate {
             for (int i = 0; i < transitions.length; i++) {
                 State begin = (State) transitions[i][0];
                 State end = (State) transitions[i][2];
-                if (begin.getValue().equalsIgnoreCase(wellState.getValue()) == true) {
+                if (begin.getName().equalsIgnoreCase(wellState.getName()) == true) {
                     // if(begin.getType() == StateType.NORMAL){
                     begin.setType(StateType.WELL);
                     // }
                 }
 
-                if (end.getValue().equalsIgnoreCase(wellState.getValue()) == true) {
+                if (end.getName().equalsIgnoreCase(wellState.getName()) == true) {
                     // if(end.getType() == StateType.NORMAL){
                     end.setType(StateType.WELL);
                     // }

@@ -147,11 +147,11 @@ public class AFN extends Automate {
                 State tempState1 = (State) transitions[j][0];
                 State tempState2 = (State) transitions[j][2];
 
-                if (finalStates[i].equalsIgnoreCase(tempState1.getValue()) == true) {
+                if (finalStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
                     tempState1.setType(StateType.FINAL);
                 }
 
-                if (finalStates[i].equalsIgnoreCase(tempState2.getValue()) == true) {
+                if (finalStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
                     tempState2.setType(StateType.FINAL);
                 }
             }
@@ -162,7 +162,7 @@ public class AFN extends Automate {
                 State tempState1 = (State) transitions[j][0];
                 State tempState2 = (State) transitions[j][2];
 
-                if (initialStates[i].equalsIgnoreCase(tempState1.getValue()) == true) {
+                if (initialStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
                     if (tempState1.getType() == StateType.FINAL || tempState1
                             .getType() == StateType.FINAL_INITIAL) {
                         tempState1.setType(StateType.FINAL_INITIAL);
@@ -171,7 +171,7 @@ public class AFN extends Automate {
                     }
                 }
 
-                if (initialStates[i].equalsIgnoreCase(tempState2.getValue()) == true) {
+                if (initialStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
                     if (tempState2.getType() == StateType.FINAL || tempState1
                             .getType() == StateType.FINAL_INITIAL) {
                         tempState2.setType(StateType.FINAL_INITIAL);

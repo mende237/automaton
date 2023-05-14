@@ -72,7 +72,4 @@
             </HBox>
         </VBox>
     </bottom>
-    <!-- <stylesheets>
-        <URL value="@style3.css" />
-    </stylesheets> -->
 </BorderPane>
