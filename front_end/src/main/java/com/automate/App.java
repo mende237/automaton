@@ -114,7 +114,7 @@ public class App extends Application {
         // stage.setScene(scene);
         // stage.show();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/test9.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
         BorderPane root = loader.load();
         
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
