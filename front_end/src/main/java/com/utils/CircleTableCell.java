@@ -1,33 +1,54 @@
 package com.utils;
 
-import javafx.scene.control.ContentDisplay;
+
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import com.automate.structure.State;
 
-public class CircleTableCell<T> extends TableCell<T, String> {
-    private final Circle circle;
-    private final Label label;
+public class CircleTableCell extends TableCell<State, String> {
+    private final StackPane stackPane = new StackPane();
+    private final Circle circle = new Circle(10);
+    private final Text text = new Text();
 
     public CircleTableCell() {
-        this.circle = new Circle(10);
-        this.label = new Label();
-        setGraphic(new HBox(circle, label));
-        setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        stackPane.setAlignment(Pos.CENTER);
+        stackPane.getChildren().addAll(circle, text);
+        setGraphic(stackPane);
     }
 
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
-            circle.setFill(Color.TRANSPARENT);
-            label.setText("");
+            setText(null);
+            setGraphic(null);
         } else {
-            circle.setFill(Color.GREEN);
-            label.setText(item);
+            State state = getTableView().getItems().get(getIndex());
+            double radius = 10;
+            if (state.isInitial()) {
+                circle.setFill(Color.RED);
+            } else if (state.isFinalState()) {
+                circle.setFill(Color.BLUE);
+            } else {
+                circle.setFill(Color.BROWN);
+            }
+            circle.setRadius(radius);
+            text.setText(state.getName());
+            text.setFont(Font.font(radius * 0.8));
+            if (radius < 20) {
+                text.setVisible(false);
+            } else {
+                text.setVisible(true);
+            }
         }
     }
-
 }

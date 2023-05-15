@@ -78,7 +78,7 @@ public class CreateAutomataController implements Initializable{
     private ComboBox<State> newTransitionToComboBox;
 
     @FXML
-    private TableColumn<String , String> stateNameColumn;
+    private TableColumn<State , String> stateNameColumn;
 
     @FXML
     private TableView<State> statesTableView;
@@ -107,7 +107,6 @@ public class CreateAutomataController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        stateNameColumn.setCellFactory(column -> new CircleTableCell<String>());
         statesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         transitionsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -117,7 +116,7 @@ public class CreateAutomataController implements Initializable{
         isFinalStateColumn.setCellValueFactory(new PropertyValueFactory<>("final"));
 
         // isInitialStateColumn = new TableColumn<>("Is Initial State");
-
+        stateNameColumn.setCellFactory(column -> new CircleTableCell());
         
         isInitialStateColumn.setCellFactory(column -> new TableCell<State, Boolean>() {
             @Override
