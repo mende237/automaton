@@ -13,10 +13,7 @@ import com.automate.structure.StateType;
 import com.automate.structure.Transition;
 // import com.utils.ArrowTableCell;
 import com.utils.CircleTableCell;
-import com.utils.FromStateTableCell;
-import com.utils.InputSymbolTableCell;
-import com.utils.StateTableTransitionCell;
-import com.utils.ToStateTableCell;
+
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
