@@ -15,8 +15,8 @@ public class Transition {
         return this.begin;
     }
 
-    public State getLabel() {
-        return this.begin;
+    public String getLabel() {
+        return this.label;
     }
 
     public State getEnd() {

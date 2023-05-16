@@ -1,16 +1,22 @@
 package com.automate.controller;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+// import java.util.ArrayList;
+// import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import com.automate.structure.State;
 import com.automate.structure.StateType;
+import com.automate.structure.Transition;
+// import com.utils.ArrowTableCell;
 import com.utils.CircleTableCell;
+import com.utils.FromStateTableCell;
+import com.utils.InputSymbolTableCell;
+import com.utils.StateTableTransitionCell;
+import com.utils.ToStateTableCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -18,7 +24,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+// import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
@@ -84,23 +90,24 @@ public class CreateAutomataController implements Initializable{
     private TableView<State> statesTableView;
 
     @FXML
-    private TableColumn<?, ?> transitionFromColumn;
+    private TableColumn<Transition, State> transitionFromColumn;
 
     @FXML
-    private TableColumn<?, ?> transitionInputColumn;
+    private TableColumn<Transition, String> transitionInputColumn;
 
     @FXML
-    private TableColumn<?, ?> transitionToColumn;
+    private TableColumn<Transition, State> transitionToColumn;
 
     @FXML
-    private TableView<?> transitionsTableView;
+    private TableView<Transition> transitionsTableView;
 
 
     // Une liste observable d'états qui sera affichée dans le TableView
     private ObservableList<State> statesList = FXCollections.observableArrayList();
+    private ObservableList<Transition> transitionsList = FXCollections.observableArrayList();
     private ObservableList<String> alphabetList;
 
-    private Map<State, Node> stateNodes = new HashMap<>();
+    // private Map<State, Node> stateNodes = new HashMap<>();
 
     // private List<String> alphabet = new ArrayList<>();
 
@@ -110,14 +117,24 @@ public class CreateAutomataController implements Initializable{
         statesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         transitionsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // Configurer les colonnes du TableView
+        // Configurer les colonnes du TableView des états
         stateNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         isInitialStateColumn.setCellValueFactory(new PropertyValueFactory<>("initial"));
         isFinalStateColumn.setCellValueFactory(new PropertyValueFactory<>("final"));
 
-        // isInitialStateColumn = new TableColumn<>("Is Initial State");
-        stateNameColumn.setCellFactory(column -> new CircleTableCell());
+        // Configurer les colonnes du TableView des transitions
+        transitionFromColumn.setCellValueFactory(new PropertyValueFactory<>("begin"));
+        transitionInputColumn.setCellValueFactory(new PropertyValueFactory<>("label"));
+        transitionToColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+
+        // transitionFromColumn.setCellFactory(colum -> new FromStateTableCell());
+        // transitionInputColumn.setCellFactory(colum -> new InputSymbolTableCell());
+        // transitionToColumn.setCellFactory(colum -> new ToStateTableCell());
+
+        // Lier la liste des transitions au TableView des transitions
+        transitionsTableView.setItems(transitionsList);
         
+        stateNameColumn.setCellFactory(column -> new CircleTableCell());
         isInitialStateColumn.setCellFactory(column -> new TableCell<State, Boolean>() {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
@@ -139,6 +156,7 @@ public class CreateAutomataController implements Initializable{
                 }
             }
         });
+
         
         isFinalStateColumn.setCellFactory(column -> new TableCell<State, Boolean>() {
             @Override
@@ -163,13 +181,20 @@ public class CreateAutomataController implements Initializable{
         });
         
         // Ajouter des états par défaut dans le TableView
-        statesList.add(new State("State 1", StateType.NORMAL));
-        statesList.add( new State("State 2", StateType.NORMAL));
-        statesList.add( new State("State 2", StateType.NORMAL));
+        State state1 = new State("State 1", StateType.FINAL);
+        State state2 = new State("State 2", StateType.INITIAL);
+        State state3 = new State("State 2", StateType.INITIAL);
+        statesList.add(state1);
+        statesList.add(state2);
+        statesList.add(state3);
+
+        transitionsList.add(new Transition(state1, "a", state2));
 
         // Lier la liste d'états au TableView
         statesTableView.setItems(statesList);
         deleteStateComboBox.setItems(statesList);
+        transitionsTableView.setItems(transitionsList);
+
 
         alphabetList = FXCollections.observableArrayList();
         // alphabetList.addListener((ListChangeListener<String>) c -> updateAlphabetLabel());
@@ -263,10 +288,23 @@ public class CreateAutomataController implements Initializable{
         }
     }
 
-    @FXML
-    void handleAddTransitionButtonClick(ActionEvent event) {
 
+    @FXML
+    private void handleAddTransitionButtonClick(ActionEvent event) {
+        State fromState = newTransitionFromComboBox.getValue();
+        State toState = newTransitionToComboBox.getValue();
+        String inputSymbol = newTransitionInputComboBox.getValue();
+
+        
+        if (fromState != null && toState != null && inputSymbol != null) {
+            Transition newTransition = new Transition(fromState, inputSymbol, toState);
+            transitionsList.add(newTransition);
+            // automaton.addTransition(newTransition);
+            // transitionsTableView.getItems().add(newTransition);
+        }
     }
+
+
 
     @FXML
     private void handleDeleteSymbolButtonClick(ActionEvent event) {
