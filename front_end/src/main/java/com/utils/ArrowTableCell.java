@@ -1,6 +1,4 @@
 package com.utils;
-
-
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -14,11 +12,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import com.automate.structure.State;
+import com.automate.structure.Transition;
 
-public class CircleTableCell extends TableCell<State, String> {
+public class ArrowTableCell extends TableCell<Transition , String> {
+
 
     @Override
     protected void updateItem(String item, boolean empty) {
@@ -28,26 +29,25 @@ public class CircleTableCell extends TableCell<State, String> {
             setText(null);
             setGraphic(null);
         } else {
-            Circle circle = new Circle();
-            setTextFill(Color.BLACK);
-            setContentDisplay(ContentDisplay.CENTER);
-            setGraphic(circle);
-
-            setText(item);
-            State state = getTableView().getItems().get(getIndex());
-            double radius = Math.max(20, item.length() * 5);
-            circle.setRadius(radius);
-            circle.setStroke(Color.BLACK);
-            if (state.isInitial()) {
-                circle.setFill(Color.web("#00cc66"));
-            } else if (state.isFinalState()) {
-                circle.setFill(Color.web("#ff3300"));
-            } else {
-                circle.setFill(Color.web("#4286f4"));
-            }
-            System.out.println(circle + "==" + circle.getLayoutY());
+            Line line = new Line();
+            // Set the line's start and end points
+            double x1 = 0;
+            double y1 = getHeight() / 2;
+            double x2 = getWidth();
+            double y2 = getHeight() / 2;
+            line.setStartX(x1);
+            line.setStartY(y1);
+            line.setEndX(x2);
+            line.setEndY(y2);
+            
+            // Set the line's stroke width and color
+            line.setStrokeWidth(2);
+            line.setStroke(Color.BLACK);
+            
+            // Add the line to the cell's children
+            // getChildren().setAll(line);
+            setGraphic(line);
         }
     }
-        
-    
+
 }

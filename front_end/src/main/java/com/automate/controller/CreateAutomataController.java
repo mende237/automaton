@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 import com.automate.structure.State;
 import com.automate.structure.StateType;
 import com.automate.structure.Transition;
+import com.utils.CircleTableCellTransitions;
+import com.utils.CircleTableCellTransitions.ColumnName;
+import com.utils.ArrowTableCell;
 // import com.utils.ArrowTableCell;
 import com.utils.CircleTableCell;
 
@@ -21,6 +24,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.print.Collation;
 // import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -124,9 +128,9 @@ public class CreateAutomataController implements Initializable{
         transitionInputColumn.setCellValueFactory(new PropertyValueFactory<>("label"));
         transitionToColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
 
-        // transitionFromColumn.setCellFactory(colum -> new FromStateTableCell());
-        // transitionInputColumn.setCellFactory(colum -> new InputSymbolTableCell());
-        // transitionToColumn.setCellFactory(colum -> new ToStateTableCell());
+        transitionFromColumn.setCellFactory(colum -> new CircleTableCellTransitions(ColumnName.FROM));
+        // transitionInputColumn.setCellFactory(colum -> new ArrowTableCell());
+        transitionToColumn.setCellFactory(colum -> new CircleTableCellTransitions(ColumnName.TO));
 
         // Lier la liste des transitions au TableView des transitions
         transitionsTableView.setItems(transitionsList);
@@ -296,6 +300,7 @@ public class CreateAutomataController implements Initializable{
         if (fromState != null && toState != null && inputSymbol != null) {
             Transition newTransition = new Transition(fromState, inputSymbol, toState);
             transitionsList.add(newTransition);
+            System.out.println(newTransition);
             // automaton.addTransition(newTransition);
             // transitionsTableView.getItems().add(newTransition);
         }

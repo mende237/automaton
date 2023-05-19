@@ -20,7 +20,7 @@ public class Transition {
     }
 
     public State getEnd() {
-        return this.begin;
+        return this.end;
     }
 
     public void setBegin(State begin){
