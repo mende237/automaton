@@ -67,7 +67,7 @@ public class CircleTableCellTransitions extends TableCell<Transition, State> {
                 state = transition.getEnd();
             }
             
-            System.out.println("column " + columnName);
+            // System.out.println("column " + columnName);
             double radius = Math.max(20, state.getName().length() * 5);
             circle.setRadius(radius);
             circle.setStroke(Color.BLACK);

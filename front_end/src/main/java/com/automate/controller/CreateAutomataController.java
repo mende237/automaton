@@ -1,6 +1,8 @@
 package com.automate.controller;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 // import java.util.ArrayList;
 // import java.util.HashMap;
 import java.util.List;
@@ -8,12 +10,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import com.automate.inputOutput.Configuration;
+import com.automate.structure.Automate;
 import com.automate.structure.State;
 import com.automate.structure.StateType;
 import com.automate.structure.Transition;
 import com.utils.CircleTableCellTransitions;
 import com.utils.CircleTableCellTransitions.ColumnName;
-import com.utils.ArrowTableCell;
+
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.Graph;
+
+// import com.utils.ArrowTableCell;
 // import com.utils.ArrowTableCell;
 import com.utils.CircleTableCell;
 
@@ -24,7 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.print.Collation;
+// import javafx.print.Collation;
 // import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -36,6 +44,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -60,8 +69,12 @@ public class CreateAutomataController implements Initializable{
     @FXML
     private ComboBox<String> deleteSymbolComboBox;
 
+
     @FXML
-    private ComboBox<?> deleteTransitionComboBox;
+    private ImageView automateImageView;
+
+    @FXML
+    private ComboBox<Transition> deleteTransitionComboBox;
 
     @FXML
     private TableColumn<State, Boolean> isFinalStateColumn;
@@ -106,7 +119,9 @@ public class CreateAutomataController implements Initializable{
     // Une liste observable d'états qui sera affichée dans le TableView
     private ObservableList<State> statesList = FXCollections.observableArrayList();
     private ObservableList<Transition> transitionsList = FXCollections.observableArrayList();
-    private ObservableList<String> alphabetList;
+    private ObservableList<String> alphabetList = FXCollections.observableArrayList();
+    private boolean isAFD = true;
+    private String epsilone = "ep";
 
     // private Map<State, Node> stateNodes = new HashMap<>();
 
@@ -195,13 +210,19 @@ public class CreateAutomataController implements Initializable{
         statesTableView.setItems(statesList);
         deleteStateComboBox.setItems(statesList);
         transitionsTableView.setItems(transitionsList);
+        deleteTransitionComboBox.setItems(transitionsList);
+        deleteSymbolComboBox.setItems(alphabetList);
+
+        newTransitionFromComboBox.setItems(FXCollections.observableArrayList(statesList));
+        newTransitionToComboBox.setItems(FXCollections.observableArrayList(statesList));
+        // deleteStateComboBox.setItems(FXCollections.observableArrayList(statesList));
+
+        newTransitionInputComboBox.setItems(FXCollections.observableArrayList(alphabetList));
+        
+        // alphabetList = FXCollections.observableArrayList();
 
 
-        alphabetList = FXCollections.observableArrayList();
-        // alphabetList.addListener((ListChangeListener<String>) c -> updateAlphabetLabel());
-
-
-        updateTransitionComboBoxes(); // Mettre à jour les ComboBox au démarrage
+        // updateTransitionComboBoxes(); // Mettre à jour les ComboBox au démarrage
         statesTableView.getItems().addListener((ListChangeListener<State>) change -> {
             while (change.next()) {
                 if (change.wasAdded() || change.wasRemoved()) {
@@ -212,7 +233,7 @@ public class CreateAutomataController implements Initializable{
         });
 
 
-        updateInputComboBox(); // Mettre à jour la ComboBox au démarrage
+        // updateInputComboBox(); // Mettre à jour la ComboBox au démarrage
         updateAlphabetLabel();
         alphabetList.addListener((ListChangeListener<String>) change -> {
             while (change.next()) {
@@ -260,8 +281,12 @@ public class CreateAutomataController implements Initializable{
         // Créer un nouvel état avec le nom spécifié et les valeurs par défaut
         State newState = new State(stateName, StateType.NORMAL);
 
-        // Ajouter le nouvel état à la liste d'états
-        statesList.add(newState);
+        if(isValidState(newState)){
+            // Ajouter le nouvel état à la liste d'états
+            statesList.add(newState);
+        }else{
+            System.out.println("**************** state ***************");
+        }
 
         // Effacer le contenu du TextField
         newStateNameTextField.setText("");
@@ -274,6 +299,16 @@ public class CreateAutomataController implements Initializable{
 
         // Supprimer l'état de la liste d'états
         statesList.remove(stateToDelete);
+        for (int i = 0; i < transitionsList.size(); i++) {
+            Transition transition = transitionsList.get(i);
+            if(transition.getBegin().equalState(stateToDelete) 
+            || transition.getEnd().equalState(stateToDelete)){
+                transitionsList.remove(transition);
+            }
+        }
+        // for (Transition transition : transitionsList) {
+            
+        // }
     }
 
 
@@ -281,11 +316,13 @@ public class CreateAutomataController implements Initializable{
     @FXML
     private void handleAddSymbolButtonClick() {
         String newSymbol = newSymbolTextField.getText().trim();
-        if (!newSymbol.isEmpty() && !alphabetList.contains(newSymbol)) {
+        if (!newSymbol.isEmpty() && this.isValidLabel(newSymbol)) {
             alphabetList.add(newSymbol);
             newSymbolTextField.clear();
             // deleteSymbolComboBox.getItems().add(newSymbol); // Ajouter le nouveau symbole à la ComboBox
             // updateAlphabetLabel();
+        }else{
+            System.out.println("***************** bad label ********************");
         }
     }
 
@@ -299,8 +336,15 @@ public class CreateAutomataController implements Initializable{
         
         if (fromState != null && toState != null && inputSymbol != null) {
             Transition newTransition = new Transition(fromState, inputSymbol, toState);
-            transitionsList.add(newTransition);
-            System.out.println(newTransition);
+            if(isValidTransition(newTransition)){
+                transitionsList.add(newTransition);
+                System.out.println(newTransition);
+                this.makeImage();
+            }else{
+                System.out.println("******************* bad transition ***********************");
+            }
+
+            
             // automaton.addTransition(newTransition);
             // transitionsTableView.getItems().add(newTransition);
         }
@@ -310,20 +354,81 @@ public class CreateAutomataController implements Initializable{
 
     @FXML
     private void handleDeleteSymbolButtonClick(ActionEvent event) {
-        String selectedSymbol = deleteSymbolComboBox.getSelectionModel().getSelectedItem();
+        String selectedSymbol = deleteSymbolComboBox.getValue();
         if (selectedSymbol != null) {
             alphabetList.remove(selectedSymbol);
-            deleteSymbolComboBox.getItems().remove(selectedSymbol); // Supprimer le symbole de la ComboBox
             deleteSymbolComboBox.getSelectionModel().clearSelection();
+            // for (Transition transition : transitionsList) {
+            //     if(transition.getLabel().equals(selectedSymbol)){
+            //         transitionsList.remove(transition);
+            //     }
+            // }
+            for (int i = 0; i < transitionsList.size(); i++) {
+                Transition transition = transitionsList.get(i);
+                if(transition.getLabel().equals(selectedSymbol)){
+                    transitionsList.remove(transition);
+                }
+            }
             updateAlphabetLabel(); // Mettre à jour le texte du Label "alphabetLabel"
         }
     }
 
     @FXML
     void handleDeleteTransitionButtonClick(ActionEvent event) {
-
+        Transition transition = deleteTransitionComboBox.getValue();
+        transitionsList.remove(transition);
     }
 
+    private boolean isValidLabel(String label){
+        int i = 0;
+        boolean goodLabel = true;
+        while (goodLabel && i < this.alphabetList.size()) {
+            goodLabel = !label.equals(label);
+            i++;
+        }
+
+        return goodLabel;
+    }
+
+    private boolean isValidState(State state){
+        int i = 0;
+        boolean goodState = true;
+        while(goodState && i < this.statesList.size()){
+            goodState = !this.statesList.get(i).equalState(state);
+            i++;
+        }
+
+        return goodState;
+    }
+
+    private boolean isValidTransition(Transition transition){
+        int i = 0;
+        boolean goodTransition = true;
+        while(goodTransition && i < this.transitionsList.size()){
+            Transition trans = this.transitionsList.get(i);
+            goodTransition = !trans.equalTransition(transition);
+            if(isAFD && goodTransition){
+                goodTransition = !trans.getBegin().equalState(transition.getBegin()) | !trans.getLabel().equals(transition.getLabel());
+            }
+            i++;
+        }
+        return goodTransition;
+    }
+
+    
+
+    public void makeImage(){
+        ArrayList<Transition> matTrans = new ArrayList<>(transitionsList);
+        Graph g = isAFD ? Automate.markeGraph(matTrans) : Automate.markeGraph(matTrans, this.epsilone);
+        try {
+            Image image = Automate.makeImage(g);
+            WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
+            this.automateImageView.setImage(writableImage);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     
 }

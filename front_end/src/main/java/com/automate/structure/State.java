@@ -34,6 +34,10 @@ public class State {
         return this.name;
     }
 
+    
+    public boolean equalState(State state){
+        return this.name.equals(state.getName());
+    }
 
 
     public StateType getType(){

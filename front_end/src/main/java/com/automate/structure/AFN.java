@@ -5,8 +5,6 @@ import static guru.nidi.graphviz.model.Factory.to;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -17,14 +15,12 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.attribute.Rank.RankDir;
 import guru.nidi.graphviz.attribute.Shape;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
 
 public class AFN extends Automate {
     private LinkedList<Transition> matTrans;
     private String initialStateTab[];
-    protected ArrayList<String> dinamicInitialState;
+    // protected ArrayList<String> dinamicInitialState;
     private String epsilone;
 
 
@@ -82,11 +78,11 @@ public class AFN extends Automate {
         this.matTrans.add(trans);
     }
 
-    @Override
-    public void addTransitionToGraph(Transition transition) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
-    }
+    // @Override
+    // public void addTransitionToGraph(Transition transition) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
+    // }
 
     public static AFN jsonToAFN(String filePath, boolean readInfo) throws FileNotFoundException {
         AFN afn = null;
@@ -223,16 +219,7 @@ public class AFN extends Automate {
 
     }
 
-    @Override
-    public void makeImage(String path) {
-        Graph g = this.markeGraph();
-        try {
-            Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    
 
 
     @Override
@@ -243,12 +230,12 @@ public class AFN extends Automate {
 
         for (int i = 0; i < this.matTrans.size(); i++) {
             if (this.matTrans.get(i).label.equalsIgnoreCase(this.epsilone) == false) {
-                g = g.with(super.addState(this.matTrans.get(i).begin)
-                        .link(to(super.addState(this.matTrans.get(i).end))
+                g = g.with(Automate.addState(this.matTrans.get(i).begin)
+                        .link(to(Automate.addState(this.matTrans.get(i).end))
                                 .with(Label.of(this.matTrans.get(i).label))));
             } else {
-                g = g.with(super.addState(this.matTrans.get(i).begin)
-                        .link(to(super.addState(this.matTrans.get(i).end))
+                g = g.with(Automate.addState(this.matTrans.get(i).begin)
+                        .link(to(Automate.addState(this.matTrans.get(i).end))
                                 .with(Label.of("\u03B5"))));
             }
         }

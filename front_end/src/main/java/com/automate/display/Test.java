@@ -30,6 +30,7 @@ public class Test {
    
 
     public static void main(String args[]) throws IOException {
+        System.out.println(true && false);
         // try {
         // config = Configuration.getConfiguration("../config.json");
         // System.out.println(config);
@@ -46,38 +47,38 @@ public class Test {
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
         // Graph g =
         // graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT));
-        Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
-                .nodeAttr().with(Shape.CIRCLE);
+        // Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+        //         .nodeAttr().with(Shape.CIRCLE);
 
-        g = g.with(node("1")
-                .link(to(node("2"))
-                        .with(Label.of("a")),
-                        to(node("3")).with(Label.of("b"), Style.DASHED, Color.rgb(150,52,80))));
+        // g = g.with(node("1")
+        //         .link(to(node("2"))
+        //                 .with(Label.of("a")),
+        //                 to(node("3")).with(Label.of("b"), Style.DASHED, Color.rgb(150,52,80))));
 
-        MutableGraph mg = g.toMutable();
-        // mg.add(
-        // mutNode("a").add(Color.RED).addLink(mutNode("b")));
+        // MutableGraph mg = g.toMutable();
+        // // mg.add(
+        // // mutNode("a").add(Color.RED).addLink(mutNode("b")));
 
-        Collection<Link> edges = mg.edges();
-        Collection<MutableNode> nodes = mg.nodes();
-        for (Link link : edges) {
-            if (link.get("color") != null) {
-                // System.out.println(link.get("color"));
+        // Collection<Link> edges = mg.edges();
+        // Collection<MutableNode> nodes = mg.nodes();
+        // for (Link link : edges) {
+        //     if (link.get("color") != null) {
+        //         // System.out.println(link.get("color"));
                 
-                Color color = Color.rgb((String) link.get("color"));
-                link.add(color.and(Color.rgb(80,80,100) , Color.rgb(0, 80, 100)));
-                System.out.println(link.get("color"));
-                //System.out.println(link.);
-                //link.add(Color.RED);
-            }
-            link.attrs();
-            // System.out.printf("%s %s\n" , link.name().value() , link.get("label"));
-            // Label l = (Label) link.get("label");
-            // System.out.println(link.get("node"));
-            // link.from().
-            // System.out.println(link.);
+        //         Color color = Color.rgb((String) link.get("color"));
+        //         link.add(color.and(Color.rgb(80,80,100) , Color.rgb(0, 80, 100)));
+        //         System.out.println(link.get("color"));
+        //         //System.out.println(link.);
+        //         //link.add(Color.RED);
+        //     }
+        //     link.attrs();
+        //     // System.out.printf("%s %s\n" , link.name().value() , link.get("label"));
+        //     // Label l = (Label) link.get("label");
+        //     // System.out.println(link.get("node"));
+        //     // link.from().
+        //     // System.out.println(link.);
 
-        }
+        // }
 
         // for (MutableNode mn1 : nodes) {
         // // for (MutableNode mn2 : nodes) {
@@ -119,9 +120,9 @@ public class Test {
         // File("./image.json")));
         // writter.write(json);
 
-        Graphviz.fromGraph(g).width(900).render(Format.PNG).toFile(new File("./ex1.png"));
+        // Graphviz.fromGraph(g).width(900).render(Format.PNG).toFile(new File("./ex1.png"));
 
-        System.out.println("fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        // System.out.println("fin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
 }

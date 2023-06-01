@@ -23,7 +23,6 @@ import guru.nidi.graphviz.model.Graph;
 
 public class AFD extends Automate {
     private Transition matTrans[] = null;
-    private LinkedList<Transition> dinimicMatTrans;
     private String initialState = null;
 
     /****************************************
@@ -66,16 +65,17 @@ public class AFD extends Automate {
     /********************************************
      * methods
      *************************************/
+    @Override
     public void addTransition(State begin, String label, State end) {
         this.matTrans[cmpt] = new Transition(begin, label, end);
         super.cmpt++;
     }
 
-    @Override
-    public void addTransitionToGraph(Transition transition) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
-    }
+    // @Override
+    // public void addTransitionToGraph(Transition transition) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
+    // }
 
     @Override
     public void save(String path) {
@@ -88,25 +88,14 @@ public class AFD extends Automate {
                 .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < this.matTrans.length; i++) {
-            g = g.with(super.addState(this.matTrans[i].begin)
-                    .link(to(super.addState(this.matTrans[i].end))
+            g = g.with(Automate.addState(this.matTrans[i].begin)
+                    .link(to(Automate.addState(this.matTrans[i].end))
                             .with(Label.of(this.matTrans[i].label))));
         }
         return g;
     }
 
-    @Override
-    public void makeImage(String path) {
-        Graph g = markeGraph();
-        try {
-            path = path.replace("\\", "/");
-            Graphviz.fromGraph(g).width(1500).render(Format.PNG).toFile(new File(path));
-       } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
+    
 
     public static AFD jsonToAFD(String filePath, boolean readInfo) throws FileNotFoundException , JSONException{
         AFD afd = null;

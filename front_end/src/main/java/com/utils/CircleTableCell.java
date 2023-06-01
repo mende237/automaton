@@ -45,7 +45,7 @@ public class CircleTableCell extends TableCell<State, String> {
             } else {
                 circle.setFill(Color.web("#4286f4"));
             }
-            System.out.println(circle + "==" + circle.getLayoutY());
+            // System.out.println(circle + "==" + circle.getLayoutY());
         }
     }
         

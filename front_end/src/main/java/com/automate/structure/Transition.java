@@ -35,6 +35,12 @@ public class Transition {
         this.end = end;
     }
 
+    public boolean equalTransition(Transition transition){
+        return this.begin.equalState(transition.getBegin()) &
+               this.label.equals(transition.getLabel()) &
+               this.end.equalState(transition.getEnd());
+    }
+
     @Override
     public String toString() {
         return String.format("%s --%s--> %s", begin.toString() , label , end.toString());
