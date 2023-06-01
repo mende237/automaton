@@ -177,6 +177,7 @@ public abstract class Automate {
     }
 
     
+    
     protected static Node addState(State state) {
         switch (state.getType()) {
             case INITIAL:

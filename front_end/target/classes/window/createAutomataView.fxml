@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -37,12 +38,11 @@
                         <Button onAction="#handleDeleteStateButtonClick" text="Delete State" />
                     </HBox>
                 </VBox>
-                <ScrollPane fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
-                   <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0">
-                        <ImageView fx:id="automatonImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
-                            layoutX="${automatonPane.width / 2 - automatonImageView.fitWidth / 2}"
-                            layoutY="${automatonPane.height / 2 - automatonImageView.fitHeight / 2}" />
-                    </Pane>          
+                <ScrollPane fitToHeight="true" fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
+                <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: white;">
+                    <ImageView fx:id="automatonImageView" fitHeight="150.0" fitWidth="200.0" layoutX="${(automatonPane.width - automatonImageView.fitWidth) / 2}" layoutY="${(automatonPane.height - automatonImageView.fitHeight) / 2}" pickOnBounds="true" preserveRatio="true" />
+                </Pane>
+                
                 </ScrollPane>
                 <VBox spacing="10.0" styleClass="right-panel" VBox.vgrow="ALWAYS">
                     <Label styleClass="panel-label" text="Transitions" />
@@ -76,6 +76,9 @@
                 <ComboBox fx:id="deleteSymbolComboBox" promptText="Select Symbol to Delete" />
                 <Button onAction="#handleDeleteSymbolButtonClick" text="Delete Symbol" />
             </HBox>
+         <padding>
+            <Insets bottom="20.0" top="10.0" />
+         </padding>
         </VBox>
     </bottom>
 </BorderPane>

@@ -38,12 +38,22 @@ public class CircleTableCell extends TableCell<State, String> {
             double radius = Math.max(20, item.length() * 5);
             circle.setRadius(radius);
             circle.setStroke(Color.BLACK);
-            if (state.isInitial()) {
-                circle.setFill(Color.web("#00cc66"));
-            } else if (state.isFinalState()) {
-                circle.setFill(Color.web("#ff3300"));
-            } else {
-                circle.setFill(Color.web("#4286f4"));
+            switch (state.getType()) {
+                case INITIAL:
+                    circle.setFill(Color.web("#b5fed9"));
+                    break;
+                case FINAL:
+                    circle.setFill(Color.web("e2cbc1"));
+                    break;
+                case WELL:
+                    circle.setFill(Color.GRAY);
+                    break;
+                case FINAL_INITIAL:
+                    circle.setFill(Color.web("#b5fed9"));
+                    break;
+                default:
+                    circle.setFill(Color.web("#87CEEB"));
+                    break;
             }
             // System.out.println(circle + "==" + circle.getLayoutY());
         }

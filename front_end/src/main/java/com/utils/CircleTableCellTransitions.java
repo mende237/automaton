@@ -3,33 +3,12 @@ package com.utils;
 import com.automate.structure.State;
 import com.automate.structure.Transition;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
+
 
 
 
@@ -71,13 +50,32 @@ public class CircleTableCellTransitions extends TableCell<Transition, State> {
             double radius = Math.max(20, state.getName().length() * 5);
             circle.setRadius(radius);
             circle.setStroke(Color.BLACK);
-            if (state.isInitial()) {
-                circle.setFill(Color.web("#00cc66"));
-            } else if (state.isFinalState()) {
-                circle.setFill(Color.web("#ff3300"));
-            } else {
-                circle.setFill(Color.web("#4286f4"));
+
+            switch (state.getType()) {
+                case INITIAL:
+                    circle.setFill(Color.web("#b5fed9"));
+                    break;
+                case FINAL:
+                    circle.setFill(Color.web("e2cbc1"));
+                    break;
+                case WELL:
+                    circle.setFill(Color.GRAY);
+                    break;
+                case FINAL_INITIAL:
+                    circle.setFill(Color.web("#b5fed9"));
+                    break;
+                default:
+                    circle.setFill(Color.web("#87CEEB"));
+                    break;
             }
+
+            // if (state.isInitial()) {
+            //     circle.setFill(Color.web("#00cc66"));
+            // } else if (state.isFinalState()) {
+            //     circle.setFill(Color.web("#ff3300"));
+            // } else {
+            //     circle.setFill(Color.web("#4286f4"));
+            // }
         }
     }
     

@@ -30,6 +30,9 @@ public class State {
         this.type = StateType.NORMAL;
     }
 
+
+    
+
     public String getName(){
         return this.name;
     }
