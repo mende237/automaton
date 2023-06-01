@@ -38,11 +38,11 @@
                     </HBox>
                 </VBox>
                 <ScrollPane fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
-                    <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0">
-                        <children>
-                            <ImageView fx:id="automateImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                        </children>
-                    </Pane>
+                   <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0">
+                        <ImageView fx:id="automatonImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
+                            layoutX="${automatonPane.width / 2 - automatonImageView.fitWidth / 2}"
+                            layoutY="${automatonPane.height / 2 - automatonImageView.fitHeight / 2}" />
+                    </Pane>          
                 </ScrollPane>
                 <VBox spacing="10.0" styleClass="right-panel" VBox.vgrow="ALWAYS">
                     <Label styleClass="panel-label" text="Transitions" />

@@ -71,7 +71,7 @@ public class CreateAutomataController implements Initializable{
 
 
     @FXML
-    private ImageView automateImageView;
+    private ImageView automatonImageView;
 
     @FXML
     private ComboBox<Transition> deleteTransitionComboBox;
@@ -130,6 +130,9 @@ public class CreateAutomataController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
+
+
         statesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         transitionsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -383,7 +386,7 @@ public class CreateAutomataController implements Initializable{
         int i = 0;
         boolean goodLabel = true;
         while (goodLabel && i < this.alphabetList.size()) {
-            goodLabel = !label.equals(label);
+            goodLabel = !label.equals(alphabetList.get(i));
             i++;
         }
 
@@ -423,7 +426,7 @@ public class CreateAutomataController implements Initializable{
         try {
             Image image = Automate.makeImage(g);
             WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
-            this.automateImageView.setImage(writableImage);
+            this.automatonImageView.setImage(writableImage);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
