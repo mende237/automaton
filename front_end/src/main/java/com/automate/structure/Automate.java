@@ -124,8 +124,11 @@ public abstract class Automate {
 
     public static Graph markeGraph(ArrayList<Transition> matTrans){
         
-        Graph g = graph("afd").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
-                .nodeAttr().with(Shape.CIRCLE);
+        Graph g = null;
+        
+        if(matTrans.size() > 0)
+            g = graph("afd").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+            .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < matTrans.size(); i++) {
             g = g.with(Automate.addState(matTrans.get(i).begin)
@@ -137,8 +140,11 @@ public abstract class Automate {
     }
 
     public static Graph markeGraph(ArrayList<Transition> matTrans , String epsilone){
-        Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
-        .nodeAttr().with(Shape.CIRCLE);
+        Graph g = null;
+        
+        if(matTrans.size() > 0)
+            g = graph("afd").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+            .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < matTrans.size(); i++) {
             if (matTrans.get(i).label.equalsIgnoreCase(epsilone) == false) {

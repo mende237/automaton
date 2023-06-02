@@ -15,17 +15,12 @@ import com.automate.structure.Automate;
 import com.automate.structure.State;
 import com.automate.structure.StateType;
 import com.automate.structure.Transition;
-import com.utils.CircleTableCellTransitions;
-import com.utils.CircleTableCellTransitions.ColumnName;
+import com.automate.utils.CircleTableCell;
+import com.automate.utils.CircleTableCellTransitions;
+import com.automate.utils.CircleTableCellTransitions.ColumnName;
 
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
-
-// import com.utils.ArrowTableCell;
-// import com.utils.ArrowTableCell;
-import com.utils.CircleTableCell;
-
-
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -270,6 +265,7 @@ public class CreateAutomataController implements Initializable{
         });   
         
         addSplitPaneListener();
+        this.makeImage();
     }
 
 
@@ -324,13 +320,20 @@ public class CreateAutomataController implements Initializable{
 
         // Supprimer l'état de la liste d'états
         statesList.remove(stateToDelete);
+        boolean update = false;
         for (int i = 0; i < transitionsList.size(); i++) {
             Transition transition = transitionsList.get(i);
             if(transition.getBegin().equalState(stateToDelete) 
             || transition.getEnd().equalState(stateToDelete)){
                 transitionsList.remove(transition);
+                i--;
+                update = true;
             }
         }
+
+        if(update)
+            this.makeImage();
+
         // for (Transition transition : transitionsList) {
             
         // }
@@ -388,13 +391,18 @@ public class CreateAutomataController implements Initializable{
             //         transitionsList.remove(transition);
             //     }
             // }
+            boolean update = false;
             for (int i = 0; i < transitionsList.size(); i++) {
                 Transition transition = transitionsList.get(i);
                 if(transition.getLabel().equals(selectedSymbol)){
                     transitionsList.remove(transition);
+                    i--;
+                    update = true;
                 }
             }
             updateAlphabetLabel(); // Mettre à jour le texte du Label "alphabetLabel"
+            if(update)
+                this.makeImage();
         }
     }
 
@@ -402,6 +410,7 @@ public class CreateAutomataController implements Initializable{
     void handleDeleteTransitionButtonClick(ActionEvent event) {
         Transition transition = deleteTransitionComboBox.getValue();
         transitionsList.remove(transition);
+        this.makeImage();
     }
 
 
@@ -452,6 +461,8 @@ public class CreateAutomataController implements Initializable{
             if(isAFD && goodTransition){
                 goodTransition = !trans.getBegin().equalState(transition.getBegin()) | !trans.getLabel().equals(transition.getLabel());
             }
+
+            // goodTransition &= ()
             i++;
         }
         return goodTransition;
@@ -463,9 +474,13 @@ public class CreateAutomataController implements Initializable{
         ArrayList<Transition> matTrans = new ArrayList<>(transitionsList);
         Graph g = isAFD ? Automate.markeGraph(matTrans) : Automate.markeGraph(matTrans, this.epsilone);
         try {
-            Image image = Automate.makeImage(g);
-            WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
-            this.automatonImageView.setImage(writableImage);
+            if(g!=null){
+                Image image = Automate.makeImage(g);
+                WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
+                this.automatonImageView.setImage(writableImage);
+            }else{
+                this.automatonImageView.setImage(null);
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

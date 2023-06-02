@@ -1,4 +1,4 @@
-package com.utils;
+package com.automate.utils;
 
 import com.automate.structure.State;
 import com.automate.structure.Transition;
