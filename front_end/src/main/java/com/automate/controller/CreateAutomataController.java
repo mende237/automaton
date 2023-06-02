@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import com.automate.inputOutput.Configuration;
 import com.automate.structure.Automate;
 import com.automate.structure.State;
 import com.automate.structure.StateType;
@@ -455,6 +454,7 @@ public class CreateAutomataController implements Initializable{
     private boolean isValidTransition(Transition transition){
         int i = 0;
         boolean goodTransition = true;
+        boolean isConnexe = false;
         while(goodTransition && i < this.transitionsList.size()){
             Transition trans = this.transitionsList.get(i);
             goodTransition = !trans.equalTransition(transition);
@@ -462,10 +462,11 @@ public class CreateAutomataController implements Initializable{
                 goodTransition = !trans.getBegin().equalState(transition.getBegin()) | !trans.getLabel().equals(transition.getLabel());
             }
 
-            // goodTransition &= ()
+            isConnexe |= transition.getBegin().equalState(trans.getBegin()) | transition.getBegin().equalState(trans.getEnd())
+                         |transition.getEnd().equalState(trans.getEnd()) | transition.getEnd().equalState(trans.getBegin());
             i++;
         }
-        return goodTransition;
+        return goodTransition & isConnexe;
     }
 
     
