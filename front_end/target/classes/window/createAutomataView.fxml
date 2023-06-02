@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.CreateAutomataController">
@@ -38,12 +39,25 @@
                         <Button onAction="#handleDeleteStateButtonClick" text="Delete State" />
                     </HBox>
                 </VBox>
-                <ScrollPane fitToHeight="true" fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
-                <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: white;">
-                    <ImageView fx:id="automatonImageView" fitHeight="150.0" fitWidth="200.0" layoutX="${(automatonPane.width - automatonImageView.fitWidth) / 2}" layoutY="${(automatonPane.height - automatonImageView.fitHeight) / 2}" pickOnBounds="true" preserveRatio="true" />
-                </Pane>
-                
-                </ScrollPane>
+            <StackPane>
+               <children>
+                    <ScrollPane fx:id="automatonScrollPane" fitToHeight="true" fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
+                        <Pane fx:id="automatonPane" minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: white;">
+                            <ImageView fx:id="automatonImageView" fitHeight="150.0" fitWidth="200.0" layoutX="${(automatonPane.width - automatonImageView.fitWidth) / 2}" layoutY="${(automatonPane.height - automatonImageView.fitHeight) / 2}" pickOnBounds="true" preserveRatio="true" />
+                        </Pane>
+                    </ScrollPane>
+                    <VBox alignment="BOTTOM_RIGHT" spacing="10.0" styleClass="zoom-box" fx:id="zoomVBox">
+                        <Button fx:id="zoomInButton" onAction="#handleZoomInButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="button-zoom" text="+" />
+                        <Button fx:id="zoomOutButton" minHeight="50.0" onAction="#handleZoomOutButtonClick" prefWidth="50.0" styleClass="button-zoom" text="-" />
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                     <padding>
+                        <Insets bottom="30.0" right="10.0" />
+                     </padding>
+                    </VBox>
+               </children>
+            </StackPane>
                 <VBox spacing="10.0" styleClass="right-panel" VBox.vgrow="ALWAYS">
                     <Label styleClass="panel-label" text="Transitions" />
                     <TableView fx:id="transitionsTableView" editable="true" prefHeight="200.0" VBox.vgrow="ALWAYS">

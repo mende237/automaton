@@ -75,3 +75,41 @@
 .table-row-cell:selected {
     -fx-background-color: #cce6ff;
 }
+
+/* Styles pour les boutons de zoom */
+.zoom-box .button-zoom {
+    -fx-background-color: #fff;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 24px 24px;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+    -fx-text-fill: #444;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-min-width: 40px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 3, 0, 0, 1);
+    -fx-transition-duration: 0.2s;
+    -fx-transition-property: background-color, border-color, text-fill;
+}
+
+.zoom-box .button-zoom:hover {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #b3b3b3;
+    -fx-text-fill: #333;
+}
+
+.zoom-box .button-zoom:pressed {
+    -fx-background-color: #e6e6e6;
+    -fx-border-color: #909090;
+}
+
+.zoom-box .button-zoom:disabled {
+    -fx-opacity: 0.5;
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #ccc;
+    -fx-text-fill: #ccc;
+}

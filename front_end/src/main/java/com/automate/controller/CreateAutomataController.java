@@ -36,6 +36,7 @@ import javafx.fxml.Initializable;
 // import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -47,8 +48,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class CreateAutomataController implements Initializable{
+
+
+    @FXML
+    private VBox zoomVBox;
 
     @FXML
     private SplitPane splitPane;
@@ -69,6 +75,10 @@ public class CreateAutomataController implements Initializable{
     @FXML
     private ComboBox<String> deleteSymbolComboBox;
 
+
+
+    @FXML
+    private ScrollPane automatonScrollPane;
 
     @FXML
     private ImageView automatonImageView;
@@ -130,7 +140,19 @@ public class CreateAutomataController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+          // Désactiver la consommation d'événements de la VBox
+          zoomVBox.setPickOnBounds(false);
+
+          // Ajouter un écouteur d'événements pour la barre de défilement de la ScrollPane
+          automatonScrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+              if (newValue.intValue() == 0 || newValue.doubleValue() == 1.0) {
+                  // Activer la consommation d'événements de la VBox lorsque la barre de défilement est en haut ou en bas
+                  zoomVBox.setPickOnBounds(true);
+              } else {
+                  // Désactiver la consommation d'événements de la VBox lorsque la barre de défilement est en mouvement
+                  zoomVBox.setPickOnBounds(false);
+              }
+          });
 
 
         statesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -382,6 +404,23 @@ public class CreateAutomataController implements Initializable{
         transitionsList.remove(transition);
     }
 
+
+    @FXML
+    void handleZoomInButtonClick(ActionEvent event) {
+        double scale = automatonImageView.getScaleX() * 1.1;
+        automatonImageView.setScaleX(scale);
+        automatonImageView.setScaleY(scale);
+        automatonScrollPane.requestLayout();
+    }
+
+    @FXML
+    void handleZoomOutButtonClick(ActionEvent event) {
+        double scale = automatonImageView.getScaleX() / 1.1;
+        automatonImageView.setScaleX(scale);
+        automatonImageView.setScaleY(scale);
+        automatonScrollPane.requestLayout();
+    }
+
     private boolean isValidLabel(String label){
         int i = 0;
         boolean goodLabel = true;
@@ -432,6 +471,8 @@ public class CreateAutomataController implements Initializable{
             e.printStackTrace();
         }
     }
+
+
 
     
 }

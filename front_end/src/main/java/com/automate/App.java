@@ -119,7 +119,7 @@ public class App extends Application {
         
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/window/style2.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
         // scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
