@@ -3,9 +3,9 @@ package com.automate.controller;
 public class Message {
     private String idDestinataire;
     private String idExpediteur;
-    private String content;
+    private Object content;
 
-    public Message(String idDestinataire, String content) {
+    public Message(String idDestinataire, Object content) {
         this.idDestinataire = idDestinataire;
         this.content = content;
     }
@@ -27,11 +27,11 @@ public class Message {
         this.idExpediteur = idExpediteur;
     }
 
-    public String getContent() {
+    public Object getContent() {
         return this.content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Object content) {
         this.content = content;
     }
 

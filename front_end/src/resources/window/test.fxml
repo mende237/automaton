@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <ToolBar prefHeight="40.0" prefWidth="600.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Determinisation"/>
+                        <Button text="Gluskov"/>
+                        <Button text="Thomson"/>
+                        <Button text="Minimisation"/>
+                    </buttons>
+                </ButtonBar>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Union"/>
+                        <Button text="Intersection"/>
+                        <Button text="Complementaire"/>
+                    </buttons>
+                </ButtonBar>
+                <ButtonBar>
+                    <buttons>
+                        <Button text="Reconnaissance AFD"/>
+                        <Button text="Reconnaissance AFND"/>
+                    </buttons>
+                </ButtonBar>
+            </items>
+        </ToolBar>
+        <SplitPane dividerPositions="0.3" layoutY="40.0" prefHeight="360.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+            <items>
+                <TreeView prefHeight="200.0" prefWidth="200.0">
+                    <TreeItem value="Automates"/>
+                </TreeView>
+                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                    <Line endX="200.0" endY="200.0" layoutX="50.0" layoutY="50.0" startX="0.0" startY="0.0"/>
+                    <Line endX="0.0" endY="200.0" layoutX="50.0" layoutY="50.0" startX="200.0" startY="0.0"/>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>

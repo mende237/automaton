@@ -27,7 +27,7 @@ import javafx.scene.layout.AnchorPane;
 
 
 public class ConvertController extends Controller implements Initializable {
-    public static ConvertController convertController = null;
+    private static ConvertController convertController = null;
     @FXML
     private Button btnConvert;
     @FXML
@@ -130,7 +130,7 @@ public class ConvertController extends Controller implements Initializable {
     public void receiveMessage(Message message) {
         System.out.println(message);
         if(message.getIdExpediteur().equals(MainController.ID)){
-            String tab[] = message.getContent().split(";");
+            String tab[] = ((String) message.getContent()).split(";");
             File file = new File(tab[0]);
             Image image = new Image(file.toURI().toString());
             this.imageViewData.setImage(image);

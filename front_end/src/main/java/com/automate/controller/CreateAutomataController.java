@@ -3,9 +3,11 @@ package com.automate.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+
 // import java.util.ArrayList;
 // import java.util.HashMap;
 import java.util.List;
+
 // import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -18,16 +20,17 @@ import com.automate.utils.CircleTableCell;
 import com.automate.utils.CircleTableCellTransitions;
 import com.automate.utils.CircleTableCellTransitions.ColumnName;
 
-import guru.nidi.graphviz.engine.Graphviz;
+
 import guru.nidi.graphviz.model.Graph;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-// import javafx.print.Collation;
-// import javafx.scene.Node;
+
+
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -36,16 +39,20 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.Scene;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-public class CreateAutomataController implements Initializable{
-
+public class CreateAutomataController extends Controller implements Initializable{
+    protected static final String ID = "createAutomataController";
 
     @FXML
     private VBox zoomVBox;
@@ -119,6 +126,8 @@ public class CreateAutomataController implements Initializable{
     @FXML
     private TableView<Transition> transitionsTableView;
 
+    
+
 
     // Une liste observable d'états qui sera affichée dans le TableView
     private ObservableList<State> statesList = FXCollections.observableArrayList();
@@ -126,11 +135,25 @@ public class CreateAutomataController implements Initializable{
     private ObservableList<String> alphabetList = FXCollections.observableArrayList();
     private boolean isAFD = true;
     private String epsilone = "ep";
+    private Object response = null;
+
+    private static CreateAutomataController createAutomataController;
 
     // private Map<State, Node> stateNodes = new HashMap<>();
 
     // private List<String> alphabet = new ArrayList<>();
 
+    private CreateAutomataController(Mediator mediator) {
+        super(ID, mediator);
+        //TODO Auto-generated constructor stub
+    }
+
+    public static CreateAutomataController getCreateAutomataController(Mediator mediator){
+        if(CreateAutomataController.createAutomataController != null)
+            return CreateAutomataController.createAutomataController;
+        
+        return new CreateAutomataController(mediator);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -296,17 +319,26 @@ public class CreateAutomataController implements Initializable{
     @FXML
     private void handleAddStateButtonClick(ActionEvent event) {
         // Récupérer le nom du nouvel état à partir du TextField
-        String stateName = newStateNameTextField.getText();
-
+        
         // Créer un nouvel état avec le nom spécifié et les valeurs par défaut
-        State newState = new State(stateName, StateType.NORMAL);
-
-        if(isValidState(newState)){
-            // Ajouter le nouvel état à la liste d'états
-            statesList.add(newState);
-        }else{
-            System.out.println("**************** state ***************");
+        try {
+            this.showDialog();
+            System.out.println("***************" + response);
+            if(this.response != null){
+                String stateName = newStateNameTextField.getText();
+                State newState = new State(stateName, (StateType) response);
+                if(isValidState(newState))
+                    // Ajouter le nouvel état à la liste d'états
+                    statesList.add(newState);
+                else{
+                    System.out.println("**************** state ***************");
+                }
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        
 
         // Effacer le contenu du TextField
         newStateNameTextField.setText("");
@@ -489,6 +521,34 @@ public class CreateAutomataController implements Initializable{
     }
 
 
+    private void showDialog() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/dialogBox.fxml"));
+        loader.setControllerFactory(c -> {
+            return PopupController.getPopupController(ConrceteMadiator.getConrceteMadiator());
+        });
+
+        BorderPane popup = loader.load();
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        Scene scene = new Scene(popup);
+        scene.getStylesheets().add(getClass().getResource("/style/diaglogstyle.css").toExternalForm());
+        // scene.getStylesheets().add(css);
+        popupStage.setScene(scene);
+        popupStage.showAndWait();
+    }
+
+
+    @Override
+    public void sendMessage(Message message) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'sendMessage'");
+    }
+
+
+    @Override
+    public void receiveMessage(Message message) {
+        response = message.getContent();
+    }
 
     
 }

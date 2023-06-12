@@ -10,7 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.automate.controller.ConrceteMadiator;
+import com.automate.controller.CreateAutomataController;
 import com.automate.controller.MainController;
+import com.automate.controller.PopupController;
 import com.automate.inputOutput.Configuration;
 import com.automate.inputOutput.Messenger;
 
@@ -115,8 +117,10 @@ public class App extends Application {
         // stage.show();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
+        loader.setControllerFactory(c -> {
+            return CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
+        });
         BorderPane root = loader.load();
-        
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());

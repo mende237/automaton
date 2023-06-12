@@ -81,7 +81,7 @@ public class ViewController extends Controller implements Initializable {
     @Override
     public void receiveMessage(Message message) {
         System.out.println(message);
-        String tab[] = message.getContent().split(";");
+        String tab[] = ((String) message.getContent()).split(";");
         this.name.setText(tab[0]);
         this.description.setText(tab[1]);
 
