@@ -31,14 +31,14 @@ public class App extends Application {
     public static Messenger messenger = Messenger.getMessenger();
 
     public static void main(String args[]) throws IOException {
-        // try {
+        try {
 
-        //     File file = new File(".." + File.separator + "config.json");
-        //     config = Configuration.getConfiguration(file.toString());
-        //     System.out.println(config);
-        // } catch (FileNotFoundException e) {
-        //     System.err.println("file not found");
-        // }
+            File file = new File(".." + File.separator + "config.json");
+            config = Configuration.getConfiguration(file.toString());
+            System.out.println(config);
+        } catch (FileNotFoundException e) {
+            System.err.println("file not found");
+        }
         
         // messenger.setSendingPath(config.getRequestPath());
         // messenger.setReceptionPath(config.getResponsePath());
@@ -102,31 +102,31 @@ public class App extends Application {
         // stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
         // stage.setTitle("beep-beep");
         // // String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
-        // ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        // FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView.fxml"));
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView1.fxml"));
 
-        // loader.setControllerFactory(c -> {
-        //     return new MainController(mediator);
-        // });
-        // AnchorPane root = loader.load();
-        
-        // //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
-        // Scene scene = new Scene(root);
-        // // scene.getStylesheets().add(css);
-        // stage.setScene(scene);
-        // stage.show();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
         loader.setControllerFactory(c -> {
-            return CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
+            return new MainController(mediator);
         });
-        BorderPane root = loader.load();
+        AnchorPane root = loader.load();
+        
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
         // scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.show();
+
+        // FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
+        // loader.setControllerFactory(c -> {
+        //     return CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
+        // });
+        // BorderPane root = loader.load();
+        // //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
+        // Scene scene = new Scene(root);
+        // scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+        // // scene.getStylesheets().add(css);
+        // stage.setScene(scene);
+        // stage.show();
     }
 
     @Override

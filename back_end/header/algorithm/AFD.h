@@ -35,13 +35,13 @@ sur lequel on veut ajouter la transition la source l'etiquette la destination
 et la fonction equal_label qui permet de dire lorsque deux etiquettes sont egales*/
 void add_transition_AFD(AFD afd, void *begin, void *label, void *end, int index);
 /**/
-static list *union_trans(AFD afd1, AFD afd2, void **trans1, void **trans2, void **tab_label, int nbre_label, void print_value(void *value, boolean last));
+static list *union_trans(AFD afd1, AFD afd2, void **trans1, void **trans2, void **tab_label, int nbre_label);
 
 static void **delta_global_AFD(AFD afn, void *state);
 
-AFD union_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last));
+AFD union_AFD(AFD afd1, AFD afd2);
 
-AFD intersection_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last));
+AFD intersection_AFD(AFD afd1, AFD afd2);
 
 void completer_AFD(AFD afd, char *well_state, boolean equal_value(void *lb1, void *lb2 , ...));
 
@@ -57,7 +57,7 @@ permettant de dire quand est ce que deux elements contenu dans les deux listes
 sont égaux*/
 static list union_set(const list li1, const list li2);
 
-static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last));
+static void **product_AFD(AFD afd1, AFD afd2);
 /*cette fonction prend en paramettre un automate non-deterministe sans epsilone transition
 , avec un unique etat initiale retourne un automate deterministe 
 elle prend aussi en paremettre d'autres fonctions comme equal_state qui permet de dire quand deux etats de
@@ -69,14 +69,14 @@ AFD determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2 , ...));
 elle prend aussi en paremettre d'autres fonctions comme equal_state qui permet de dire quand deux etats de
 sont egaux , la fonction equal_lable qui joue presque le meme role que la fonction equal_state , elle
 permet de dire lorsque deux ettiquettes sont egaux*/
-AFD epsilone_determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2 , ...), void print_value(void *x, boolean last));
+AFD epsilone_determinisation(AFN afn, boolean equal_label(void *lb1, void *lb2 , ...));
 /*cette fonction permet de donner tous les etats partant d'un etat donné que l'on peut atteindre en ne lisant que 
 les epsilone*/
-list epsilone_transition(AFN afn, void *state, void print_value(void *x, boolean last));
+list epsilone_transition(AFN afn, void *state);
 /*cette fonction retourne l'epsilone fermerture d'un etat donné*/
-list epsilone_closure(AFN afn, void *state, void print_value(void *x, boolean last));
+list epsilone_closure(AFN afn, void *state);
 /*cette fonction retourne l'epsilone fermerture d'un ensemble d'etat donné*/
-list epsilone_closure_set(AFN afn, list set_state, void print_value(void *x, boolean last));
+list epsilone_closure_set(AFN afn, list set_state);
 
 void print_transitions_AFD(AFD afd, void print_elem(void *begin, void *label, void *end));
 /*cette fonction permet d'afficher la table de transition d'un afd elle prend en parametre une fonction print_state

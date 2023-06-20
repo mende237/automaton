@@ -113,3 +113,16 @@
     -fx-border-color: #ccc;
     -fx-text-fill: #ccc;
 }
+
+
+/* Styles pour les boutons de zoom */
+.save-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14pt;
+    -fx-padding: 5px 10px;
+}
+
+.save-button:hover {
+    -fx-background-color: #3E8E41;
+}

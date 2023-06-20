@@ -3,6 +3,7 @@
 #include "../../header/algorithm/AFN.h"
 #include "../../header/data_structure/linked_list.h"
 #include "../../header/data_structure/stack.h"
+#include "../../header/libs/fort.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -133,6 +134,21 @@ list delta_AFN(AFN afn, void *state, void *symbole)
     }
 
     return result;
+}
+
+void print_AFN(AFN afn, char* print_state(void *state) , boolean equal_state(void* state1, void* state2)){
+    list visited_state_list = new_list();
+    stack pile = new_stack();
+    
+    while (is_empty_stack(pile) == False)
+    {
+        void *state = pop(pile);
+
+    }
+    
+    free_stack(pile);
+    free_list(visited_state_list);
+
 }
 
 list detect_AFN(const AFN afn, void *word, int size)

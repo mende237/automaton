@@ -209,7 +209,7 @@ static void **delta_global_AFD(AFD afd, void *state)
     return trans_result;
 }
 
-static list *union_trans(AFD afd1, AFD afd2, void **trans1, void **trans2, void **tab_label, int nbre_label, void print_value(void *value, boolean last))
+static list *union_trans(AFD afd1, AFD afd2, void **trans1, void **trans2, void **tab_label, int nbre_label)
 {
     list *trans_result = calloc(nbre_label, sizeof(list));
     list *test = calloc(nbre_label, sizeof(list));
@@ -272,7 +272,7 @@ static list *union_trans(AFD afd1, AFD afd2, void **trans1, void **trans2, void 
     return trans_result;
 }
 
-static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last))
+static void **product_AFD(AFD afd1, AFD afd2)
 {
     void **result = calloc(6, sizeof(void *));
     int i = 0, j = 0, cmpt_state = 1;
@@ -317,7 +317,7 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
     // state_tab[0] = initial_state_list;
     queue_insertion(state_list, initial_state_list);
 
-    list *trans = union_trans(afd1, afd2, delta_global_AFD(afd1, afd1->initiale_state), delta_global_AFD(afd2, afd2->initiale_state), tab_label, label_list->length, print_value);
+    list *trans = union_trans(afd1, afd2, delta_global_AFD(afd1, afd1->initiale_state), delta_global_AFD(afd2, afd2->initiale_state), tab_label, label_list->length);
     queue_insertion(mat_state_list, trans);
     // mat_state[0] = trans;
     for (i = 0; i < label_list->length; i++)
@@ -339,7 +339,7 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
         {
             queue_insertion(state_list, state);
             // state_tab[cmpt_state] = state;
-            trans = union_trans(afd1, afd2, delta_global_AFD(afd1, get_element_list(state, 0)), delta_global_AFD(afd2, get_element_list(state, 1)), tab_label, label_list->length, print_value);
+            trans = union_trans(afd1, afd2, delta_global_AFD(afd1, get_element_list(state, 0)), delta_global_AFD(afd2, get_element_list(state, 1)), tab_label, label_list->length);
             queue_insertion(mat_state_list, trans);
             // mat_state[cmpt_state] = trans;
 
@@ -413,13 +413,13 @@ static void **product_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean 
     return result;
 }
 
-AFD union_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last))
+AFD union_AFD(AFD afd1, AFD afd2)
 {
     void **trans = NULL;
     int cmpt = 0;
     list final_states = new_list();
     int i = 0, j = 0;
-    void **data = product_AFD(afd1, afd2, print_value);
+    void **data = product_AFD(afd1, afd2);
     void **state_tab = data[0];
     int *nbr_state = data[1];
     void ***mat_state = data[2];
@@ -477,14 +477,14 @@ AFD union_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last))
     return afd_result;
 }
 
-AFD intersection_AFD(AFD afd1, AFD afd2, void print_value(void *x, boolean last))
+AFD intersection_AFD(AFD afd1, AFD afd2)
 {
 
     void **trans = NULL;
     int cmpt = 0;
     list final_states = new_list();
     int i = 0, j = 0;
-    void **data = product_AFD(afd1, afd2, print_value);
+    void **data = product_AFD(afd1, afd2);
     void **state_tab = data[0];
     int *nbr_state = data[1];
     void ***mat_state = data[2];
@@ -1096,7 +1096,7 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2, ...))
     return afd;
 }
 
-AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, ...), void print_value(void *x, boolean last))
+AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, ...))
 {
     typedef struct etiquette etiquette;
 
@@ -1115,14 +1115,14 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
 
     stack pile = new_stack();
 
-    list e_clo = epsilone_closure_set(afn, initiale, print_value);
+    list e_clo = epsilone_closure_set(afn, initiale);
     void **trans = delta_global_automate(afn, e_clo, False, equal_value);
 
     list old_list;
     for (i = 0; i < afn->nbre_label; i++)
     {
         old_list = trans[i];
-        trans[i] = epsilone_closure_set(afn, trans[i], print_value);
+        trans[i] = epsilone_closure_set(afn, trans[i]);
         //**************************************
         head_insertion(garbage, old_list);
         //**************************************
@@ -1151,7 +1151,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
             for (i = 0; i < afn->nbre_label; i++)
             {
                 old_list = trans[i];
-                trans[i] = epsilone_closure_set(afn, trans[i], print_value);
+                trans[i] = epsilone_closure_set(afn, trans[i]);
                 //***************************************************
                 head_insertion(garbage, old_list);
                 //***************************************************
@@ -1252,7 +1252,7 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
     return afd;
 }
 
-list epsilone_transition(AFN afn, void *state, void print_value(void *x, boolean last))
+list epsilone_transition(AFN afn, void *state)
 {
     list states = new_list();
     typedef struct etiquette etiquette;
@@ -1274,7 +1274,7 @@ list epsilone_transition(AFN afn, void *state, void print_value(void *x, boolean
     return states;
 }
 
-list epsilone_closure(AFN afn, void *state, void print_value(void *x, boolean last))
+list epsilone_closure(AFN afn, void *state)
 {
     int i = 0;
 
@@ -1287,7 +1287,7 @@ list epsilone_closure(AFN afn, void *state, void print_value(void *x, boolean la
     while (is_empty_stack(pile) == False)
     {
         temp = pop(pile);
-        list_states = epsilone_transition(afn, temp, print_value);
+        list_states = epsilone_transition(afn, temp);
         for (i = 0; i < list_states->length; i++)
         {
             void *state = get_element_list(list_states, i);
@@ -1309,7 +1309,7 @@ list epsilone_closure(AFN afn, void *state, void print_value(void *x, boolean la
     return e_fermerture;
 }
 
-list epsilone_closure_set(AFN afn, list set_state, void print_value(void *x, boolean last))
+list epsilone_closure_set(AFN afn, list set_state)
 {
     list result = new_list();
     list old_result;
@@ -1318,7 +1318,7 @@ list epsilone_closure_set(AFN afn, list set_state, void print_value(void *x, boo
     for (i = 0; i < set_state->length; i++)
     {
         old_result = result;
-        result = union_set(result, epsilone_closure(afn, get_element_list(set_state, i), print_value));
+        result = union_set(result, epsilone_closure(afn, get_element_list(set_state, i)));
         //****************************************
         free_list(old_result);
         //**************************************

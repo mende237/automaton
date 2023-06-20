@@ -32,6 +32,7 @@ boolean confirm(int user_rep);
 boolean equal_special_state(void *st1, void *st2);
 boolean equal_label(void *lbl1, void *lbl2, ...);
 boolean equal_st(void *st1, void *st2, ...);
+int hash_string(const char *str);
 
 void clearScreen()
 {
@@ -258,18 +259,42 @@ char **add_data(int n, ...)
     return data;
 }
 
-int main()
+// int hash_string(const char *str) {
+//     if (strcmp(str, "-T") == 0) {
+//         return 1;
+//     } else if (strcmp(str, "-G") == 0) {
+//         return 2;
+//     } else if (strcmp(str, "-B") == 0) {
+//         return 3;
+//     } else if (strcmp(str, "-B") == 0) {
+//         return ;
+//     }else if (strcmp(str, "-HM") == 0) {
+//         code = 3;
+//     }
+//     else {
+//         code = 0; // default code
+//     }
+// }
+
+int main(int argc, char *argv[])
 {
-    char *test1 = calloc(6 , sizeof(char));
-    test1[0] = 'a';
-    test1[1] = 'b';
-    test1[2] = 'c';
-    test1[3] = 'd';
-    test1[4] = 'e';
-    printf("before %s %d\n",test1 , (int)strlen(test1));
-    test1[strlen(test1)-1] = '\0';
-    test1[0] = '\n';
-    printf("after  %s %d\n", test1, (int)strlen(test1));
+
+    // if(argc <= 1){
+    //     printf("erreur\n");
+    //     printf("syntaxe ./main -option arg1 .. arg2\n");
+    //     exit(EXIT_FAILURE);
+    // }
+
+    // char *test1 = calloc(6 , sizeof(char));
+    // test1[0] = 'a';
+    // test1[1] = 'b';
+    // test1[2] = 'c';
+    // test1[3] = 'd';
+    // test1[4] = 'e';
+    // printf("before %s %d\n",test1 , (int)strlen(test1));
+    // test1[strlen(test1)-1] = '\0';
+    // test1[0] = '\n';
+    // printf("after  %s %d\n", test1, (int)strlen(test1));
 
     //test1 += 1;
     // free(test1);
@@ -322,15 +347,15 @@ int main()
     {
     case 1:
         garbage = new_list();
-        expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
-        
+        // expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
+        reg_expression = jason_to_word("exp.json");
         //reg_expression = malloc(expression_list->length * sizeof(char *));
-
-        for (i = 0; i < expression_list->length; i++)
-        {
-            //reg_expression[i] = get_element_list(expression_list, i);
-            printf("%s", (char *)get_element_list(expression_list, i));
-        }
+        afn = glushkov_algorithm(reg_expression, calculate_length(reg_expression), garbage);
+        // for (i = 0; i < expression_list->length; i++)
+        // {
+        //     //reg_expression[i] = get_element_list(expression_list, i);
+        //     printf("%s", (char *)get_element_list(expression_list, i));
+        // }
 
         // afn = glushkov_algorithm(reg_expression, expression_list->length, garbage);
         // print_info_AFN(afn, print_trans_info);
@@ -349,34 +374,46 @@ int main()
         // free_list(expression_list);
         // free(reg_expression);
         // free_AFN(afn);
+        print_info_AFN(afn, print_trans_info);
+        free_word(reg_expression);
+        free_AFN(afn);
         break;
     case 2:
         garbage = new_list();
-        expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
+        reg_expression = jason_to_word("exp.json");
+        afn = thomson_algorithm(reg_expression, calculate_length(reg_expression), garbage);
 
-        reg_expression = malloc(expression_list->length * sizeof(char *));
 
-        for (i = 0; i < expression_list->length; i++)
-        {
-            reg_expression[i] = get_element_list(expression_list, i);
-        }
-
-        afn = thomson_algorithm(reg_expression, expression_list->length, garbage);
         print_info_AFN(afn, print_trans_info);
-        AFN_to_jason(afn, "afn.json");
+        AFN_to_jason(afn, config->data_response_path);
 
-        afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
-
-        afd = rename_states(afd, True);
-        AFD_to_jason(afd, "afd.json");
-
-        print_info_AFD(afd, False, print_element_in_list);
-        print_AFD(afd, False, False, print_element_in_list, length_state);
-        free_AFD(afd, False);
-        free_elem_in_list(expression_list);
-        free_list(expression_list);
-        free(reg_expression);
+        free_word(reg_expression);
         free_AFN(afn);
+        // expression_list = read_expression(255, "/home/dimitri/Bureau/expression.txt", True);
+
+        // reg_expression = malloc(expression_list->length * sizeof(char *));
+
+        // for (i = 0; i < expression_list->length; i++)
+        // {
+        //     reg_expression[i] = get_element_list(expression_list, i);
+        // }
+
+        // afn = thomson_algorithm(reg_expression, expression_list->length, garbage);
+        // print_info_AFN(afn, print_trans_info);
+        // AFN_to_jason(afn, "afn.json");
+
+        // afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
+
+        // afd = rename_states(afd, True);
+        // AFD_to_jason(afd, "afd.json");
+
+        // print_info_AFD(afd, False, print_element_in_list);
+        // print_AFD(afd, False, False, print_element_in_list, length_state);
+        // free_AFD(afd, False);
+        // free_elem_in_list(expression_list);
+        // free_list(expression_list);
+        // free(reg_expression);
+        // free_AFN(afn);
         break;
     case 3:
         garbage = new_list();
@@ -430,7 +467,7 @@ int main()
         }
         else
         {
-            afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
+            afd = epsilone_determinisation(afn, equal_st);
         }
 
         print_info_AFD(afd, True, print_element_in_list);
@@ -465,7 +502,7 @@ int main()
 
         if (user_rep == 8)
         {
-            afd_result = union_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
+            afd_result = union_AFD(afd_tab[0], afd_tab[1]);
 
             // print_info_AFD(afd_result, True, print_element_in_list);
             // print_AFD(afd_result, True, True, print_element_in_list, length_state);
@@ -483,7 +520,7 @@ int main()
 
             for (i = 2; i < nbr_automate; i++)
             {
-                afd_result = union_AFD(old_afd, afd_tab[i], print_element_in_list);
+                afd_result = union_AFD(old_afd, afd_tab[i]);
                 afd_result = rename_states(afd_result, False);
                 for (i = 0; i < afd_result->nbre_state + 1; i++)
                 {
@@ -496,7 +533,7 @@ int main()
         }
         else
         {
-            afd_result = intersection_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
+            afd_result = intersection_AFD(afd_tab[0], afd_tab[1]);
             if (afd_result->nbre_finale_state > 0)
             {
                 afd_result = rename_states(afd_result, False);
@@ -516,7 +553,7 @@ int main()
                 old_afd = afd_result;
                 for (i = 2; i < nbr_automate; i++)
                 {
-                    afd_result = intersection_AFD(old_afd, afd_tab[i], print_element_in_list);
+                    afd_result = intersection_AFD(old_afd, afd_tab[i]);
                     if (afd_result->nbre_finale_state > 0)
                     {
                         afd_result = rename_states(afd_result, False);

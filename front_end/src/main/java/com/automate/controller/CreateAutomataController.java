@@ -438,7 +438,7 @@ public class CreateAutomataController extends Controller implements Initializabl
     }
 
     @FXML
-    void handleDeleteTransitionButtonClick(ActionEvent event) {
+    private void handleDeleteTransitionButtonClick(ActionEvent event) {
         Transition transition = deleteTransitionComboBox.getValue();
         transitionsList.remove(transition);
         this.makeImage();
@@ -446,7 +446,7 @@ public class CreateAutomataController extends Controller implements Initializabl
 
 
     @FXML
-    void handleZoomInButtonClick(ActionEvent event) {
+    private void handleZoomInButtonClick(ActionEvent event) {
         double scale = automatonImageView.getScaleX() * 1.1;
         automatonImageView.setScaleX(scale);
         automatonImageView.setScaleY(scale);
@@ -454,11 +454,16 @@ public class CreateAutomataController extends Controller implements Initializabl
     }
 
     @FXML
-    void handleZoomOutButtonClick(ActionEvent event) {
+    private void handleZoomOutButtonClick(ActionEvent event) {
         double scale = automatonImageView.getScaleX() / 1.1;
         automatonImageView.setScaleX(scale);
         automatonImageView.setScaleY(scale);
         automatonScrollPane.requestLayout();
+    }
+
+    @FXML
+    private void handleSaveButtonClick(ActionEvent event) {
+
     }
 
     private boolean isValidLabel(String label){
@@ -537,6 +542,7 @@ public class CreateAutomataController extends Controller implements Initializabl
         popupStage.showAndWait();
     }
 
+    
 
     @Override
     public void sendMessage(Message message) {

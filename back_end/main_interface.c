@@ -396,7 +396,7 @@ START:
         }
         else
         {
-            afd = epsilone_determinisation(afn, equal_st, print_element_in_list);
+            afd = epsilone_determinisation(afn, equal_st);
             message = (Message){messenger->message.id, config->data_response_path, "epsilone determinisation"};
         }
         afd = rename_states(afd, True);
@@ -428,7 +428,7 @@ START:
 
         if (user_rep == 8)
         {
-            afd_result = union_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
+            afd_result = union_AFD(afd_tab[0], afd_tab[1]);
 
             // print_info_AFD(afd_result, True, print_element_in_list);
             // print_AFD(afd_result, True, True, print_element_in_list, length_state);
@@ -446,7 +446,7 @@ START:
 
             for (i = 2; i < nbr_automate; i++)
             {
-                afd_result = union_AFD(old_afd, afd_tab[i], print_element_in_list);
+                afd_result = union_AFD(old_afd, afd_tab[i]);
                 afd_result = rename_states(afd_result, False);
                 for (i = 0; i < afd_result->nbre_state + 1; i++)
                 {
@@ -459,7 +459,7 @@ START:
         }
         else
         {
-            afd_result = intersection_AFD(afd_tab[0], afd_tab[1], print_element_in_list);
+            afd_result = intersection_AFD(afd_tab[0], afd_tab[1]);
             if (afd_result->nbre_finale_state > 0)
             {
                 afd_result = rename_states(afd_result, False);
@@ -479,7 +479,7 @@ START:
                 old_afd = afd_result;
                 for (i = 2; i < nbr_automate; i++)
                 {
-                    afd_result = intersection_AFD(old_afd, afd_tab[i], print_element_in_list);
+                    afd_result = intersection_AFD(old_afd, afd_tab[i]);
                     if (afd_result->nbre_finale_state > 0)
                     {
                         afd_result = rename_states(afd_result, False);

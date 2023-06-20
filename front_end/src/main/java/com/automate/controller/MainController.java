@@ -21,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeItem;
@@ -29,6 +30,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class MainController extends Controller implements Initializable {
     @FXML
@@ -526,6 +530,31 @@ public class MainController extends Controller implements Initializable {
             }
         }
         return list;
+    }
+
+    @FXML
+    private void handleOpenCreateAutomateInterface(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
+        loader.setControllerFactory(c -> {
+            return CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
+        });
+
+        BorderPane createAutomateView;
+        try {
+
+            createAutomateView = loader.load();
+            Stage createStage = new Stage();
+            // createStage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(createAutomateView);
+            scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+            // scene.getStylesheets().add(css);
+            createStage.setScene(scene);
+            createStage.showAndWait();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
     }
 
     // @FXML
