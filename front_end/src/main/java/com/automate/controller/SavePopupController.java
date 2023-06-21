@@ -60,6 +60,7 @@ public class SavePopupController extends Controller implements Initializable{
     @FXML
     private void handleConfirmButtonClicked(ActionEvent event) {
         if(nameField.getText().length() > 0){
+            System.out.println("******************* enter " + nameField.getText() +" *********************");
             HashMap<String , String> content = new HashMap<>();
             
             content.put("name", nameField.getText());

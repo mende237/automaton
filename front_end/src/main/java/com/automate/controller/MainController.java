@@ -4,18 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.automate.inputOutput.Configuration;
-import com.automate.inputOutput.Scheduler;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automate;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,7 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainController extends Controller implements Initializable {
@@ -63,6 +58,7 @@ public class MainController extends Controller implements Initializable {
     private ArrayList<AFD> tabAFD;
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
+    private Object response;
 
     private enum viewType {
         AUTOMATE_VIEW, CONVERT_VIEW , RECONNAISSANCE_VIEW
@@ -550,6 +546,10 @@ public class MainController extends Controller implements Initializable {
             // scene.getStylesheets().add(css);
             createStage.setScene(scene);
             createStage.showAndWait();
+            if(response != null)
+                System.out.println(response);
+            else
+                System.out.println("*************** nulll *******************");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -571,8 +571,7 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void receiveMessage(Message message) {
-        System.out.println(message);
-
+        this.response = message;
     }
 
 }

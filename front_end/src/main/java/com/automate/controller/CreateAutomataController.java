@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import com.automate.structure.AFD;
+import com.automate.structure.AFN;
 import com.automate.structure.Automate;
 import com.automate.structure.State;
 import com.automate.structure.StateType;
@@ -19,7 +21,6 @@ import com.automate.structure.Transition;
 import com.automate.utils.CircleTableCell;
 import com.automate.utils.CircleTableCellTransitions;
 import com.automate.utils.CircleTableCellTransitions.ColumnName;
-
 
 import guru.nidi.graphviz.model.Graph;
 import javafx.collections.FXCollections;
@@ -29,8 +30,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
-
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -56,6 +56,9 @@ public class CreateAutomataController extends Controller implements Initializabl
     }
 
     protected static final String ID = "createAutomataController";
+
+    @FXML
+    private Button saveButton;
 
     @FXML
     private VBox zoomVBox;
@@ -235,14 +238,14 @@ public class CreateAutomataController extends Controller implements Initializabl
         });
         
         // Ajouter des états par défaut dans le TableView
-        State state1 = new State("State 1", StateType.FINAL);
-        State state2 = new State("State 2", StateType.INITIAL);
-        State state3 = new State("State 2", StateType.INITIAL);
-        statesList.add(state1);
-        statesList.add(state2);
-        statesList.add(state3);
+        // State state1 = new State("State 1", StateType.FINAL);
+        // State state2 = new State("State 2", StateType.INITIAL);
+        // State state3 = new State("State 2", StateType.INITIAL);
+        // statesList.add(state1);
+        // statesList.add(state2);
+        // statesList.add(state3);
 
-        transitionsList.add(new Transition(state1, "a", state2));
+        // transitionsList.add(new Transition(state1, "a", state2));
 
         // Lier la liste d'états au TableView
         statesTableView.setItems(statesList);
@@ -469,10 +472,19 @@ public class CreateAutomataController extends Controller implements Initializabl
             if(this.response != null){
                 HashMap<String, String> data = (HashMap<String, String>) response;
                 if(!isFileExist(data.get("name"))){
-
+                    Automate automata = this.makeAutomata(data.get("name"), data.get("description"));
+                    if(automata != null){
+                        Message message = new Message("mainController", automata);
+                        this.sendMessage(message);
+                        Stage stage = (Stage) saveButton.getScene().getWindow();
+                        stage.close();
+                    }
+                    Stage stage = (Stage) saveButton.getScene().getWindow();
+                    stage.close();
                 }
 
                 this.response = null;
+                this.automateType = AutomateType.AFD;
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -505,16 +517,16 @@ public class CreateAutomataController extends Controller implements Initializabl
     private boolean isValidTransition(Transition transition){
         int i = 0;
         boolean goodTransition = true;
-        boolean isConnexe = false;
+        boolean isConnexe = true;
         while(goodTransition && i < this.transitionsList.size()){
             Transition trans = this.transitionsList.get(i);
             goodTransition = !trans.equalTransition(transition);
-            if(isAFD && goodTransition){
-                goodTransition = !trans.getBegin().equalState(transition.getBegin()) | !trans.getLabel().equals(transition.getLabel());
-            }
+            // if(goodTransition){
+            //     goodTransition = !trans.getBegin().equalState(transition.getBegin()) | !trans.getLabel().equals(transition.getLabel());
+            // }
 
             isConnexe |= transition.getBegin().equalState(trans.getBegin()) | transition.getBegin().equalState(trans.getEnd())
-                         |transition.getEnd().equalState(trans.getEnd()) | transition.getEnd().equalState(trans.getBegin());
+                         | transition.getEnd().equalState(trans.getBegin()) | transition.getEnd().equalState(trans.getEnd());
             i++;
         }
         return goodTransition & isConnexe;
@@ -569,18 +581,90 @@ public class CreateAutomataController extends Controller implements Initializabl
         // scene.getStylesheets().add(css);
         popupSaveStage.setScene(scene);
         popupSaveStage.showAndWait();
+
     }
 
-    private Automate makeAutomata(){
+    private Automate makeAutomata(String name, String description){
+        ArrayList<State> initialStateList = new ArrayList<>();
+        ArrayList<State> finalStateList = new ArrayList<>();
 
-        return null;
+        for(int i=0; i<this.transitionsList.size(); i++){
+            Transition transition = transitionsList.get(i);
+            if(transition.getBegin().getType() == StateType.INITIAL)
+                initialStateList.add(transition.getBegin());
+            else if(transition.getBegin().getType() == StateType.FINAL)
+                finalStateList.add(transition.getBegin());
+            else if(transition.getBegin().getType() == StateType.FINAL_INITIAL){
+                initialStateList.add(transition.getBegin());
+                finalStateList.add(transition.getBegin());
+            }
+
+            if(transition.getEnd().getType() == StateType.INITIAL)
+                initialStateList.add(transition.getEnd());
+            else if(transition.getEnd().getType() == StateType.FINAL)
+                finalStateList.add(transition.getEnd());
+            else if(transition.getEnd().getType() == StateType.FINAL_INITIAL){
+                initialStateList.add(transition.getEnd());
+                finalStateList.add(transition.getEnd());
+            }
+
+            if(initialStateList.size() >= 2 && this.automateType != AutomateType.E_AFN)
+                this.automateType = AutomateType.AFN;
+            
+            if(transition.getLabel().equalsIgnoreCase("\u03B5"))
+                this.automateType = AutomateType.E_AFN;
+
+            if(this.automateType == AutomateType.AFD){
+                int j = i + 1;
+                while (j < this.transitionsList.size() && this.automateType == AutomateType.AFD) {
+                    Transition transition2 = this.transitionsList.get(j);
+                    if(transition.semiEqualTransition(transition2))
+                        this.automateType = AutomateType.AFN;
+                }
+            }
+        }
+
+        if(initialStateList.size() <= 0 || finalStateList.size() <= 0){
+            ////////                ::::::::
+            return null;
+        }
+
+        int nbrState = statesList.size();
+        String labelTab[] = new String[alphabetList.size()];
+
+        for(int i = 0; i < alphabetList.size(); i++)
+            labelTab[i] = alphabetList.get(i);
+
+        String finalStateTab[] = new String[finalStateList.size()];
+        for(int i = 0; i < finalStateList.size(); i++)
+            finalStateTab[i] = finalStateList.get(i).getName();
+
+        Automate automata = null;
+        if(this.automateType == AutomateType.AFD){
+            String initialState = initialStateList.get(0).getName();
+            automata = new AFD(labelTab, nbrState, finalStateTab, initialState, name, description);
+
+             for (Transition transition : this.transitionsList) 
+                automata.addTransition(transition.getBegin(), transition.getLabel(), transition.getEnd());
+        }else{
+            String initialStateTab[] = new String[initialStateList.size()];
+
+            for(int i = 0; i < initialStateList.size(); i++)
+                initialStateTab[i] = initialStateList.get(i).getName();
+
+            automata = new AFN(labelTab, this.epsilone , nbrState , finalStateTab, initialStateTab, name , description);
+            for (Transition transition : this.transitionsList) 
+                automata.addTransition(transition.getBegin(), transition.getLabel(), transition.getEnd());
+            
+        }
+        return automata;
     }
 
 
     @Override
     public void sendMessage(Message message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendMessage'");
+        message.setIdExpediteur(ID);
+        super.mediator.transmitMessage(message);
     }
 
 

@@ -41,6 +41,11 @@ public class Transition {
                this.end.equalState(transition.getEnd());
     }
 
+    public boolean semiEqualTransition(Transition transition){
+        return this.begin.equalState(transition.getBegin()) &
+               this.label.equals(transition.getLabel());
+    }
+
     @Override
     public String toString() {
         return String.format("%s --%s--> %s", begin.toString() , label , end.toString());
