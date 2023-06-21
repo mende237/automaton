@@ -3,7 +3,7 @@ package com.automate.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 // import java.util.ArrayList;
 // import java.util.HashMap;
 import java.util.List;
@@ -44,14 +44,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class CreateAutomataController extends Controller implements Initializable{
+    public enum AutomateType{
+        AFD , AFN , E_AFN
+    }
+
     protected static final String ID = "createAutomataController";
 
     @FXML
@@ -64,19 +67,12 @@ public class CreateAutomataController extends Controller implements Initializabl
     @FXML
     private Label alphabetLabel;
     
-    @FXML
-    private HBox alphabetBox;
-
-    @FXML
-    private Pane automatonPane;
 
     @FXML
     private ComboBox<State> deleteStateComboBox;
 
     @FXML
     private ComboBox<String> deleteSymbolComboBox;
-
-
 
     @FXML
     private ScrollPane automatonScrollPane;
@@ -126,7 +122,7 @@ public class CreateAutomataController extends Controller implements Initializabl
     @FXML
     private TableView<Transition> transitionsTableView;
 
-    
+
 
 
     // Une liste observable d'états qui sera affichée dans le TableView
@@ -136,6 +132,7 @@ public class CreateAutomataController extends Controller implements Initializabl
     private boolean isAFD = true;
     private String epsilone = "ep";
     private Object response = null;
+    private AutomateType automateType = AutomateType.AFD;
 
     private static CreateAutomataController createAutomataController;
 
@@ -145,7 +142,6 @@ public class CreateAutomataController extends Controller implements Initializabl
 
     private CreateAutomataController(Mediator mediator) {
         super(ID, mediator);
-        //TODO Auto-generated constructor stub
     }
 
     public static CreateAutomataController getCreateAutomataController(Mediator mediator){
@@ -276,6 +272,8 @@ public class CreateAutomataController extends Controller implements Initializabl
 
 
         // updateInputComboBox(); // Mettre à jour la ComboBox au démarrage
+        // alphabetList.add("\\u03B5");
+        newTransitionInputComboBox.getItems().add("\u03B5");
         updateAlphabetLabel();
         alphabetList.addListener((ListChangeListener<String>) change -> {
             while (change.next()) {
@@ -305,6 +303,7 @@ public class CreateAutomataController extends Controller implements Initializabl
 
     private void updateInputComboBox() {
         newTransitionInputComboBox.setItems(FXCollections.observableArrayList(alphabetList));
+        newTransitionInputComboBox.getItems().add(0, "\u03B5");
         deleteSymbolComboBox.setItems(FXCollections.observableArrayList(alphabetList));
     }
 
@@ -333,7 +332,9 @@ public class CreateAutomataController extends Controller implements Initializabl
                 else{
                     System.out.println("**************** state ***************");
                 }
+                this.response = null;
             }
+        
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -462,8 +463,21 @@ public class CreateAutomataController extends Controller implements Initializabl
     }
 
     @FXML
-    private void handleSaveButtonClick(ActionEvent event) {
+    private void handleSaveButtonClick(ActionEvent event){
+        try {
+            this.showPopupSave();
+            if(this.response != null){
+                HashMap<String, String> data = (HashMap<String, String>) response;
+                if(!isFileExist(data.get("name"))){
 
+                }
+
+                this.response = null;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private boolean isValidLabel(String label){
@@ -542,7 +556,26 @@ public class CreateAutomataController extends Controller implements Initializabl
         popupStage.showAndWait();
     }
 
-    
+    private void showPopupSave() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/savePopup.fxml"));
+        loader.setControllerFactory(c -> {
+            return SavePopupController.getSavePopupController(ConrceteMadiator.getConrceteMadiator());
+        });
+        AnchorPane popupSave = loader.load();
+        Stage popupSaveStage = new Stage();
+        popupSaveStage.initModality(Modality.APPLICATION_MODAL);
+        Scene scene = new Scene(popupSave);
+        scene.getStylesheets().add(getClass().getResource("/style/savePopup.css").toExternalForm());
+        // scene.getStylesheets().add(css);
+        popupSaveStage.setScene(scene);
+        popupSaveStage.showAndWait();
+    }
+
+    private Automate makeAutomata(){
+
+        return null;
+    }
+
 
     @Override
     public void sendMessage(Message message) {
@@ -556,5 +589,9 @@ public class CreateAutomataController extends Controller implements Initializabl
         response = message.getContent();
     }
 
+    private boolean isFileExist(String fileName){
+
+        return false;
+    }
     
 }

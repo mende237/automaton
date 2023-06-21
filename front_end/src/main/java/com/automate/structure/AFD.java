@@ -5,8 +5,6 @@ import static guru.nidi.graphviz.model.Factory.to;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -17,8 +15,6 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.attribute.Rank.RankDir;
 import guru.nidi.graphviz.attribute.Shape;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
 
 public class AFD extends Automate {

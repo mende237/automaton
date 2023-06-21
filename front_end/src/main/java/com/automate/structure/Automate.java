@@ -2,14 +2,12 @@ package com.automate.structure;
 
 import static guru.nidi.graphviz.model.Factory.*;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
@@ -22,7 +20,6 @@ import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 
 public abstract class Automate {
     protected int cmpt;

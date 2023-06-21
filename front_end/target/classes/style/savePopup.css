@@ -1,0 +1,37 @@
+.popup-vbox {
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.popup-textfield {
+    -fx-prompt-text-fill: #A9A9A9;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.popup-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #4CAF50;
+    -fx-border-radius: 5px;
+}
+
+.popup-button:hover {
+    -fx-background-color: #3E8E41;
+    -fx-border-color: #3E8E41;
+}
+
+.popup-textarea {
+    -fx-prompt-text-fill: #A9A9A9;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 12px;
+    -fx-padding: 5px;
+}
