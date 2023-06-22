@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.json.JSONException;
 
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
@@ -21,7 +22,7 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import javafx.scene.image.Image;
 
-public abstract class Automate {
+public abstract class Automaton {
     protected int cmpt;
     protected int nbrState;
     protected String name;
@@ -38,23 +39,23 @@ public abstract class Automate {
     /*******************************************
      * constructor
      *************************************************/
-    public Automate(){
+    public Automaton(){
 
     }
 
-    public Automate(String tabLabel[] , int nbrState, String finalStateTab[] , String name, String description , String path) {
+    public Automaton(String tabLabel[] , int nbrState, String finalStateTab[] , String name, String description , String path) {
         this(tabLabel , nbrState , finalStateTab , path);
         this.name = name;
         this.description = description;
     }
 
-    public Automate(String tabLabel[], int nbrState, String finalStateTab[], String name, String description) {
+    public Automaton(String tabLabel[], int nbrState, String finalStateTab[], String name, String description) {
         this(tabLabel, nbrState, finalStateTab);
         this.name = name;
         this.description = description;
     }
 
-    public Automate(String tabLabel[], int nbrState, String finalStateTab[]) {
+    public Automaton(String tabLabel[], int nbrState, String finalStateTab[]) {
         this.finalStateTab = finalStateTab;
         this.tabLabel = tabLabel;
         this.nbrState = nbrState;
@@ -62,7 +63,7 @@ public abstract class Automate {
 
     }
 
-    public Automate(String tabLabel[], int nbrState, String finalStateTab[] , String path) {
+    public Automaton(String tabLabel[], int nbrState, String finalStateTab[] , String path) {
         this(tabLabel , nbrState , finalStateTab);
         this.path = path;
     }
@@ -116,6 +117,7 @@ public abstract class Automate {
     public abstract void save(String path);
     public abstract Graph markeGraph();
     public abstract void addTransition(State begin, String label, State end);
+    public abstract void AutomatonToJson(String fileName) throws JSONException;
     // public abstract void addTransitionToGraph(Transition transition);
 
 
@@ -128,8 +130,8 @@ public abstract class Automate {
             .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < matTrans.size(); i++) {
-            g = g.with(Automate.addState(matTrans.get(i).begin)
-                    .link(to(Automate.addState(matTrans.get(i).end))
+            g = g.with(Automaton.addState(matTrans.get(i).begin)
+                    .link(to(Automaton.addState(matTrans.get(i).end))
                             .with(Label.of(matTrans.get(i).label))));
         }
 
@@ -145,12 +147,12 @@ public abstract class Automate {
 
         for (int i = 0; i < matTrans.size(); i++) {
             if (matTrans.get(i).label.equalsIgnoreCase(epsilone) == false) {
-                g = g.with(Automate.addState(matTrans.get(i).begin)
-                        .link(to(Automate.addState(matTrans.get(i).end))
+                g = g.with(Automaton.addState(matTrans.get(i).begin)
+                        .link(to(Automaton.addState(matTrans.get(i).end))
                                 .with(Label.of(matTrans.get(i).label))));
             } else {
-                g = g.with(Automate.addState(matTrans.get(i).begin)
-                        .link(to(Automate.addState(matTrans.get(i).end))
+                g = g.with(Automaton.addState(matTrans.get(i).begin)
+                        .link(to(Automaton.addState(matTrans.get(i).end))
                                 .with(Label.of("\u03B5"))));
             }
         }

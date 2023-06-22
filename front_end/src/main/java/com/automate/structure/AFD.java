@@ -17,7 +17,7 @@ import guru.nidi.graphviz.attribute.Rank.RankDir;
 import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.model.Graph;
 
-public class AFD extends Automate {
+public class AFD extends Automaton {
     private Transition matTrans[] = null;
     private String initialState = null;
 
@@ -84,8 +84,8 @@ public class AFD extends Automate {
                 .nodeAttr().with(Shape.CIRCLE);
 
         for (int i = 0; i < this.matTrans.length; i++) {
-            g = g.with(Automate.addState(this.matTrans[i].begin)
-                    .link(to(Automate.addState(this.matTrans[i].end))
+            g = g.with(Automaton.addState(this.matTrans[i].begin)
+                    .link(to(Automaton.addState(this.matTrans[i].end))
                             .with(Label.of(this.matTrans[i].label))));
         }
         return g;
@@ -240,14 +240,15 @@ public class AFD extends Automate {
     @Override
     public String toString() {
         String ch = "l'alphabet est : {";
-        for (int i = 0; i < super.tabLabel.length; i++) {
+        for (int i = 0; i < super.tabLabel.length - 1; i++) {
             ch += super.tabLabel[i] + ";";
         }
-
+        ch += super.tabLabel[super.tabLabel.length - 1];
         ch += "}\nl'etat initiale est : " + this.initialState + "\nl'ensemble des etats finaux est {";
-        for (int i = 0; i < super.finalStateTab.length; i++) {
+        for (int i = 0; i < super.finalStateTab.length - 1; i++) {
             ch += super.finalStateTab[i].toString() + ";";
         }
+        ch += super.finalStateTab[super.finalStateTab.length - 1];
         ch += "}\nles differentes transitions sont :\n";
         for (int i = 0; i < this.cmpt; i++) {
             ch += matTrans[i].toString() + "\n";
@@ -271,7 +272,10 @@ public class AFD extends Automate {
         System.out.println(test);
     }
 
+    @Override
+    public void AutomatonToJson(String fileName) throws JSONException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'AutomatonToJson'");
+    }
 
-
-   
 }

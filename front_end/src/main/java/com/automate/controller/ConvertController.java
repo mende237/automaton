@@ -11,7 +11,7 @@ import com.automate.inputOutput.Instruction;
 import com.automate.inputOutput.Messenger;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
-import com.automate.structure.Automate;
+import com.automate.structure.Automaton;
 
 import org.json.JSONException;
 
@@ -191,7 +191,7 @@ public class ConvertController extends Controller implements Initializable {
 
         if (messenger.isResponse() == true) {
             try {
-                Automate automate = null;
+                Automaton automate = null;
                 if(isReturnAFD  == true){
                     automate = AFD.jsonToAFD(messenger.getDataPathResponse(), false);
                 }else{

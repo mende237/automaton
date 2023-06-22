@@ -5,12 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.automate.controller.CreateAutomataController.AutomateType;
 import com.automate.inputOutput.Configuration;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
-import com.automate.structure.Automate;
+import com.automate.structure.Automaton;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -87,7 +89,7 @@ public class MainController extends Controller implements Initializable {
             this.tabAFD = new ArrayList<>();
             this.tabAFN = new ArrayList<>();
             this.tabEpAFN = new ArrayList<>();
-            ArrayList<Automate> tempTab;
+            ArrayList<Automaton> tempTab;
             // chargement des afd
             tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "afd"), true);
             for (int i = 0; i < tempTab.size(); i++) {
@@ -183,7 +185,7 @@ public class MainController extends Controller implements Initializable {
 
                 // Scheduler.DOWNS2();// on bloque tout autre instruction d'affichage
                 String pathCurrentImage = Configuration.getConfiguration().getImagePath();
-                Automate automate = null;
+                Automaton automate = null;
                 if (indexParent == 0) {// dans ce cas on doit afficher un afd
                     automate = this.tabAFD.get(itemIndex);
                     pathCurrentImage += File.separator +  "afd.png";
@@ -209,7 +211,7 @@ public class MainController extends Controller implements Initializable {
         }
     }
 
-    private void automateVisualisation(String path, Automate automate) {
+    private void automateVisualisation(String path, Automaton automate) {
         try {
             Message message = null;
             switch (this.vType) {
@@ -510,8 +512,8 @@ public class MainController extends Controller implements Initializable {
         return item;
     }
 
-    public ArrayList<Automate> loadData(File folder, boolean isAFD) throws FileNotFoundException {
-        ArrayList<Automate> list = new ArrayList<>();
+    public ArrayList<Automaton> loadData(File folder, boolean isAFD) throws FileNotFoundException {
+        ArrayList<Automaton> list = new ArrayList<>();
         for (File file : folder.listFiles()) {
             if (file.isFile()) {
                 if (isAFD == true) {
@@ -546,9 +548,18 @@ public class MainController extends Controller implements Initializable {
             // scene.getStylesheets().add(css);
             createStage.setScene(scene);
             createStage.showAndWait();
-            if(response != null)
-                System.out.println(response);
-            else
+            if(response != null){
+                HashMap<String, Object> data = (HashMap<String, Object>) response;
+                System.out.println(data.get("automata"));
+                // System.out.println(data.get("type"));
+                if((AutomateType) data.get("type") == AutomateType.AFD){
+                    System.out.println("********************* AFD *********************");
+                }else if((AutomateType) data.get("type") == AutomateType.AFN){
+                    System.out.println("********************* AFN *********************");
+                }else{
+                    System.out.println("********************* E-AFN *********************");
+                }
+            }else
                 System.out.println("*************** nulll *******************");
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -571,7 +582,7 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void receiveMessage(Message message) {
-        this.response = message;
+        this.response = message.getContent();
     }
 
 }

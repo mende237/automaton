@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import guru.nidi.graphviz.attribute.Label;
@@ -17,7 +18,7 @@ import guru.nidi.graphviz.attribute.Rank.RankDir;
 import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.model.Graph;
 
-public class AFN extends Automate {
+public class AFN extends Automaton {
     private LinkedList<Transition> matTrans;
     private String initialStateTab[];
     // protected ArrayList<String> dinamicInitialState;
@@ -193,20 +194,22 @@ public class AFN extends Automate {
     @Override
     public String toString() {
         String ch = "l'alphabet est : {";
-        for (int i = 0; i < super.tabLabel.length; i++) {
+        for (int i = 0; i < super.tabLabel.length - 1; i++) {
             ch += super.tabLabel[i] + ";";
         }
+        ch += super.tabLabel[super.tabLabel.length - 1];
         ch += "}\nepsilone est : " + this.epsilone + "\n";
         ch += "l'ensemble des etats initiaux est : {";
-        for (int i = 0; i < this.initialStateTab.length; i++) {
+        for (int i = 0; i < this.initialStateTab.length - 1; i++) {
             ch += this.initialStateTab[i] + ";";
         }
-
+        ch += this.initialStateTab[this.initialStateTab.length - 1];
         ch += "}\nl'ensemble des etats finaux est : {";
 
-        for (int i = 0; i < super.finalStateTab.length; i++) {
+        for (int i = 0; i < super.finalStateTab.length - 1; i++) {
             ch += super.finalStateTab[i] + ";";
         }
+        ch += super.finalStateTab[super.finalStateTab.length - 1];
         ch += "}\nles differentes transitions sont :\n";
         for (int i = 0; i < this.matTrans.size(); i++) {
             ch += matTrans.get(i).toString() + "\n";
@@ -230,16 +233,22 @@ public class AFN extends Automate {
 
         for (int i = 0; i < this.matTrans.size(); i++) {
             if (this.matTrans.get(i).label.equalsIgnoreCase(this.epsilone) == false) {
-                g = g.with(Automate.addState(this.matTrans.get(i).begin)
-                        .link(to(Automate.addState(this.matTrans.get(i).end))
+                g = g.with(Automaton.addState(this.matTrans.get(i).begin)
+                        .link(to(Automaton.addState(this.matTrans.get(i).end))
                                 .with(Label.of(this.matTrans.get(i).label))));
             } else {
-                g = g.with(Automate.addState(this.matTrans.get(i).begin)
-                        .link(to(Automate.addState(this.matTrans.get(i).end))
+                g = g.with(Automaton.addState(this.matTrans.get(i).begin)
+                        .link(to(Automaton.addState(this.matTrans.get(i).end))
                                 .with(Label.of("\u03B5"))));
             }
         }
         return g;
+    }
+
+    @Override
+    public void AutomatonToJson(String fileName) throws JSONException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'AutomatonToJson'");
     }
 
 }

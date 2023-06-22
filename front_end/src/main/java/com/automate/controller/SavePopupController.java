@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -15,6 +16,8 @@ import javafx.stage.Stage;
 public class SavePopupController extends Controller implements Initializable{
     protected static final String ID = "savePopupController";
 
+    @FXML
+    private Label lblErrorMessage;
 
     @FXML
     private Button btnCancel;
@@ -29,6 +32,9 @@ public class SavePopupController extends Controller implements Initializable{
     private TextField nameField;
 
 
+    // private Message response = null;
+
+
     public SavePopupController(Mediator mediator) {
         super(ID, mediator);
     }
@@ -39,7 +45,7 @@ public class SavePopupController extends Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    
+        
     }
 
     public static SavePopupController getSavePopupController(Mediator mediator){
@@ -72,6 +78,8 @@ public class SavePopupController extends Controller implements Initializable{
             stage.close();
             this.nameField.setText("");
             this.descriptionArea.setText("");
+        }else{
+            this.lblErrorMessage.setText("Name field can't be empty");
         }
     }
 
@@ -83,8 +91,18 @@ public class SavePopupController extends Controller implements Initializable{
 
     @Override
     public void receiveMessage(Message message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'receiveMessage'");
+       
+    }
+
+    public void setTextNameField(String name){
+        this.nameField.setText(name);
     }
     
+    public void setTextDescriptionArea(String description){
+        this.descriptionArea.setText(description);
+    }
+
+    public void setLblErrorMessage(String errorMessage){
+        this.lblErrorMessage.setText(errorMessage);
+    }
 }

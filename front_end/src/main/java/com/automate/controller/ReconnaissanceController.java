@@ -21,7 +21,7 @@ import java.util.Scanner;
 import com.automate.inputOutput.Configuration;
 import com.automate.inputOutput.Instruction;
 import com.automate.inputOutput.Messenger;
-import com.automate.structure.Automate;
+import com.automate.structure.Automaton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public class ReconnaissanceController extends Controller implements Initializabl
     protected static final String ID = "reconnaissanceController";
     private static ReconnaissanceController reconnaissanceController = null;
     private Algorithm algorithmType;
-    private Automate automate;
+    private Automaton automate;
 
     @FXML
     private TextField txtWord;
@@ -60,11 +60,11 @@ public class ReconnaissanceController extends Controller implements Initializabl
         this.algorithmType = algorithmType;
     }
 
-    public Automate getAutomate() {
+    public Automaton getAutomate() {
         return this.automate;
     }
 
-    public void setAutomate(Automate automate) {
+    public void setAutomate(Automaton automate) {
         this.automate = automate;
     }
 
