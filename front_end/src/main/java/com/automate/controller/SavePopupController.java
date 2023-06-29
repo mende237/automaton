@@ -57,7 +57,7 @@ public class SavePopupController extends Controller implements Initializable{
 
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) {
-        Message message = new Message("createAutomataController", null);
+        Message message = new Message(CreateAutomatonController.ID, null);
         this.sendMessage(message);
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
@@ -72,7 +72,7 @@ public class SavePopupController extends Controller implements Initializable{
             content.put("name", nameField.getText());
             content.put("description", descriptionArea.getText());
 
-            Message message = new Message("createAutomataController", content);
+            Message message = new Message(CreateAutomatonController.ID, content);
             this.sendMessage(message);
             Stage stage = (Stage) btnOk.getScene().getWindow();
             stage.close();

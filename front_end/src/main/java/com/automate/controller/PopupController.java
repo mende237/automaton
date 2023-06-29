@@ -49,7 +49,7 @@ public class PopupController extends Controller implements Initializable{
 
     @FXML
     void handleCancelButtonClicked(ActionEvent event) {
-        Message message = new Message("createAutomataController", null);
+        Message message = new Message(CreateAutomatonController.ID, null);
         this.sendMessage(message);
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
@@ -58,7 +58,7 @@ public class PopupController extends Controller implements Initializable{
     @FXML
     void handleConfirmButtonClicked(ActionEvent event) {
         StateType stateTypeSelected = this.stateTypeComboBox.getValue();
-        Message message = new Message("createAutomataController", stateTypeSelected);
+        Message message = new Message(CreateAutomatonController.ID, stateTypeSelected);
         this.sendMessage(message);
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
@@ -76,5 +76,4 @@ public class PopupController extends Controller implements Initializable{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'receiveMessage'");
     }
-    
 }

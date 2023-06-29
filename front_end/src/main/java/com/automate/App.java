@@ -11,9 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.automate.controller.ConrceteMadiator;
-import com.automate.controller.CreateAutomataController;
 import com.automate.controller.MainController;
-import com.automate.controller.PopupController;
 import com.automate.inputOutput.Configuration;
 import com.automate.inputOutput.Messenger;
 
@@ -22,9 +20,7 @@ import com.automate.inputOutput.Messenger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -41,9 +37,9 @@ public class App extends Application {
             System.err.println("file not found");
         }
         
-        // messenger.setSendingPath(config.getRequestPath());
-        // messenger.setReceptionPath(config.getResponsePath());
-        // App.reset();
+        messenger.setSendingPath(config.getRequestPath());
+        messenger.setReceptionPath(config.getResponsePath());
+        App.reset();
         launch();
         // Graphviz.useEngine(new GraphvizCmdLineEngine());
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");

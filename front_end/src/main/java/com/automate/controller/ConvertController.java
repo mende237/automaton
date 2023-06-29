@@ -2,6 +2,7 @@ package com.automate.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,6 +13,8 @@ import com.automate.inputOutput.Messenger;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automaton;
+
+import guru.nidi.graphviz.model.Graph;
 
 import org.json.JSONException;
 
@@ -197,11 +200,13 @@ public class ConvertController extends Controller implements Initializable {
                 }else{
                     automate = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
                 }
-                automate.makeImage(config.getImagePath() + File.separator + "afd.png");
-                File file = new File(config.getImagePath() + File.separator + "afd.png");
-                Image image = new Image(file.toURI().toString());
+
+                Image image = Automaton.makeImage(automate.markeGraph());
                 this.imageViewResult.setImage(image);
             } catch (FileNotFoundException | JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

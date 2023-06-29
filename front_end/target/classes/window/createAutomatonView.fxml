@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.CreateAutomataController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.CreateAutomatonController">
     <top>
         <HBox spacing="10.0" styleClass="top-panel">
             <Button fx:id="saveButton" onAction="#handleSaveButtonClick" styleClass="save-button" text="Save" />

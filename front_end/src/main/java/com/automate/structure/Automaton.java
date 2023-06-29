@@ -117,7 +117,7 @@ public abstract class Automaton {
     public abstract void save(String path);
     public abstract Graph markeGraph();
     public abstract void addTransition(State begin, String label, State end);
-    public abstract void AutomatonToJson(String fileName) throws JSONException;
+    public abstract void AutomatonToJson(String filePath) throws JSONException;
     // public abstract void addTransitionToGraph(Transition transition);
 
 

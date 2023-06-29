@@ -5,6 +5,8 @@ import static guru.nidi.graphviz.model.Factory.to;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -273,9 +275,28 @@ public class AFD extends Automaton {
     }
 
     @Override
-    public void AutomatonToJson(String fileName) throws JSONException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'AutomatonToJson'");
+    public void AutomatonToJson(String filePath) throws JSONException {
+        JSONObject jo = new JSONObject();
+        jo.put("name", super.name);
+        jo.put("description", super.description);
+        jo.put("number state", super.nbrState);
+        jo.put("initial states", this.initialState);
+        JSONArray jaFinalState = new JSONArray(super.finalStateTab);
+        jo.put("final states", jaFinalState);
+        JSONArray jaTransitions = new JSONArray();
+
+        for (Transition transition : this.matTrans)
+            jaTransitions.put(new JSONArray(String.format("[%s , %s , %s]",
+                transition.getBegin().getName() , transition.getLabel() , transition.getEnd().getName())));
+        
+        jo.put("transitions", jaTransitions);
+        
+        try (FileWriter file = new FileWriter(filePath)) {
+            file.write(jo.toString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

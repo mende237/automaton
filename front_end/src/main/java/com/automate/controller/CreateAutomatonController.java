@@ -55,7 +55,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CreateAutomataController extends Controller implements Initializable{
+public class CreateAutomatonController extends Controller implements Initializable{
     public enum AutomateType{
         AFD , AFN , E_AFN
     }
@@ -142,21 +142,21 @@ public class CreateAutomataController extends Controller implements Initializabl
     private Message response = null;
     private AutomateType automateType = AutomateType.AFD;
 
-    private static CreateAutomataController createAutomataController;
+    private static CreateAutomatonController createAutomataController;
 
     // private Map<State, Node> stateNodes = new HashMap<>();
 
     // private List<String> alphabet = new ArrayList<>();
 
-    private CreateAutomataController(Mediator mediator) {
+    private CreateAutomatonController(Mediator mediator) {
         super(ID, mediator);
     }
 
-    public static CreateAutomataController getCreateAutomataController(Mediator mediator){
-        if(CreateAutomataController.createAutomataController != null)
-            return CreateAutomataController.createAutomataController;
+    public static CreateAutomatonController getCreateAutomataController(Mediator mediator){
+        if(CreateAutomatonController.createAutomataController != null)
+            return CreateAutomatonController.createAutomataController;
         
-        return new CreateAutomataController(mediator);
+        return new CreateAutomatonController(mediator);
     }
 
     @Override
@@ -474,7 +474,7 @@ public class CreateAutomataController extends Controller implements Initializabl
     private void handleSaveButtonClick(ActionEvent event){
         try {
             this.showPopupSave("" , "" , "");
-            if(this.response != null  && this.response.getContent() != null && response.getIdExpediteur().equalsIgnoreCase("savePopupController")){
+            if(this.response != null  && this.response.getContent() != null && response.getIdExpediteur().equalsIgnoreCase(SavePopupController.ID)){
                 HashMap<String, String> data = null;
                 boolean fileExist = true;
                 do{
@@ -536,8 +536,10 @@ public class CreateAutomataController extends Controller implements Initializabl
     private boolean isValidTransition(Transition transition){
         int i = 0;
         boolean goodTransition = true;
-        boolean isConnexe = true;
+        boolean isConnexe = false;
+        boolean firstTransition = true;
         while(goodTransition && i < this.transitionsList.size()){
+            firstTransition = false;
             Transition trans = this.transitionsList.get(i);
             goodTransition = !trans.equalTransition(transition);
             // if(goodTransition){
@@ -548,7 +550,7 @@ public class CreateAutomataController extends Controller implements Initializabl
                          | transition.getEnd().equalState(trans.getBegin()) | transition.getEnd().equalState(trans.getEnd());
             i++;
         }
-        return goodTransition & isConnexe;
+        return goodTransition & (isConnexe | firstTransition);
     }
 
     

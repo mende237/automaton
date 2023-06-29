@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import com.automate.controller.CreateAutomataController.AutomateType;
+
 import com.automate.inputOutput.Configuration;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automaton;
+import com.automate.controller.CreateAutomatonController.AutomateType;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -532,9 +533,9 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void handleOpenCreateAutomateInterface(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomatonView.fxml"));
         loader.setControllerFactory(c -> {
-            return CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
+            return CreateAutomatonController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
         });
 
         BorderPane createAutomateView;
@@ -550,8 +551,22 @@ public class MainController extends Controller implements Initializable {
             createStage.showAndWait();
             if(response != null){
                 HashMap<String, Object> data = (HashMap<String, Object>) response;
-                System.out.println(data.get("automata"));
-                // System.out.println(data.get("type"));
+                String saveFolderName = null;
+                switch ((AutomateType) data.get("type")) {
+                    case AFD:
+                        saveFolderName = Configuration.getConfiguration().getAfdFolderName();
+                        break;
+                    case AFN:
+                        saveFolderName = Configuration.getConfiguration().getAfnFolderName();
+                        break;
+                    default:
+                        saveFolderName = Configuration.getConfiguration().getEp_afnFolderName();
+                        break;
+                }
+                Automaton automaton = (Automaton) data.get("automata");
+                automaton.AutomatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + automaton.getName() + ".json");
+                System.out.println(automaton);
+                System.out.println(data.get("type"));
                 if((AutomateType) data.get("type") == AutomateType.AFD){
                     System.out.println("********************* AFD *********************");
                 }else if((AutomateType) data.get("type") == AutomateType.AFN){
