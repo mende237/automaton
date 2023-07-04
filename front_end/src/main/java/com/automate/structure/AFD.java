@@ -279,16 +279,25 @@ public class AFD extends Automaton {
         JSONObject jo = new JSONObject();
         jo.put("name", super.name);
         jo.put("description", super.description);
+        jo.put("alphabet", super.tabLabel);
         jo.put("number state", super.nbrState);
-        jo.put("initial states", this.initialState);
+        jo.put("initial state", this.initialState);
         JSONArray jaFinalState = new JSONArray(super.finalStateTab);
         jo.put("final states", jaFinalState);
         JSONArray jaTransitions = new JSONArray();
 
-        for (Transition transition : this.matTrans)
-            jaTransitions.put(new JSONArray(String.format("[%s , %s , %s]",
-                transition.getBegin().getName() , transition.getLabel() , transition.getEnd().getName())));
-        
+        // for (Transition transition : this.matTrans)
+        //     jaTransitions.put(new JSONArray(String.format("[%s , %s , %s]",
+        //         transition.getBegin().getName() , transition.getLabel() , transition.getEnd().getName())));
+        String temp[] = new String[3];
+        for (int i = 0; i < this.cmpt; i++) {
+            Transition transition = this.matTrans[i];
+            temp[0] = transition.getBegin().getName();
+            temp[1] = transition.getLabel();
+            temp[2] = transition.getEnd().getName();
+            jaTransitions.put(new JSONArray(temp));
+
+        }
         jo.put("transitions", jaTransitions);
         
         try (FileWriter file = new FileWriter(filePath)) {

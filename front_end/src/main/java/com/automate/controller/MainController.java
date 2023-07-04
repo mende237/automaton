@@ -552,20 +552,25 @@ public class MainController extends Controller implements Initializable {
             if(response != null){
                 HashMap<String, Object> data = (HashMap<String, Object>) response;
                 String saveFolderName = null;
+                Automaton automaton = (Automaton) data.get("automata");
                 switch ((AutomateType) data.get("type")) {
                     case AFD:
                         saveFolderName = Configuration.getConfiguration().getAfdFolderName();
+                        this.makeBranch(automaton.getName(), afd, 1);
                         break;
                     case AFN:
                         saveFolderName = Configuration.getConfiguration().getAfnFolderName();
+                        this.makeBranch(automaton.getName(), afn, 2);
                         break;
                     default:
                         saveFolderName = Configuration.getConfiguration().getEp_afnFolderName();
+                        this.makeBranch(automaton.getName(), epAfn, 2);
                         break;
                 }
-                Automaton automaton = (Automaton) data.get("automata");
-                automaton.AutomatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + automaton.getName() + ".json");
+                System.out.println("*********** B *********************");
                 System.out.println(automaton);
+                System.out.println("************ E ********************");
+                automaton.AutomatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + automaton.getName() + ".json");
                 System.out.println(data.get("type"));
                 if((AutomateType) data.get("type") == AutomateType.AFD){
                     System.out.println("********************* AFD *********************");

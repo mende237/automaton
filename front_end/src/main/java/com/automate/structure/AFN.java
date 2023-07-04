@@ -252,6 +252,8 @@ public class AFN extends Automaton {
         JSONObject jo = new JSONObject();
         jo.put("name", super.name);
         jo.put("description", super.description);
+        jo.put("epsilone", this.epsilone);
+        jo.put("alphabet", super.tabLabel);
         jo.put("number state", super.nbrState);
         JSONArray jaInitialState = new JSONArray(this.initialStateTab);
         jo.put("initial states", jaInitialState);
@@ -259,9 +261,14 @@ public class AFN extends Automaton {
         jo.put("final states", jaFinalState);
         JSONArray jaTransitions = new JSONArray();
 
-        for (Transition transition : this.matTrans)
-            jaTransitions.put(new JSONArray(String.format("[%s , %s , %s]",
-                transition.getBegin().getName() , transition.getLabel() , transition.getEnd().getName())));
+        String temp[] = new String[3];
+        for (Transition transition : this.matTrans){
+            temp[0] = transition.getBegin().getName();
+            temp[1] = transition.getLabel();
+            temp[2] = transition.getEnd().getName();
+            jaTransitions.put(new JSONArray(temp));
+
+        }
         
         jo.put("transitions", jaTransitions);
         

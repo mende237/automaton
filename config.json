@@ -5,5 +5,8 @@
     "request path": "/home/dimitri/Documents/beep-beep/.communication/.request/request.json",
     "response path": "/home/dimitri/Documents/beep-beep/.communication/.response/response.json",
     "image path" : "/home/dimitri/Documents/beep-beep/.communication/.images",
-    "save path":"/home/dimitri/Documents/beep-beep/save"
+    "save path":"/home/dimitri/Documents/beep-beep/save",
+    "afd folder name" : "afd",
+    "afn folder name" : "afn",
+    "ep_afn folder name" : "ep-afn"
 }
