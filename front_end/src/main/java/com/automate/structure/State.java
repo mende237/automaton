@@ -37,7 +37,8 @@ public class State {
         return this.name;
     }
 
-    
+
+
     public boolean equalState(State state){
         return this.name.equals(state.getName());
     }
@@ -78,5 +79,22 @@ public class State {
     @Override
     public String toString(){
         return String.format("%s %s", this.name , this.type);
-    } 
+    }
+    
+    @Override
+    public int hashCode() {
+        return name.toLowerCase().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (obj == this) 
+            return true;
+        
+        if (!(obj instanceof State)) 
+            return false;
+        
+        State state = (State) obj;
+        return this.name.equalsIgnoreCase(state.getName());
+    }
 }

@@ -141,6 +141,7 @@ public class CreateAutomatonController extends Controller implements Initializab
     private String epsilone = "ep";
     private Message response = null;
     private AutomateType automateType = AutomateType.AFD;
+    private static Automaton automaton;
 
     private static CreateAutomatonController createAutomataController;
 
@@ -152,6 +153,11 @@ public class CreateAutomatonController extends Controller implements Initializab
         super(ID, mediator);
     }
 
+    private CreateAutomatonController(Mediator mediator,  Automaton automaton) {
+        super(ID, mediator);
+        CreateAutomatonController.automaton = automaton;
+    }
+
     public static CreateAutomatonController getCreateAutomataController(Mediator mediator){
         if(CreateAutomatonController.createAutomataController != null)
             return CreateAutomatonController.createAutomataController;
@@ -159,21 +165,32 @@ public class CreateAutomatonController extends Controller implements Initializab
         return new CreateAutomatonController(mediator);
     }
 
+    public static CreateAutomatonController getCreateAutomataController(Mediator mediator , Automaton automaton){
+        if(CreateAutomatonController.createAutomataController != null){
+            CreateAutomatonController.automaton = automaton;
+            return CreateAutomatonController.createAutomataController;
+        }
+        
+        
+        return new CreateAutomatonController(mediator, automaton);
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-          // Désactiver la consommation d'événements de la VBox
-          zoomVBox.setPickOnBounds(false);
+        // Désactiver la consommation d'événements de la VBox
+        zoomVBox.setPickOnBounds(false);
 
-          // Ajouter un écouteur d'événements pour la barre de défilement de la ScrollPane
-          automatonScrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
-              if (newValue.intValue() == 0 || newValue.doubleValue() == 1.0) {
-                  // Activer la consommation d'événements de la VBox lorsque la barre de défilement est en haut ou en bas
-                  zoomVBox.setPickOnBounds(true);
-              } else {
-                  // Désactiver la consommation d'événements de la VBox lorsque la barre de défilement est en mouvement
-                  zoomVBox.setPickOnBounds(false);
-              }
-          });
+        // Ajouter un écouteur d'événements pour la barre de défilement de la ScrollPane
+        automatonScrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() == 0 || newValue.doubleValue() == 1.0) {
+                // Activer la consommation d'événements de la VBox lorsque la barre de défilement est en haut ou en bas
+                zoomVBox.setPickOnBounds(true);
+            } else {
+                // Désactiver la consommation d'événements de la VBox lorsque la barre de défilement est en mouvement
+                zoomVBox.setPickOnBounds(false);
+            }
+        });
 
 
         statesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -293,7 +310,41 @@ public class CreateAutomatonController extends Controller implements Initializab
         });   
         
         addSplitPaneListener();
-        this.makeImage();
+        // this.makeImage();
+        if(CreateAutomatonController.automaton != null){
+            this.initializeAutomaton(automaton);
+            this.makeImage();
+            CreateAutomatonController.automaton = null;
+        }
+    }
+
+    private void initializeAutomaton(Automaton automaton){
+        for (String symbol : automaton.getTabLabel()) {
+            alphabetList.add(symbol);
+        }
+
+        Set<State> stateSet = new HashSet<>();
+
+        if(automaton instanceof AFN){
+            AFN afn = (AFN) automaton;
+            for (Transition transition : afn.getMatTrans()) {
+                transitionsList.add(transition);
+                stateSet.add(transition.getBegin());
+                stateSet.add(transition.getEnd());
+            }
+        }else{
+            AFD afd = (AFD) automaton;
+            for (Transition transition : afd.getMatTrans()) {
+                transitionsList.add(transition);
+                stateSet.add(transition.getBegin());
+                stateSet.add(transition.getEnd());
+            }
+        }
+
+        Iterator<State> stateSetIterator = stateSet.iterator();
+        while (stateSetIterator.hasNext()) {
+            statesList.add(stateSetIterator.next());
+        }
     }
 
 
@@ -553,7 +604,7 @@ public class CreateAutomatonController extends Controller implements Initializab
         return goodTransition & (isConnexe | firstTransition);
     }
 
-    
+
 
     public void makeImage(){
         ArrayList<Transition> matTrans = new ArrayList<>(transitionsList);

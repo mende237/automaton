@@ -7,10 +7,19 @@ import static guru.nidi.graphviz.model.Factory.to;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.tree.MutableTreeNode;
+
+import com.automate.structure.AFN;
+import com.automate.structure.Automaton;
+import com.automate.structure.State;
 
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
@@ -31,6 +40,28 @@ public class Test {
 
     public static void main(String args[]) throws IOException {
         System.out.println(true && false);
+        AFN afn = new AFN();
+        Set<State> temp = new HashSet<>();
+        State state1 = new State("gg");
+        State state2 = new State("gg");
+
+        temp.add(state1);
+        temp.add(state2);
+        
+        Iterator<State> tempIterator = temp.iterator();
+        int i = 0;
+        while(tempIterator.hasNext()){
+           System.out.println(tempIterator.next().getName());
+        }
+        // try {
+        //     System.out.println(automaton.getClass());
+        // } catch (NoSuchFieldException | SecurityException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
+        // for(Method f: automaton.getClass().getDeclaredMethods()){
+        //     System.out.println(f);
+        // }
         // try {
         // config = Configuration.getConfiguration("../config.json");
         // System.out.println(config);

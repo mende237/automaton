@@ -34,6 +34,8 @@ public class AFN extends Automaton {
         super();
     }
 
+   
+
     public AFN(String tabLabel[], String epsilone, int nbrState, String finalStateTab[],
             String initialStateTab[], String name, String description) {
         super(tabLabel, nbrState, finalStateTab, name, description);
@@ -147,11 +149,11 @@ public class AFN extends Automaton {
                 State tempState2 = (State) transitions[j][2];
 
                 if (finalStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
-                    tempState1.setType(StateType.FINAL);
+                    tempState1.setType((tempState1.getType() == StateType.INITIAL || tempState2.getType() == StateType.FINAL_INITIAL)? StateType.FINAL_INITIAL : StateType.FINAL);
                 }
 
                 if (finalStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
-                    tempState2.setType(StateType.FINAL);
+                    tempState2.setType((tempState2.getType() == StateType.INITIAL || tempState2.getType() == StateType.FINAL_INITIAL)? StateType.FINAL_INITIAL : StateType.FINAL);
                 }
             }
         }
@@ -162,21 +164,14 @@ public class AFN extends Automaton {
                 State tempState2 = (State) transitions[j][2];
 
                 if (initialStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
-                    if (tempState1.getType() == StateType.FINAL || tempState1
-                            .getType() == StateType.FINAL_INITIAL) {
-                        tempState1.setType(StateType.FINAL_INITIAL);
-                    } else {
-                        tempState1.setType(StateType.INITIAL);
-                    }
+                    tempState1.setType((tempState1.getType() == StateType.FINAL || tempState1
+                            .getType() == StateType.FINAL_INITIAL) ? StateType.FINAL_INITIAL : StateType.INITIAL);
                 }
 
                 if (initialStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
-                    if (tempState2.getType() == StateType.FINAL || tempState1
-                            .getType() == StateType.FINAL_INITIAL) {
-                        tempState2.setType(StateType.FINAL_INITIAL);
-                    } else {
-                        tempState2.setType(StateType.INITIAL);
-                    }
+                    tempState2.setType((tempState2.getType() == StateType.FINAL || tempState2
+                            .getType() == StateType.FINAL_INITIAL) ? StateType.FINAL_INITIAL : StateType.INITIAL);
+
                 }
             }
         }
@@ -267,7 +262,6 @@ public class AFN extends Automaton {
             temp[1] = transition.getLabel();
             temp[2] = transition.getEnd().getName();
             jaTransitions.put(new JSONArray(temp));
-
         }
         
         jo.put("transitions", jaTransitions);

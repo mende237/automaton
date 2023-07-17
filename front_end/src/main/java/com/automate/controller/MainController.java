@@ -135,24 +135,26 @@ public class MainController extends Controller implements Initializable {
 
         });
 
-        icon = new Image(getClass().getResourceAsStream("/icon/lettre-d.png"));
+        icon = new Image(getClass().getResourceAsStream("/icon/ellipse.png"));
         imgView = new ImageView(icon);
-        imgView.setFitHeight(16);
-        imgView.setFitWidth(16);
+        imgView.setFitHeight(30);
+        imgView.setFitWidth(30);
         root = new TreeItem<String>();
         root.setExpanded(true);
 
-        afd = new TreeItem<String>("AFD", imgView);
+        // afd = new TreeItem<String>("AFD", imgView);
+        afd = new TreeItem<String>("AFD");
         afd.setExpanded(true);
         root.getChildren().add(afd);
         for (int i = 0; i < this.tabAFD.size(); i++) {
             makeBranch(this.tabAFD.get(i).getName(), afd, 1);
         }
-        icon = new Image(getClass().getResourceAsStream("/icon/lettre-n.png"));
+        icon = new Image(getClass().getResourceAsStream("/icon/circle.png"));
         imgView = new ImageView(icon);
-        imgView.setFitHeight(20);
-        imgView.setFitWidth(20);
-        afn = new TreeItem<String>("AFN", imgView);
+        imgView.setFitHeight(30);
+        imgView.setFitWidth(30);
+        // afn = new TreeItem<String>("\u2500 AFN", imgView);
+        afn = new TreeItem<String>(" AFN");
         afn.setExpanded(true);
         root.getChildren().add(afn);
         for (int i = 0; i < this.tabAFN.size(); i++) {
@@ -162,7 +164,8 @@ public class MainController extends Controller implements Initializable {
         imgView = new ImageView(icon);
         imgView.setFitHeight(20);
         imgView.setFitWidth(20);
-        epAfn = new TreeItem<String>("\u03B5-AFN", imgView);
+        // epAfn = new TreeItem<String>("\u03B5-AFN", imgView);
+        epAfn = new TreeItem<String>("\u03B5-AFN");
         epAfn.setExpanded(true);
         root.getChildren().add(epAfn);
 
@@ -212,45 +215,64 @@ public class MainController extends Controller implements Initializable {
         }
     }
 
-    private void automateVisualisation(String path, Automaton automate) {
+    private void automateVisualisation(String path, Automaton automaton) {
+        
         try {
             Message message = null;
             switch (this.vType) {
                 case AUTOMATE_VIEW:
-                    ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-                    FXMLLoader loader = null;
-                    loader = new FXMLLoader(getClass().getResource("/window/view.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomatonView.fxml"));
                     loader.setControllerFactory(c -> {
-                        return ViewController.getViewController(mediator);
+                        return CreateAutomatonController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator() , automaton);
                     });
 
-                    AnchorPane anchor = loader.load();
-                    this.mainContainer.getChildren().clear();
-                    AnchorPane.setTopAnchor(anchor, 0.0);
-                    AnchorPane.setRightAnchor(anchor, 0.0);
-                    AnchorPane.setLeftAnchor(anchor, 0.0);
-                    AnchorPane.setBottomAnchor(anchor, 0.0);
-                    this.mainContainer.getChildren().setAll(anchor);
+                    
+                    BorderPane createAutomateView = loader.load();
+                    Stage createStage = new Stage();
+                    // createStage.initModality(Modality.APPLICATION_MODAL);
+                    Scene scene = new Scene(createAutomateView);
+                    scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+                    // scene.getStylesheets().add(css);
+                    createStage.setScene(scene);
+                    createStage.showAndWait();
 
-                    anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-                    anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
-
-                    ViewController viewController = loader.getController();
-                    message = new Message(viewController.getId(),
-                            automate.getName() + ";" + automate.getDescription() + ";" + path);
-
-                    System.out.println(message);
+                    message = new Message(CreateAutomatonController.ID, automaton);
                     this.sendMessage(message);
+                    
+                    // ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+                    // FXMLLoader loader = null;
+                    // loader = new FXMLLoader(getClass().getResource("/window/view.fxml"));
+                    // loader.setControllerFactory(c -> {
+                    //     return ViewController.getViewController(mediator);
+                    // });
+
+                    // AnchorPane anchor = loader.load();
+                    // this.mainContainer.getChildren().clear();
+                    // AnchorPane.setTopAnchor(anchor, 0.0);
+                    // AnchorPane.setRightAnchor(anchor, 0.0);
+                    // AnchorPane.setLeftAnchor(anchor, 0.0);
+                    // AnchorPane.setBottomAnchor(anchor, 0.0);
+                    // this.mainContainer.getChildren().setAll(anchor);
+
+                    // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+                    // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+
+                    // ViewController viewController = loader.getController();
+                    // message = new Message(viewController.getId(),
+                    //         automaton.getName() + ";" + automaton.getDescription() + ";" + path);
+
+                    // System.out.println(message);
+                    // this.sendMessage(message);
                     break;
                 case CONVERT_VIEW:
                     message = new Message(ConvertController.getConvertController().getId(),
-                            path + ";" + automate.getPath());
+                            path + ";" + automaton.getPath());
                     this.sendMessage(message);
                     break;
                 case RECONNAISSANCE_VIEW:
                     message = new Message(ReconnaissanceController.getReconnaissanceController().getId(),
                             path);
-                    ReconnaissanceController.getReconnaissanceController().setAutomate(automate);
+                    ReconnaissanceController.getReconnaissanceController().setAutomate(automaton);
                     this.sendMessage(message);
                     break;
             }
