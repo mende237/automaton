@@ -10,24 +10,13 @@ public class State {
     public State(String name , StateType type){
         this.name = name;
         this.type = type;
-        if(type == StateType.FINAL){
-            initial = false;
-            finalState = true;
-        }else if(type == StateType.FINAL_INITIAL){
-            initial = true;
-            finalState = true;
-        }else if(type == StateType.INITIAL){
-            initial = true;
-            finalState = false;
-        }else{
-            initial = false;
-            finalState = false;
-        }
+        this.setType(type);
     }
 
     public State(String name) {
         this.name = name;
         this.type = StateType.NORMAL;
+        this.setType(this.type);
     }
 
 
@@ -54,10 +43,23 @@ public class State {
 
     public void setType(StateType type){
         this.type = type;
+        if(type == StateType.FINAL){
+            this.initial = false;
+            this.finalState = true;
+        }else if(type == StateType.FINAL_INITIAL){
+            this.initial = true;
+            this.finalState = true;
+        }else if(type == StateType.INITIAL){
+            this.initial = true;
+            this.finalState = false;
+        }else{
+            this.initial = false;
+            this.finalState = false;
+        }
     }
 
     public boolean isInitial() {
-        return initial;
+        return this.initial;
     }
 
     public void setInitial(boolean initial) {
@@ -65,7 +67,7 @@ public class State {
     }
 
     public boolean isFinalState() {
-        return finalState;
+        return this.finalState;
     }
 
     public void setFinalState(boolean finalState) {
@@ -73,7 +75,7 @@ public class State {
     }
 
     public boolean getFinal() {
-        return finalState;
+        return this.finalState;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class AFD extends Automaton {
         this.matTrans = new Transition[super.nbrState * super.tabLabel.length];
     }
 
-    /***************************************
+    /*********************************************
      * getter
      ********************************************/
     public Transition[] getMatTrans() {
@@ -62,7 +62,7 @@ public class AFD extends Automaton {
 
     /********************************************
      * methods
-     *************************************/
+     ********************************************/
     @Override
     public void addTransition(State begin, String label, State end) {
         this.matTrans[cmpt] = new Transition(begin, label, end);
@@ -74,11 +74,6 @@ public class AFD extends Automaton {
     //     // TODO Auto-generated method stub
     //     throw new UnsupportedOperationException("Unimplemented method 'addTransitionToGraph'");
     // }
-
-    @Override
-    public void save(String path) {
-
-    }
 
     @Override
     public Graph markeGraph() {
@@ -140,6 +135,7 @@ public class AFD extends Automaton {
                     }
                 }
             }
+            System.out.println("name : " + name + " nbr trans " + transitions.length);
         }
         for (int i = 0; i < finalStates.length; i++) {
             for (int j = 0; j < transitions.length; j++) {
@@ -147,11 +143,13 @@ public class AFD extends Automaton {
                 State tempState2 = (State) transitions[j][2];
 
                 if (finalStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
-                    tempState1.setType(StateType.FINAL);
+                    tempState1.setType((tempState1.getType() == StateType.INITIAL || tempState1.getType() == StateType.FINAL_INITIAL)? StateType.FINAL_INITIAL : StateType.FINAL);
+                    // tempState1.setType(StateType.FINAL);
                 }
 
                 if (finalStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
-                    tempState2.setType(StateType.FINAL);
+                    tempState2.setType((tempState2.getType() == StateType.INITIAL || tempState2.getType() == StateType.FINAL_INITIAL)? StateType.FINAL_INITIAL : StateType.FINAL);
+                    // tempState2.setType(StateType.FINAL);
                 }
 
                 if (initialState.equalsIgnoreCase(tempState1.getName()) == true) {
@@ -258,24 +256,9 @@ public class AFD extends Automaton {
         return ch;
     }
 
-    public static void main(String[] args) {
-        // AFD afd = null;
-        // try {
-        //     afd = AFD.jsonToAFD("/home/dimitri/automate_manip/back_end/afd.json", false);
-        // } catch (FileNotFoundException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
-        // afd.makeImage("./test.png");
-        // System.out.println(afd);
-
-        String test = "tata\\titi\\toto";
-        test = test.replace("\\", "/");
-        System.out.println(test);
-    }
-
+   
     @Override
-    public void AutomatonToJson(String filePath) throws JSONException {
+    public void automatonToJson(String filePath) throws JSONException {
         JSONObject jo = new JSONObject();
         jo.put("name", super.name);
         jo.put("description", super.description);

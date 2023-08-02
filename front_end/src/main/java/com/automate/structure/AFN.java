@@ -136,7 +136,7 @@ public class AFN extends Automaton {
             JSONArray Jtemp = JTabTransition.getJSONArray(i);
             for (int j = 0; j < Jtemp.length(); j++) {
                 if (j != 1) {
-                    transitions[i][j] = new State(Jtemp.getString(j));
+                    transitions[i][j] = new State(Jtemp.getString(j) , StateType.NORMAL);
                 } else {
                     transitions[i][j] = Jtemp.getString(j);
                 }
@@ -149,7 +149,7 @@ public class AFN extends Automaton {
                 State tempState2 = (State) transitions[j][2];
 
                 if (finalStates[i].equalsIgnoreCase(tempState1.getName()) == true) {
-                    tempState1.setType((tempState1.getType() == StateType.INITIAL || tempState2.getType() == StateType.FINAL_INITIAL)? StateType.FINAL_INITIAL : StateType.FINAL);
+                    tempState1.setType((tempState1.getType() == StateType.INITIAL || tempState1.getType() == StateType.FINAL_INITIAL)? StateType.FINAL_INITIAL : StateType.FINAL);
                 }
 
                 if (finalStates[i].equalsIgnoreCase(tempState2.getName()) == true) {
@@ -215,14 +215,6 @@ public class AFN extends Automaton {
     }
 
     @Override
-    public void save(String path) {
-
-    }
-
-    
-
-
-    @Override
     public Graph markeGraph() {
         
         Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
@@ -243,7 +235,7 @@ public class AFN extends Automaton {
     }
 
     @Override
-    public void AutomatonToJson(String filePath) throws JSONException {
+    public void automatonToJson(String filePath) throws JSONException {
         JSONObject jo = new JSONObject();
         jo.put("name", super.name);
         jo.put("description", super.description);

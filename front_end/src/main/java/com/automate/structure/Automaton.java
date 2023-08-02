@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
+import com.automate.controller.CreateAutomatonController.AutomateType;
+import com.automate.inputOutput.Configuration;
+
 import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
@@ -114,10 +117,25 @@ public abstract class Automaton {
      * methods
      **************************************************/
 
-    public abstract void save(String path);
+    public void save(AutomateType automateType){
+        String saveFolderName; 
+        switch (automateType) {
+            case AFD:
+                saveFolderName = Configuration.getConfiguration().getAfdFolderName();
+                break;
+            case AFN:
+                saveFolderName = Configuration.getConfiguration().getAfnFolderName();
+                break;
+            default:
+                saveFolderName = Configuration.getConfiguration().getEp_afnFolderName();
+                break;
+        }
+        this.automatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + this.name + ".json");
+    }
+
     public abstract Graph markeGraph();
     public abstract void addTransition(State begin, String label, State end);
-    public abstract void AutomatonToJson(String filePath) throws JSONException;
+    public abstract void automatonToJson(String filePath) throws JSONException;
     // public abstract void addTransitionToGraph(Transition transition);
 
 

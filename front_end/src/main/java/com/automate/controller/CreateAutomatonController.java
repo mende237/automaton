@@ -262,7 +262,7 @@ public class CreateAutomatonController extends Controller implements Initializab
         // Ajouter des états par défaut dans le TableView
         // State state1 = new State("State 1", StateType.FINAL);
         // State state2 = new State("State 2", StateType.INITIAL);
-        // State state3 = new State("State 2", StateType.INITIAL);
+        // State state3 = new State("State 2", StateType.NORMAL);
         // statesList.add(state1);
         // statesList.add(state2);
         // statesList.add(state3);
@@ -314,7 +314,7 @@ public class CreateAutomatonController extends Controller implements Initializab
         if(CreateAutomatonController.automaton != null){
             this.initializeAutomaton(automaton);
             this.makeImage();
-            CreateAutomatonController.automaton = null;
+            // CreateAutomatonController.automaton = null;
         }
     }
 
@@ -334,8 +334,14 @@ public class CreateAutomatonController extends Controller implements Initializab
             }
         }else{
             AFD afd = (AFD) automaton;
+            System.out.println("****************************** " + afd.getMatTrans().length);
             for (Transition transition : afd.getMatTrans()) {
+                if(transition == null)
+                    continue;
+
                 transitionsList.add(transition);
+                System.out.println("******************************************************************");
+                System.out.println(transition);
                 stateSet.add(transition.getBegin());
                 stateSet.add(transition.getEnd());
             }
@@ -525,6 +531,7 @@ public class CreateAutomatonController extends Controller implements Initializab
     private void handleSaveButtonClick(ActionEvent event){
         try {
             this.showPopupSave("" , "" , "");
+            boolean editMode = CreateAutomatonController.automaton != null ? true : false;
             if(this.response != null  && this.response.getContent() != null && response.getIdExpediteur().equalsIgnoreCase(SavePopupController.ID)){
                 HashMap<String, String> data = null;
                 boolean fileExist = true;
@@ -535,12 +542,12 @@ public class CreateAutomatonController extends Controller implements Initializab
                         
                     System.out.println("*************************** " + data.get("name") + " $$$$$$$$$$$$$$$$");
                     System.out.println("*************************** " + data.get("description") + " $$$$$$$$");
-                    Automaton automata = this.makeAutomata(data.get("name"), data.get("description"));
+                    Automaton automaton = this.makeAutomata(data.get("name"), data.get("description"));
                     fileExist = isFileExist(data.get("name"));
-                    if(!fileExist){
-                        if(automata != null){
+                    if(!fileExist || CreateAutomatonController.automaton != null){
+                        if(automaton != null){
                             HashMap<String, Object> content = new HashMap<>();
-                            content.put("automata", automata);
+                            content.put("automaton", automaton);
                             content.put("type", this.automateType); 
                             Message message = new Message("mainController", content);
                             this.sendMessage(message);
@@ -549,9 +556,9 @@ public class CreateAutomatonController extends Controller implements Initializab
                         }
                     }else{
                         String errortext = "An automaton with the same name\n alrealdy exist chose another name";
-                        this.showPopupSave(data.get("name") , data.get("description"), errortext);
+                        this.showPopupSave(data.get("name") , data.get("description"), errortext);                        
                     }
-                }while(fileExist);
+                }while(fileExist && !editMode);
 
                 // this.response = null;
                 this.automateType = AutomateType.AFD;
@@ -560,6 +567,8 @@ public class CreateAutomatonController extends Controller implements Initializab
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        CreateAutomatonController.automaton = null;
     }
 
     private boolean isValidLabel(String label){

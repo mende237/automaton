@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 public class REG_toAutomateController extends Controller implements Initializable {
@@ -60,11 +62,18 @@ public class REG_toAutomateController extends Controller implements Initializabl
         }   
     }
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub
 
     }
+
+
+    // @FXML
+    // void handleConvertToAutomaton(ActionEvent event) {
+        
+    // }
 
     @Override
     public void sendMessage(Message message) {
@@ -79,8 +88,9 @@ public class REG_toAutomateController extends Controller implements Initializabl
     }
 
 
-    public static void main(String[] args) {
-        REG_toAutomateController.REG_toJson("a.(a+b)*.(a+a)*");
-    }
+    // public static void main(String[] args) {
+    //     REG_toAutomateController.REG_toJson("a.(a+b)*.(a+a)*");
+    // }
+
 
 }

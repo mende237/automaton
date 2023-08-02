@@ -14,7 +14,6 @@ import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automaton;
 
-import guru.nidi.graphviz.model.Graph;
 
 import org.json.JSONException;
 
