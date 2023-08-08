@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "REG_toAutomateController",
+            "request": "launch",
+            "mainClass": "com.automate.controller.REG_toAutomateController",
+            "projectName": "front_end"
+        },
+        {
+            "type": "java",
             "name": "Test",
             "request": "launch",
             "mainClass": "com.automate.display.Test",

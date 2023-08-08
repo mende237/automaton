@@ -135,7 +135,7 @@ public class AFD extends Automaton {
                     }
                 }
             }
-            System.out.println("name : " + name + " nbr trans " + transitions.length);
+            // System.out.println("name : " + name + " nbr trans " + transitions.length);
         }
         for (int i = 0; i < finalStates.length; i++) {
             for (int j = 0; j < transitions.length; j++) {

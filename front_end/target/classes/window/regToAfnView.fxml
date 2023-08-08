@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.REG_toAutomateController">
    <children>
       <SplitPane dividerPositions="0.23366834170854273" layoutX="156.0" layoutY="25.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -20,7 +19,7 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>
-                              <TextField />
+                              <TextField fx:id="txtExpression" />
                               <Button mnemonicParsing="false" text="Button" />
                            </children>
                            <opaqueInsets>
@@ -43,7 +42,7 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="35.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Button mnemonicParsing="false" text="convert" />
+                                    <Button mnemonicParsing="false" onAction="#handleBtnConvertClicked" text="convert" />
                                  </children>
                               </HBox>
                            </children>

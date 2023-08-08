@@ -64,7 +64,7 @@ public class MainController extends Controller implements Initializable {
     private Message response;
 
     private enum viewType {
-        AUTOMATE_VIEW, CONVERT_VIEW , RECONNAISSANCE_VIEW
+        AUTOMATE_VIEW, CONVERT_VIEW , RECONNAISSANCE_VIEW, REG_VIEW
     }
 
     protected static final String ID = "mainController";
@@ -458,7 +458,15 @@ public class MainController extends Controller implements Initializable {
     @FXML
     private void handleGlushkovView(ActionEvent event) {
         try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
+            this.vType = viewType.REG_VIEW;
+            ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/regToAfnView.fxml"));
+
+            loader.setControllerFactory(c -> {
+                return REG_toAutomateController.getREG_toAutomateController(mediator, Algorithm.GLUSHKOV);
+            });
+            AnchorPane anchor = loader.load();
+            // AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
             // this.mainContainer = root;
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
@@ -479,8 +487,16 @@ public class MainController extends Controller implements Initializable {
 
     @FXML
     private void handleThomsonView(ActionEvent event) {
-        try {
-            AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
+       try {
+            this.vType = viewType.REG_VIEW;
+            ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/regToAfnView.fxml"));
+
+            loader.setControllerFactory(c -> {
+                return REG_toAutomateController.getREG_toAutomateController(mediator, Algorithm.THOMSON);
+            });
+            AnchorPane anchor = loader.load();
+            // AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
             // this.mainContainer = root;
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
@@ -489,12 +505,14 @@ public class MainController extends Controller implements Initializable {
             AnchorPane.setBottomAnchor(anchor, 0.0);
             this.mainContainer.getChildren().setAll(anchor);
 
-            anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+
         } catch (Exception e) {
             e.printStackTrace();
             // System.out.println("eror");
         }
+
     }
 
     @FXML
