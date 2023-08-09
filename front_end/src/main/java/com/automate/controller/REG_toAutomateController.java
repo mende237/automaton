@@ -13,15 +13,22 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.automate.inputOutput.Configuration;
 import com.automate.inputOutput.Instruction;
+import com.automate.inputOutput.Messenger;
+import com.automate.structure.AFD;
+import com.automate.structure.AFN;
+import com.automate.structure.Automaton;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class REG_toAutomateController extends Controller implements Initializable {
     protected static final String ID = "REG_toAutomateController";
@@ -30,6 +37,10 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
     @FXML
     private TextField txtExpression;
+
+
+    @FXML
+    private ImageView imageViewResult;
 
     private REG_toAutomateController(Mediator mediator, Algorithm algorithmType) {
         super(REG_toAutomateController.ID, mediator);
@@ -54,14 +65,15 @@ public class REG_toAutomateController extends Controller implements Initializabl
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub
-
     }
 
 
     @FXML
     void handleBtnConvertClicked(ActionEvent event) {
+
+        Configuration config = Configuration.getConfiguration();
         try {
-            this.REG_toJson(txtExpression.getText(), ".");
+            this.REG_toJson(txtExpression.getText(), config.getDataRequestPath() + "/" + "word.json");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -69,18 +81,46 @@ public class REG_toAutomateController extends Controller implements Initializabl
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Configuration config = Configuration.getConfiguration();
-        System.out.println("***************************************************");
+
+        Messenger messenger = Messenger.getMessenger();
+        // System.out.println("***************************************************");
+        Instruction instruction = null;
         switch (this.algorithmType) {
             case GLUSHKOV:
-                // Instruction instruction = new Instruction("hopcroft minisation", this.dataPath);
+                instruction = new Instruction("glushkov", config.getDataRequestPath());
                 break;
             case THOMSON:
-                
+                instruction = new Instruction("thomson", config.getDataRequestPath());
                 break;
             default:
+                return;
+        }
 
-                break;
+        try {
+            messenger.sendInstruction(instruction);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if (messenger.isResponse() == true) {
+            try {
+                Automaton automate = null;
+                if(automate instanceof AFD){
+                    automate = AFD.jsonToAFD(messenger.getDataPathResponse(), false);
+                }else{
+                    automate = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
+                }
+
+                Image image = Automaton.makeImage(automate.markeGraph());
+                this.imageViewResult.setImage(image);
+            } catch (FileNotFoundException | JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -119,12 +159,14 @@ public class REG_toAutomateController extends Controller implements Initializabl
         for (int i = 0; i < list.size(); i++) {
             Jword.put(list.get(i));
         }
+
         obj.put("word", Jword);
         StringWriter strW = new StringWriter();
         obj.write(strW);
         String jsonText = strW.toString();
-
         RandomAccessFile raf = new RandomAccessFile(filePath, "rw");
+        raf.seek(0);
+        raf.setLength(0);
         raf.write(jsonText.getBytes());
         raf.close();
     }

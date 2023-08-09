@@ -107,7 +107,6 @@ public class Messenger{
             this.sendInstruction(instruction, sendingPath, receptionPath , Messenger.DELAY);
     }
 
-
     
     private void checkResponse() throws FileNotFoundException {
         boolean rep = false;
@@ -137,18 +136,6 @@ public class Messenger{
             System.out.println("pas de reponse");
             this.response = false;
         }
-    }
-
-    public static void main(String[] args) {
-        // System.out.println("enter!!!!!!!!!!!!!!!");
-        // Scheduler.DOWNS1();
-        // System.out.println("pass1");
-        // Scheduler.DOWNS1();
-        // System.out.println("pass2");
-        // Scheduler.DOWNS1();
-        // System.out.println("pass3");
-        // System.out.println("enter!!!!!!!!!!!!!!!!!!");
-
     }
 
 }
