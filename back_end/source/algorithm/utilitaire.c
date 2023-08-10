@@ -221,45 +221,46 @@ int calculate_length(char **word)
 char **jason_to_word(char *path)
 {
     FILE *file = fopen(path, "r");
-    if (file != NULL)
+    if(file == NULL){
+        printf("file not found %s" , path);
+        exit(1);
+    }
+ 
+    fseek(file, 0, SEEK_END);
+    long fsize = ftell(file);
+    rewind(file);
+
+    char *buffer = malloc(fsize + 1);
+    fread(buffer, fsize, 1, file);
+    fclose(file);
+    buffer[fsize] = 0;
+
+    cJSON *json_word = cJSON_Parse(buffer);
+    free(buffer);
+    cJSON *tab = cJSON_GetObjectItemCaseSensitive(json_word, "word");
+
+    cJSON *string = NULL;
+
+    int i = 0;
+    int size = cJSON_GetArraySize(tab);
+    char **main_word = calloc(size + 1, sizeof(char *));
+    cJSON_ArrayForEach(string, tab)
     {
-        fseek(file, 0, SEEK_END);
-        long fsize = ftell(file);
-        rewind(file);
-
-        char *buffer = malloc(fsize + 1);
-        fread(buffer, fsize, 1, file);
-        fclose(file);
-        buffer[fsize] = 0;
-
-        cJSON *json_word = cJSON_Parse(buffer);
-        free(buffer);
-        cJSON *tab = cJSON_GetObjectItemCaseSensitive(json_word, "word");
-
-        cJSON *string = NULL;
-
-        int i = 0;
-        int size = cJSON_GetArraySize(tab);
-        char **main_word = calloc(size + 1, sizeof(char *));
-        cJSON_ArrayForEach(string, tab)
-        {
-            main_word[i] = calloc(strlen(string->valuestring), sizeof(char));
-            strcpy(main_word[i], string->valuestring);
-            i++;
-        }
-
-        main_word[size] = NULL;
-        for (i = 0; i < size; i++)
-        {
-            printf("%s " , main_word[i]);
-        }
-        printf("\n");
-        // strcpy(word , cJSON_GetStringValue(json_word));
-        cJSON_Delete(json_word);
-        return main_word;
+        main_word[i] = calloc(strlen(string->valuestring), sizeof(char));
+        strcpy(main_word[i], string->valuestring);
+        i++;
     }
 
-    return NULL;
+    main_word[size] = NULL;
+    for (i = 0; i < size; i++)
+    {
+        printf("%s " , main_word[i]);
+    }
+    printf("\n");
+    // strcpy(word , cJSON_GetStringValue(json_word));
+    cJSON_Delete(json_word);
+    return main_word;
+   
 }
 
 char **convert_to_word(char *word)
