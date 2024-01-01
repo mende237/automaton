@@ -64,7 +64,8 @@ public class Messenger{
 
     
 
-    public void sendInstruction(Instruction instruction , long delay)
+    public void 
+    sendInstruction(Instruction instruction , long delay)
             throws IOException {
         //Scheduler.DOWN_SEM_REQUEST();
         this.delay = delay;
@@ -84,7 +85,12 @@ public class Messenger{
         
         this.begin = System.currentTimeMillis();
         //Scheduler.UP_SEM_REQUEST();
-        this.checkResponse();
+        try {
+            this.checkResponse();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
@@ -108,7 +114,7 @@ public class Messenger{
     }
 
     
-    private void checkResponse() throws FileNotFoundException {
+    private void checkResponse() throws FileNotFoundException, InterruptedException {
         boolean rep = false;
         while (rep == false && System.currentTimeMillis() - this.begin <= this.delay) {
             File file = new File(this.receptionPath);
@@ -118,16 +124,17 @@ public class Messenger{
                     String content = reader.next();
                     reader.close();
                     JSONObject obj = new JSONObject(content);
-                    if(this.previousId != obj.getInt("id")){
+                    if(this.previousId < obj.getInt("id")){
                         this.dataPathResponse = obj.getString("data path");
                         this.previousId = obj.getInt("id");
                         rep = true;
-                        System.out.println("response");
+                        System.out.println("******************** response ***********************");
                     }
             }else{
                 rep = false;
                 System.out.println("le dossier contenant les reponses est vide");
             }
+            Thread.sleep(1000);
         }
 
         if (rep == true) {

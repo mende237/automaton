@@ -299,8 +299,7 @@ public class MainController extends Controller implements Initializable {
                     newAutomaton.save(newAutomatonType);
                     break;
                 case CONVERT_VIEW:
-                    message = new Message(ConvertController.getConvertController().getId(),
-                            path + ";" + automaton.getPath());
+                    message = new Message(ConvertController.getConvertController().getId(),automaton);
                     this.sendMessage(message);
                     break;
                 case RECONNAISSANCE_VIEW:
@@ -329,13 +328,8 @@ public class MainController extends Controller implements Initializable {
         this.vType = viewType.CONVERT_VIEW;
         // Path path = Paths.get("src/ressource/test/convertView.fxml");
         // System.out.println(path.toRealPath());
-        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
-        loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator, Algorithm.DERTIMINISATION);
-        });
-        AnchorPane anchor = loader.load();
+        AnchorPane anchor = this.loadConvertView(Algorithm.DERTIMINISATION).load();
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
@@ -354,13 +348,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleComplementaireView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
-
-        loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator, Algorithm.COMPLEMENTAIRE);
-        });
-        AnchorPane anchor = loader.load();
+        AnchorPane anchor = this.loadConvertView(Algorithm.COMPLEMENTAIRE).load();
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
@@ -380,13 +368,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleEpDeterminisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
-
-        loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator, Algorithm.EP_DERTIMINISATION);
-        });
-        AnchorPane anchor = loader.load();
+        AnchorPane anchor = this.loadConvertView(Algorithm.EP_DERTIMINISATION).load();
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
@@ -406,13 +388,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleMinimisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
-
-        loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator, Algorithm.MINIMISATION_B);
-        });
-        AnchorPane anchor = loader.load();
+        AnchorPane anchor = this.loadConvertView(Algorithm.MINIMISATION_B).load();
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
@@ -432,13 +408,7 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleMiroirView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
-
-        loader.setControllerFactory(c -> {
-            return ConvertController.getConvertController(mediator, Algorithm.MIROIR_AFD);
-        });
-        AnchorPane anchor = loader.load();
+        AnchorPane anchor = this.loadConvertView(Algorithm.MIROIR_AFD).load();
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
@@ -453,6 +423,16 @@ public class MainController extends Controller implements Initializable {
         anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
+    }
+
+    private FXMLLoader loadConvertView(Algorithm algorithm){
+        ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
+
+        loader.setControllerFactory(c -> {
+            return ConvertController.getConvertController(mediator, algorithm);
+        });
+        return loader;
     }
 
     @FXML

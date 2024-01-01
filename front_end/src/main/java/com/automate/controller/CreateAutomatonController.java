@@ -460,7 +460,8 @@ public class CreateAutomatonController extends Controller implements Initializab
 
         
         if (fromState != null && toState != null && inputSymbol != null) {
-            Transition newTransition = new Transition(fromState, inputSymbol, toState);
+            
+            Transition newTransition = new Transition(fromState, inputSymbol.equalsIgnoreCase("\\u03B5") ? this.epsilone : inputSymbol, toState);
             if(isValidTransition(newTransition)){
                 transitionsList.add(newTransition);
                 System.out.println(newTransition);

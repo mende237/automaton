@@ -40,11 +40,11 @@
                     </TableView>
                     <HBox spacing="10.0">
                         <TextField fx:id="newStateNameTextField" promptText="New State Name" />
-                        <Button onAction="#handleAddStateButtonClick" text="Add State" />
+                        <Button onAction="#handleAddStateButtonClick" styleClass="confirm-button" text="Add State" />
                     </HBox>
                     <HBox spacing="10.0">
                         <ComboBox fx:id="deleteStateComboBox" promptText="Select State to Delete" />
-                        <Button onAction="#handleDeleteStateButtonClick" text="Delete State" />
+                        <Button onAction="#handleDeleteStateButtonClick" styleClass="confirm-button" text="Delete State" />
                     </HBox>
                 </VBox>
             <StackPane>
@@ -76,11 +76,11 @@
                         <ComboBox fx:id="newTransitionFromComboBox" promptText="From State" />
                         <ComboBox fx:id="newTransitionToComboBox" promptText="To State" />
                         <ComboBox fx:id="newTransitionInputComboBox" promptText="Input Symbol" />
-                        <Button onAction="#handleAddTransitionButtonClick" text="Add Transition" />
+                        <Button onAction="#handleAddTransitionButtonClick" styleClass="confirm-button" text="Add Transition" />
                     </HBox>
                     <HBox spacing="10.0">
                         <ComboBox fx:id="deleteTransitionComboBox" promptText="Select Transition to Delete" />
-                        <Button onAction="#handleDeleteTransitionButtonClick" text="Delete Transition" />
+                        <Button onAction="#handleDeleteTransitionButtonClick" styleClass="confirm-button" text="Delete Transition" />
                     </HBox>
                 </VBox>
             </items>
@@ -91,9 +91,9 @@
             <Label fx:id="alphabetLabel" styleClass="panel-label" text="Alphabet" />
             <HBox fx:id="alphabetBox" alignment="CENTER" spacing="10.0" styleClass="alphabet-box">
                 <TextField fx:id="newSymbolTextField" promptText="New Symbol" />
-                <Button onAction="#handleAddSymbolButtonClick" text="Add Symbol" />
+                <Button onAction="#handleAddSymbolButtonClick" styleClass="confirm-button" text="Add Symbol" />
                 <ComboBox fx:id="deleteSymbolComboBox" promptText="Select Symbol to Delete" />
-                <Button onAction="#handleDeleteSymbolButtonClick" text="Delete Symbol" />
+                <Button onAction="#handleDeleteSymbolButtonClick" styleClass="confirm-button" text="Delete Symbol" />
             </HBox>
          <padding>
             <Insets bottom="20.0" top="10.0" />

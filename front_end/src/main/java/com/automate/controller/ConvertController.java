@@ -14,6 +14,7 @@ import com.automate.structure.AFD;
 import com.automate.structure.AFN;
 import com.automate.structure.Automaton;
 
+import guru.nidi.graphviz.model.Graph;
 
 import org.json.JSONException;
 
@@ -24,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 
 
@@ -103,17 +105,33 @@ public class ConvertController extends Controller implements Initializable {
                 break;
         }
         //System.out.println("la fenetre convert a ete lance!!!!!");
-        this.imageViewData.fitWidthProperty().bind(this.anchorPaneData.widthProperty());
-        this.imageViewData.fitHeightProperty().bind(this.anchorPaneData.heightProperty());
-        this.imageViewData.setPreserveRatio(true);
+        // this.imageViewData.fitWidthProperty().bind(this.anchorPaneData.widthProperty());
+        // this.imageViewData.fitHeightProperty().bind(this.anchorPaneData.heightProperty());
+        // this.imageViewData.setPreserveRatio(true);
 
-        this.imageViewResult.fitWidthProperty().bind(this.anchorPaneResult.widthProperty());
-        this.imageViewResult.fitHeightProperty().bind(this.anchorPaneResult.heightProperty());
-        this.imageViewResult.setPreserveRatio(true);
+        // this.imageViewResult.fitWidthProperty().bind(this.anchorPaneResult.widthProperty());
+        // this.imageViewResult.fitHeightProperty().bind(this.anchorPaneResult.heightProperty());
+        // this.imageViewResult.setPreserveRatio(true);
 
         // this.splitPane.setDividerPositions(0.45);
     }
 
+
+    @FXML
+    private void handleZoomInButtonClick(ActionEvent event) {
+       
+    }
+
+    @FXML
+    private void handleZoomOutButtonClick(ActionEvent event) {
+        
+    }
+
+    @FXML
+    private void handleSaveButtonClick(ActionEvent event){
+    
+    }
+    
     public Algorithm getAlgorithmType() {
         return this.algorithmType;
     }
@@ -130,13 +148,20 @@ public class ConvertController extends Controller implements Initializable {
 
     @Override
     public void receiveMessage(Message message) {
-        System.out.println(message);
+        // System.out.println(message);
         if(message.getIdExpediteur().equals(MainController.ID)){
-            String tab[] = ((String) message.getContent()).split(";");
-            File file = new File(tab[0]);
-            Image image = new Image(file.toURI().toString());
-            this.imageViewData.setImage(image);
-            this.dataPath = tab[1];
+            Automaton automaton = (Automaton) message.getContent();
+            Graph g = automaton.markeGraph();
+            Image image;
+            try {
+                image = Automaton.makeImage(g);
+                WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
+                this.imageViewData.setImage(writableImage);
+                this.dataPath = automaton.getPath();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
@@ -183,7 +208,7 @@ public class ConvertController extends Controller implements Initializable {
 
     private void handleConvertion(Instruction instruction , boolean isReturnAFD){
         Messenger messenger = Messenger.getMessenger();
-        Configuration config = Configuration.getConfiguration();
+        // Configuration config = Configuration.getConfiguration();
         try {
             messenger.sendInstruction(instruction);
         } catch (Exception e) {
@@ -193,14 +218,14 @@ public class ConvertController extends Controller implements Initializable {
 
         if (messenger.isResponse() == true) {
             try {
-                Automaton automate = null;
+                Automaton automaton = null;
                 if(isReturnAFD  == true){
-                    automate = AFD.jsonToAFD(messenger.getDataPathResponse(), false);
+                    automaton = AFD.jsonToAFD(messenger.getDataPathResponse(), false);
                 }else{
-                    automate = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
+                    automaton = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
                 }
 
-                Image image = Automaton.makeImage(automate.markeGraph());
+                Image image = Automaton.makeImage(automaton.markeGraph());
                 this.imageViewResult.setImage(image);
             } catch (FileNotFoundException | JSONException e) {
                 // TODO Auto-generated catch block

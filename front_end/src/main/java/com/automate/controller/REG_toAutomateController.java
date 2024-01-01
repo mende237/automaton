@@ -31,6 +31,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class REG_toAutomateController extends Controller implements Initializable {
+    private static final String dataFileName = "regularExpression.json";
+
     protected static final String ID = "REG_toAutomateController";
     private static REG_toAutomateController reg_toAutomateController = null;
     private Algorithm algorithmType;
@@ -73,7 +75,7 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
         Configuration config = Configuration.getConfiguration();
         try {
-            this.REG_toJson(txtExpression.getText(), config.getDataRequestPath() + "/" + "word.json");
+            this.REG_toJson(txtExpression.getText(), config.getDataRequestPath() + "/" + dataFileName);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -87,10 +89,10 @@ public class REG_toAutomateController extends Controller implements Initializabl
         Instruction instruction = null;
         switch (this.algorithmType) {
             case GLUSHKOV:
-                instruction = new Instruction("glushkov", config.getDataRequestPath());
+                instruction = new Instruction("glushkov", config.getDataRequestPath() + "/" + dataFileName);
                 break;
             case THOMSON:
-                instruction = new Instruction("thomson", config.getDataRequestPath());
+                instruction = new Instruction("thomson", config.getDataRequestPath() + "/" + dataFileName);
                 break;
             default:
                 return;

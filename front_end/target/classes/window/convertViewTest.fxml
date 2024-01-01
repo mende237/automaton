@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.AutomatonController">
+    <children>
+        <Label text="Nondeterministic Automaton to Deterministic Automaton Converter" />
+        
+        <VBox>
+            <Label text="Enter the states (comma-separated):" />
+            <TextField fx:id="statesTextField" />
+        </VBox>
+        
+        <VBox>
+            <Label text="Enter the alphabet (comma-separated):" />
+            <TextField fx:id="alphabetTextField" />
+        </VBox>
+        
+        <VBox>
+            <Label text="Enter the transition function (comma-separated, each transition on a new line):" />
+            <TextArea fx:id="transitionTextArea" />
+        </VBox>
+        
+        <VBox>
+            <Label text="Enter the initial state:" />
+            <TextField fx:id="initialStateTextField" />
+        </VBox>
+        
+        <VBox>
+            <Label text="Enter the final states (comma-separated):" />
+            <TextField fx:id="finalStatesTextField" />
+        </VBox>
+        
+        <Button text="Convert to Deterministic Automaton" onAction="#convertAutomaton" />
+    </children>
+</VBox>

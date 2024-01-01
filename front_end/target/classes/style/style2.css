@@ -33,7 +33,7 @@
     -fx-padding: 0 0 0 10px;
 }
 
-.button {
+.confirm-button {
     -fx-background-color: #0066cc;
     -fx-text-fill: white;
     -fx-font-weight: bold;
