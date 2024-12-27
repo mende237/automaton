@@ -1,12 +1,9 @@
 package com.automate.controller;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import com.automate.inputOutput.Configuration;
 
 import com.automate.inputOutput.Instruction;
 import com.automate.inputOutput.Messenger;
@@ -22,47 +19,74 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
-
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class ConvertController extends Controller implements Initializable {
     private static ConvertController convertController = null;
     @FXML
     private Button btnConvert;
-    @FXML
-    private Button btnSave;
-    @FXML
-    private SplitPane splitPane;
-    @FXML
-    private ImageView imageViewData;
-    @FXML
-    private ImageView imageViewResult;
 
     @FXML
-    private AnchorPane anchorPaneData;
+    private Button btnSave;
+
     @FXML
-    private AnchorPane anchorPaneResult;
- 
+    private SplitPane splitPane;
+
+    @FXML
+    private ScrollPane automatonDataScrollPane;
+
+    @FXML
+    private ScrollPane automatonResultScrollPane;
+
+    @FXML
+    private ImageView automatonDataImageView;
+
+    @FXML
+    private VBox zoomDataVBox;
+
+    @FXML
+    private VBox zoomResultVBox;
+
+    @FXML
+    private ImageView automatonResultImageView;
+
+    @FXML
+    private SplitPane splitPaneContainer;
+
+    @FXML
+    private StackPane stackPaneData;
+
+    @FXML
+    private StackPane stackPaneResult;
+
+    @FXML
+    private VBox vBoxBotton;
+
+    @FXML
+    private HBox hBoxButtonContainer;
+
+
     protected static final String ID = "convertController";
     private Algorithm algorithmType;
     private String dataPath;
 
-    
-    private ConvertController(Mediator mediator , Algorithm algorithmType) {
-        super(ID , mediator);
+    private ConvertController(Mediator mediator, Algorithm algorithmType) {
+        super(ID, mediator);
         this.algorithmType = algorithmType;
         System.out.println("************convert controller*******************");
     }
 
-    public static ConvertController getConvertController(Mediator mediator , Algorithm algorithmType) {
+    public static ConvertController getConvertController(Mediator mediator, Algorithm algorithmType) {
         if (ConvertController.convertController == null) {
-            ConvertController.convertController = new ConvertController(mediator , algorithmType);
-        }else{
+            ConvertController.convertController = new ConvertController(mediator, algorithmType);
+        } else {
             ConvertController.convertController.algorithmType = algorithmType;
             System.out.println("deja lance");
         }
@@ -104,34 +128,80 @@ public class ConvertController extends Controller implements Initializable {
             default:
                 break;
         }
-        //System.out.println("la fenetre convert a ete lance!!!!!");
-        // this.imageViewData.fitWidthProperty().bind(this.anchorPaneData.widthProperty());
-        // this.imageViewData.fitHeightProperty().bind(this.anchorPaneData.heightProperty());
-        // this.imageViewData.setPreserveRatio(true);
 
-        // this.imageViewResult.fitWidthProperty().bind(this.anchorPaneResult.widthProperty());
-        // this.imageViewResult.fitHeightProperty().bind(this.anchorPaneResult.heightProperty());
-        // this.imageViewResult.setPreserveRatio(true);
+        this.zoomDataVBox.setPickOnBounds(false);
 
-        // this.splitPane.setDividerPositions(0.45);
+        // Ajouter un écouteur d'événements pour la barre de défilement de la ScrollPane
+        this.automatonDataScrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() == 0 || newValue.doubleValue() == 1.0) {
+                // Activer la consommation d'événements de la VBox lorsque la barre de défilement est en haut ou en bas
+                this.zoomDataVBox.setPickOnBounds(true);
+            } else {
+                // Désactiver la consommation d'événements de la VBox lorsque la barre de défilement est en mouvement
+                this.zoomDataVBox.setPickOnBounds(false);
+            }
+        });
+
+        hBoxButtonContainer.setPickOnBounds(false);
+
+        this.btnConvert.setOnMouseEntered(event -> {
+            this.splitPaneContainer.setPickOnBounds(false);
+            System.out.println("Mouse entered the button area");
+        });
+
+        this.btnConvert.setOnMouseExited(event -> {
+            this.splitPaneContainer.setPickOnBounds(true);
+            this.hBoxButtonContainer.setPickOnBounds(false);
+            System.out.println("Mouse exited the button area");
+        });
+
+        // Bind the position of btnConvert with the divider bar of splitPaneContainer
+        splitPaneContainer.getDividers().get(0).positionProperty().addListener((obs, oldVal, newVal) -> {
+            double position = newVal.doubleValue();
+            double totalWidth = splitPaneContainer.getWidth();
+            double translationValue = (totalWidth * position) - (totalWidth / 2);
+            hBoxButtonContainer.setTranslateX(translationValue);
+        });
+    }
+
+    @FXML
+    private void handleZoomInDataButtonClick(ActionEvent event) {
+        double scale = automatonDataImageView.getScaleX() * 1.1;
+        automatonDataImageView.setScaleX(scale);
+        automatonDataImageView.setScaleY(scale);
+        automatonDataScrollPane.requestLayout();
+    }
+
+    @FXML
+    private void handleZoomOutDataButtonClick(ActionEvent event) {
+        double scale = automatonDataImageView.getScaleX() / 1.1;
+        automatonDataImageView.setScaleX(scale);
+        automatonDataImageView.setScaleY(scale);
+        automatonDataScrollPane.requestLayout();
     }
 
 
     @FXML
-    private void handleZoomInButtonClick(ActionEvent event) {
-       
+    private void handleZoomInResultButtonClick(ActionEvent event) {
+        double scale = automatonResultImageView.getScaleX() * 1.1;
+        automatonResultImageView.setScaleX(scale);
+        automatonResultImageView.setScaleY(scale);
+        automatonResultScrollPane.requestLayout();
     }
 
     @FXML
-    private void handleZoomOutButtonClick(ActionEvent event) {
-        
+    private void handleZoomOutResultButtonClick(ActionEvent event) {
+        double scale = automatonResultImageView.getScaleX() / 1.1;
+        automatonResultImageView.setScaleX(scale);
+        automatonResultImageView.setScaleY(scale);
+        automatonResultScrollPane.requestLayout();
     }
 
     @FXML
-    private void handleSaveButtonClick(ActionEvent event){
-    
+    private void handleSaveButtonClick(ActionEvent event) {
+
     }
-    
+
     public Algorithm getAlgorithmType() {
         return this.algorithmType;
     }
@@ -149,14 +219,15 @@ public class ConvertController extends Controller implements Initializable {
     @Override
     public void receiveMessage(Message message) {
         // System.out.println(message);
-        if(message.getIdExpediteur().equals(MainController.ID)){
+        if (message.getIdExpediteur().equals(MainController.ID)) {
             Automaton automaton = (Automaton) message.getContent();
             Graph g = automaton.markeGraph();
             Image image;
             try {
                 image = Automaton.makeImage(g);
-                WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(), (int) image.getHeight());
-                this.imageViewData.setImage(writableImage);
+                WritableImage writableImage = new WritableImage(image.getPixelReader(), (int) image.getWidth(),
+                        (int) image.getHeight());
+                this.automatonDataImageView.setImage(writableImage);
                 this.dataPath = automaton.getPath();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -165,9 +236,8 @@ public class ConvertController extends Controller implements Initializable {
         }
     }
 
-
     @FXML
-    public void handleBtnConvertClicked(ActionEvent event){
+    public void handleBtnConvertClicked(ActionEvent event) {
         switch (this.algorithmType) {
             case DERTIMINISATION:
                 this.btnConvert.setText("deternine");
@@ -206,7 +276,7 @@ public class ConvertController extends Controller implements Initializable {
         }
     }
 
-    private void handleConvertion(Instruction instruction , boolean isReturnAFD){
+    private void handleConvertion(Instruction instruction, boolean isReturnAFD) {
         Messenger messenger = Messenger.getMessenger();
         // Configuration config = Configuration.getConfiguration();
         try {
@@ -219,14 +289,14 @@ public class ConvertController extends Controller implements Initializable {
         if (messenger.isResponse() == true) {
             try {
                 Automaton automaton = null;
-                if(isReturnAFD  == true){
+                if (isReturnAFD == true) {
                     automaton = AFD.jsonToAFD(messenger.getDataPathResponse(), false);
-                }else{
+                } else {
                     automaton = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
                 }
 
                 Image image = Automaton.makeImage(automaton.markeGraph());
-                this.imageViewResult.setImage(image);
+                this.automatonResultImageView.setImage(image);
             } catch (FileNotFoundException | JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -237,27 +307,25 @@ public class ConvertController extends Controller implements Initializable {
         }
     }
 
-    private void handleDeterminisation(){
+    private void handleDeterminisation() {
         Instruction instruction = new Instruction("determinisation", this.dataPath);
-        this.handleConvertion(instruction , true);
+        this.handleConvertion(instruction, true);
     }
 
     private void handleEpDeterminisation() {
         Instruction instruction = new Instruction("epsilone determinisation", this.dataPath);
-        this.handleConvertion(instruction , true);
+        this.handleConvertion(instruction, true);
     }
 
-
-    private void handleMinisation(String type){
+    private void handleMinisation(String type) {
         Instruction instruction;
-        if(type.equalsIgnoreCase("h")){
+        if (type.equalsIgnoreCase("h")) {
             instruction = new Instruction("hopcroft minisation", this.dataPath);
-        }else{
+        } else {
             instruction = new Instruction("brzozowski minisation", this.dataPath);
         }
         this.handleConvertion(instruction, true);
     }
-
 
     private void handleComplementaire() {
         Instruction instruction = new Instruction("complementaire", this.dataPath);
@@ -269,7 +337,6 @@ public class ConvertController extends Controller implements Initializable {
         this.handleConvertion(instruction, true);
     }
 
-
     private void handleMiroir(String type) {
         Instruction instruction;
         if (type.equalsIgnoreCase("afd")) {
@@ -277,7 +344,7 @@ public class ConvertController extends Controller implements Initializable {
             this.handleConvertion(instruction, false);
         } else {
             instruction = new Instruction("miroir AFN", this.dataPath);
-            this.handleConvertion(instruction , false);
+            this.handleConvertion(instruction, false);
         }
     }
 }

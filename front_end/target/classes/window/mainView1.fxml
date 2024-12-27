@@ -19,9 +19,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.MainController">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.MainController">
    <children>
-      <BorderPane layoutX="87.0" layoutY="73.0" prefHeight="520.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane layoutX="87.0" layoutY="73.0" prefHeight="520.0" prefWidth="1042.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <SplitPane fx:id="splitPane" dividerPositions="0.10288461538461538">
                <items>
@@ -30,14 +30,7 @@
                         <TreeView fx:id="treeView" prefHeight="273.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity">
-                     <children>
-                        <BorderPane prefHeight="273.0" prefWidth="930.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <bottom>
-                              <AnchorPane prefHeight="47.0" prefWidth="930.0" BorderPane.alignment="CENTER" />
-                           </bottom>
-                        </BorderPane>
-                     </children></AnchorPane>
+                  <AnchorPane fx:id="mainContainer" minHeight="-Infinity" minWidth="-Infinity" />
                </items>
             </SplitPane>
          </center>

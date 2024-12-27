@@ -323,44 +323,51 @@ public class MainController extends Controller implements Initializable {
         return item.getParent().getChildren().indexOf(item);
     }
 
+
+    private void setupConvertView(AnchorPane convertView){
+        this.mainContainer.getChildren().clear();
+        AnchorPane.setTopAnchor(convertView, 0.0);
+        AnchorPane.setRightAnchor(convertView, 0.0);
+        AnchorPane.setLeftAnchor(convertView, 0.0);
+        AnchorPane.setBottomAnchor(convertView, 0.0);
+
+
+        this.mainContainer.getChildren().setAll(convertView);
+        convertView.prefWidthProperty().bind(this.mainContainer.widthProperty());
+        convertView.prefHeightProperty().bind(this.mainContainer.heightProperty());
+
+        convertView.minWidthProperty().bind(this.mainContainer.widthProperty());
+        convertView.minHeightProperty().bind(this.mainContainer.heightProperty());
+    }
+
     @FXML
     private void handleDeterminisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
         // Path path = Paths.get("src/ressource/test/convertView.fxml");
         // System.out.println(path.toRealPath());
 
-        AnchorPane anchor = this.loadConvertView(Algorithm.DERTIMINISATION).load();
-        //ConvertController convertController = loader.getController();
-        // this.mainContainer = anchor;
-
-        this.mainContainer.getChildren().clear();
-        AnchorPane.setTopAnchor(anchor, 0.0);
-        AnchorPane.setRightAnchor(anchor, 0.0);
-        AnchorPane.setLeftAnchor(anchor, 0.0);
-        AnchorPane.setBottomAnchor(anchor, 0.0);
-        this.mainContainer.getChildren().setAll(anchor);
-
-        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
-        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
+        AnchorPane convertView = this.loadConvertView(Algorithm.DERTIMINISATION).load();
+        this.setupConvertView(convertView);
+        System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccc!");
     }
 
     @FXML
     void handleComplementaireView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        AnchorPane anchor = this.loadConvertView(Algorithm.COMPLEMENTAIRE).load();
+        AnchorPane convertView = this.loadConvertView(Algorithm.COMPLEMENTAIRE).load();
+        this.setupConvertView(convertView);
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
-        this.mainContainer.getChildren().clear();
-        AnchorPane.setTopAnchor(anchor, 0.0);
-        AnchorPane.setRightAnchor(anchor, 0.0);
-        AnchorPane.setLeftAnchor(anchor, 0.0);
-        AnchorPane.setBottomAnchor(anchor, 0.0);
-        this.mainContainer.getChildren().setAll(anchor);
+        // this.mainContainer.getChildren().clear();
+        // AnchorPane.setTopAnchor(anchor, 0.0);
+        // AnchorPane.setRightAnchor(anchor, 0.0);
+        // AnchorPane.setLeftAnchor(anchor, 0.0);
+        // AnchorPane.setBottomAnchor(anchor, 0.0);
+        // this.mainContainer.getChildren().setAll(anchor);
 
-        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -368,19 +375,20 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleEpDeterminisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        AnchorPane anchor = this.loadConvertView(Algorithm.EP_DERTIMINISATION).load();
+        AnchorPane convertView = this.loadConvertView(Algorithm.EP_DERTIMINISATION).load();
+        this.setupConvertView(convertView);
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
-        this.mainContainer.getChildren().clear();
-        AnchorPane.setTopAnchor(anchor, 0.0);
-        AnchorPane.setRightAnchor(anchor, 0.0);
-        AnchorPane.setLeftAnchor(anchor, 0.0);
-        AnchorPane.setBottomAnchor(anchor, 0.0);
-        this.mainContainer.getChildren().setAll(anchor);
+        // this.mainContainer.getChildren().clear();
+        // AnchorPane.setTopAnchor(anchor, 0.0);
+        // AnchorPane.setRightAnchor(anchor, 0.0);
+        // AnchorPane.setLeftAnchor(anchor, 0.0);
+        // AnchorPane.setBottomAnchor(anchor, 0.0);
+        // this.mainContainer.getChildren().setAll(anchor);
 
-        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -388,19 +396,20 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleMinimisationView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        AnchorPane anchor = this.loadConvertView(Algorithm.MINIMISATION_B).load();
+        AnchorPane convertView = this.loadConvertView(Algorithm.MINIMISATION_B).load();
+        this.setupConvertView(convertView);
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
-        this.mainContainer.getChildren().clear();
-        AnchorPane.setTopAnchor(anchor, 0.0);
-        AnchorPane.setRightAnchor(anchor, 0.0);
-        AnchorPane.setLeftAnchor(anchor, 0.0);
-        AnchorPane.setBottomAnchor(anchor, 0.0);
-        this.mainContainer.getChildren().setAll(anchor);
+        // this.mainContainer.getChildren().clear();
+        // AnchorPane.setTopAnchor(anchor, 0.0);
+        // AnchorPane.setRightAnchor(anchor, 0.0);
+        // AnchorPane.setLeftAnchor(anchor, 0.0);
+        // AnchorPane.setBottomAnchor(anchor, 0.0);
+        // this.mainContainer.getChildren().setAll(anchor);
 
-        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -408,19 +417,20 @@ public class MainController extends Controller implements Initializable {
     @FXML
     void handleMiroirView(ActionEvent event) throws IOException {
         this.vType = viewType.CONVERT_VIEW;
-        AnchorPane anchor = this.loadConvertView(Algorithm.MIROIR_AFD).load();
+        AnchorPane convertView = this.loadConvertView(Algorithm.MIROIR_AFD).load();
+        this.setupConvertView(convertView);
         //ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
-        this.mainContainer.getChildren().clear();
-        AnchorPane.setTopAnchor(anchor, 0.0);
-        AnchorPane.setRightAnchor(anchor, 0.0);
-        AnchorPane.setLeftAnchor(anchor, 0.0);
-        AnchorPane.setBottomAnchor(anchor, 0.0);
-        this.mainContainer.getChildren().setAll(anchor);
+        // this.mainContainer.getChildren().clear();
+        // AnchorPane.setTopAnchor(anchor, 0.0);
+        // AnchorPane.setRightAnchor(anchor, 0.0);
+        // AnchorPane.setLeftAnchor(anchor, 0.0);
+        // AnchorPane.setBottomAnchor(anchor, 0.0);
+        // this.mainContainer.getChildren().setAll(anchor);
 
-        anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
+        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
+        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -569,6 +579,7 @@ public class MainController extends Controller implements Initializable {
 
     public ArrayList<Automaton> loadData(File folder, boolean isAFD) throws FileNotFoundException {
         ArrayList<Automaton> list = new ArrayList<>();
+        System.out.println("************************************ "  + folder);
         for (File file : folder.listFiles()) {
             if (file.isFile()) {
                 if (isAFD == true) {
