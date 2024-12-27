@@ -142,6 +142,19 @@ public class ConvertController extends Controller implements Initializable {
             }
         });
 
+        this.zoomResultVBox.setPickOnBounds(false);
+
+        // Ajouter un écouteur d'événements pour la barre de défilement de la ScrollPane
+        this.automatonResultScrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() == 0 || newValue.doubleValue() == 1.0) {
+                // Activer la consommation d'événements de la VBox lorsque la barre de défilement est en haut ou en bas
+                this.zoomResultVBox.setPickOnBounds(true);
+            } else {
+                // Désactiver la consommation d'événements de la VBox lorsque la barre de défilement est en mouvement
+                this.zoomResultVBox.setPickOnBounds(false);
+            }
+        });
+
         hBoxButtonContainer.setPickOnBounds(false);
 
         this.btnConvert.setOnMouseEntered(event -> {

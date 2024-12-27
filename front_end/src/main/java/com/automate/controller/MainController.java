@@ -248,6 +248,7 @@ public class MainController extends Controller implements Initializable {
                     HashMap<String, Object> data = (HashMap<String, Object>) response.getContent();
                     Automaton newAutomaton = (Automaton) data.get("automaton");
                     AutomateType newAutomatonType = (AutomateType) data.get("type");
+                    System.out.println("__________________________________________    " + newAutomatonType.name());
                     switch (newAutomatonType) {
                         case AFD:
                             if(parentIndex == 0){
@@ -333,11 +334,14 @@ public class MainController extends Controller implements Initializable {
 
 
         this.mainContainer.getChildren().setAll(convertView);
-        convertView.prefWidthProperty().bind(this.mainContainer.widthProperty());
-        convertView.prefHeightProperty().bind(this.mainContainer.heightProperty());
+        // convertView.prefWidthProperty().bind(this.mainContainer.widthProperty());
+        // convertView.prefHeightProperty().bind(this.mainContainer.heightProperty());
 
-        convertView.minWidthProperty().bind(this.mainContainer.widthProperty());
-        convertView.minHeightProperty().bind(this.mainContainer.heightProperty());
+        convertView.setPrefWidth(10);
+        convertView.setPrefHeight(10);
+
+        // convertView.minWidthProperty().bind(this.mainContainer.widthProperty());
+        // convertView.minHeightProperty().bind(this.mainContainer.heightProperty());
     }
 
     @FXML

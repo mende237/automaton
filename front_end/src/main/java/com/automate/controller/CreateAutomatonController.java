@@ -207,7 +207,18 @@ public class CreateAutomatonController extends Controller implements Initializab
         transitionToColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
 
         transitionFromColumn.setCellFactory(colum -> new CircleTableCellTransitions(ColumnName.FROM));
-        // transitionInputColumn.setCellFactory(colum -> new ArrowTableCell());
+        transitionInputColumn.setCellFactory(column -> new TableCell<Transition, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item.equals(epsilone) ? "\u03B5" : item);
+                }
+            }
+        });
         transitionToColumn.setCellFactory(colum -> new CircleTableCellTransitions(ColumnName.TO));
 
         // Lier la liste des transitions au TableView des transitions
@@ -332,6 +343,7 @@ public class CreateAutomatonController extends Controller implements Initializab
                 stateSet.add(transition.getBegin());
                 stateSet.add(transition.getEnd());
             }
+            isAFD = false;
         }else{
             AFD afd = (AFD) automaton;
             System.out.println("****************************** " + afd.getMatTrans().length);
@@ -460,8 +472,7 @@ public class CreateAutomatonController extends Controller implements Initializab
 
         
         if (fromState != null && toState != null && inputSymbol != null) {
-            
-            Transition newTransition = new Transition(fromState, inputSymbol.equalsIgnoreCase("\\u03B5") ? this.epsilone : inputSymbol, toState);
+            Transition newTransition = new Transition(fromState, inputSymbol.equalsIgnoreCase("\u03B5") ? this.epsilone : inputSymbol, toState);
             if(isValidTransition(newTransition)){
                 transitionsList.add(newTransition);
                 System.out.println(newTransition);
@@ -698,7 +709,7 @@ public class CreateAutomatonController extends Controller implements Initializab
             if(initialStateList.size() >= 2 && this.automateType != AutomateType.E_AFN)
                 this.automateType = AutomateType.AFN;
             
-            if(transition.getLabel().equalsIgnoreCase("\u03B5"))
+            if(transition.getLabel().equalsIgnoreCase(epsilone))
                 this.automateType = AutomateType.E_AFN;
 
             if(this.automateType == AutomateType.AFD){
