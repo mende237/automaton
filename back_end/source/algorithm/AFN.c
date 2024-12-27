@@ -3,7 +3,7 @@
 #include "../../header/algorithm/AFN.h"
 #include "../../header/data_structure/linked_list.h"
 #include "../../header/data_structure/stack.h"
-#include "../../header/libs/fort.h"
+// #include "../../header/libs/fort.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

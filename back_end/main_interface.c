@@ -397,8 +397,13 @@ START:
         else
         {
             afd = epsilone_determinisation(afn, equal_st);
+            printf("********************************************************$$$");
             message = (Message){messenger->message.id, config->data_response_path, "epsilone determinisation"};
         }
+
+        print_info_AFD(afd, True, print_element_in_list);
+        print_AFD(afd, True, False, print_element_in_list, length_state);
+        printf("********************************************************");
         afd = rename_states(afd, True);
         AFD_to_jason(afd, config->data_response_path);
         printf("L'AUTOMATE DETERMINISTE CORRESPONDANT EST :\n");
