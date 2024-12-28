@@ -1137,6 +1137,10 @@ AFD epsilone_determinisation(AFN afn, boolean equal_value(void *lb1, void *lb2, 
         {
             push(pile, trans[i]);
         }
+        else
+        {
+            is_well = True;
+        }
     }
 
     queue_insertion(state_tab_list, e_clo);
