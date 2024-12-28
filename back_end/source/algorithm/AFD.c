@@ -12,7 +12,6 @@
 #include "../../header/data_structure/linked_list.h"
 #include "../../header/algorithm/function.h"
 
-
 AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label)
 {
     AFD afd = malloc(sizeof(AFD_value));
@@ -22,7 +21,7 @@ AFD new_AFD(int nbre_state, int nbre_finale_state, int nbre_label)
     afd->nbre_finale_state = nbre_finale_state;
     afd->mat_state = NULL;
     afd->state_tab = NULL;
-    afd->mat_trans = calloc(nbre_label * nbre_state , sizeof(void **));
+    afd->mat_trans = calloc(nbre_label * nbre_state, sizeof(void **));
     afd->finale_state = calloc(nbre_finale_state, sizeof(void *));
     afd->tab_labels = calloc(nbre_label, sizeof(void *));
     return afd;
@@ -120,7 +119,7 @@ list detect_AFD(const AFD afd, void *word, int size)
         queue_insertion(path, q);
     }
 
-    queue_insertion(tab_path , path);
+    queue_insertion(tab_path, path);
     return tab_path;
 }
 
@@ -807,6 +806,7 @@ AFN miroir_AFD(AFD afd)
 
 AFD rename_states(AFD afd, boolean permut)
 {
+    printf("number state %d\n", afd->nbre_state);
     typedef struct etiquette etiquette;
     int cmpt = 0, nbr_line = 0;
     int i = 0, j = 0, k = 0, q = 0;
@@ -987,11 +987,14 @@ AFD determinisation(AFN afn, boolean equal_value(void *st1, void *st2, ...))
         {
             push(pile, trans[i]);
         }
+        else
+        {
+            is_well = True;
+        }
     }
 
     queue_insertion(state_tab_list, initial_state_list);
     queue_insertion(mat_state_list, trans);
-
     while (is_empty_stack(pile) == False)
     {
 
@@ -1735,13 +1738,12 @@ void free_AFD(AFD afd, boolean is_state_list)
                 {
                     free_list(afd->state_tab[afd->nbre_state - 1]);
                 }
-                
+
                 for (i = 0; i < afd->nbre_state; i++)
                 {
                     free_transition(afd->mat_state[i], afd->nbre_label);
                 }
                 free_list(afd->initiale_state);
-
             }
             else
             {

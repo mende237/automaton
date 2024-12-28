@@ -397,7 +397,6 @@ START:
         else
         {
             afd = epsilone_determinisation(afn, equal_st);
-            printf("********************************************************$$$");
             message = (Message){messenger->message.id, config->data_response_path, "epsilone determinisation"};
         }
 
