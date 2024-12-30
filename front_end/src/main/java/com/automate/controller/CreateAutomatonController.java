@@ -19,12 +19,15 @@ import java.util.stream.Collectors;
 import com.automate.inputOutput.Configuration;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
+import com.automate.structure.AutomateType;
 import com.automate.structure.Automaton;
 import com.automate.structure.State;
 import com.automate.structure.StateType;
 import com.automate.structure.Transition;
 import com.automate.utils.CircleTableCell;
 import com.automate.utils.CircleTableCellTransitions;
+import com.automate.utils.UtilFile;
+import com.automate.utils.UtilLoader;
 import com.automate.utils.CircleTableCellTransitions.ColumnName;
 
 import guru.nidi.graphviz.model.Graph;
@@ -56,9 +59,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class CreateAutomatonController extends Controller implements Initializable{
-    public enum AutomateType{
-        AFD , AFN , E_AFN
-    }
 
     protected static final String ID = "createAutomataController";
 
@@ -398,11 +398,11 @@ public class CreateAutomatonController extends Controller implements Initializab
         
         // Créer un nouvel état avec le nom spécifié et les valeurs par défaut
         try {
-            this.showDialog();
+            UtilLoader.showDialog();
             System.out.println("***************" + response);
             if(this.response != null ){
                 String stateName = newStateNameTextField.getText();
-                State newState = new State(stateName, (StateType) response.getContent());
+                State newState = new State(stateName, (StateType) response.getContent().get("stateType"));
                 if(isValidState(newState))
                     // Ajouter le nouvel état à la liste d'états
                     statesList.add(newState);
@@ -542,33 +542,33 @@ public class CreateAutomatonController extends Controller implements Initializab
     @FXML
     private void handleSaveButtonClick(ActionEvent event){
         try {
-            this.showPopupSave("" , "" , "");
+            UtilLoader.showPopupSave("" , "" , "", CreateAutomatonController.ID);
             boolean editMode = CreateAutomatonController.automaton != null ? true : false;
             if(this.response != null  && this.response.getContent() != null && response.getIdExpediteur().equalsIgnoreCase(SavePopupController.ID)){
-                HashMap<String, String> data = null;
+                HashMap<String, ? extends Object> data = null;
                 boolean fileExist = true;
                 do{
-                    data = (HashMap<String, String>) response.getContent();
+                    data = response.getContent();
                     if(data == null)
                         break;
                         
                     System.out.println("*************************** " + data.get("name") + " $$$$$$$$$$$$$$$$");
                     System.out.println("*************************** " + data.get("description") + " $$$$$$$$");
-                    Automaton automaton = this.makeAutomata(data.get("name"), data.get("description"));
-                    fileExist = isFileExist(data.get("name"));
+                    Automaton automaton = this.makeAutomata((String) data.get("name"), (String) data.get("description"));
+                    fileExist = UtilFile.isFileExist(this.automateType, (String) data.get("name"));
                     if(!fileExist || CreateAutomatonController.automaton != null){
                         if(automaton != null){
                             HashMap<String, Object> content = new HashMap<>();
                             content.put("automaton", automaton);
                             content.put("type", this.automateType); 
-                            Message message = new Message("mainController", content);
+                            Message message = new Message(MainController.ID, content);
                             this.sendMessage(message);
                             Stage stage = (Stage) saveButton.getScene().getWindow();
                             stage.close();
                         }
                     }else{
-                        String errortext = "An automaton with the same name\n alrealdy exist chose another name";
-                        this.showPopupSave(data.get("name") , data.get("description"), errortext);                        
+                        String errortext = "An automaton with the same name\n alrealdy exist chose another name";          
+                        UtilLoader.showPopupSave((String) data.get("name") , (String) data.get("description"), errortext, CreateAutomatonController.ID);                   
                     }
                 }while(fileExist && !editMode);
 
@@ -644,43 +644,6 @@ public class CreateAutomatonController extends Controller implements Initializab
         }
     }
 
-
-    private void showDialog() throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/dialogBox.fxml"));
-        loader.setControllerFactory(c -> {
-            return PopupController.getPopupController(ConrceteMadiator.getConrceteMadiator());
-        });
-
-        BorderPane popup = loader.load();
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(popup);
-        scene.getStylesheets().add(getClass().getResource("/style/diaglogstyle.css").toExternalForm());
-        // scene.getStylesheets().add(css);
-        popupStage.setScene(scene);
-        popupStage.showAndWait();
-    }
-
-    private void showPopupSave(String name , String description , String errorLabel) throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/savePopup.fxml"));
-        SavePopupController savePopupController = SavePopupController.getSavePopupController(ConrceteMadiator.getConrceteMadiator());
-        loader.setControllerFactory(c -> {
-            return savePopupController;
-        });
-
-        AnchorPane popupSave = loader.load();
-        savePopupController.setTextNameField(name);
-        savePopupController.setTextDescriptionArea(description);
-        savePopupController.setLblErrorMessage(errorLabel);
-
-        Stage popupSaveStage = new Stage();
-        popupSaveStage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(popupSave);
-        scene.getStylesheets().add(getClass().getResource("/style/savePopup.css").toExternalForm());
-        // scene.getStylesheets().add(css);
-        popupSaveStage.setScene(scene);
-        popupSaveStage.showAndWait();
-    }
 
     private Automaton makeAutomata(String name, String description){
         Set<State> initialStateList = new HashSet<>();
@@ -782,24 +745,6 @@ public class CreateAutomatonController extends Controller implements Initializab
         return automata;
     }
 
-
-    private boolean isFileExist(String fileName){
-        String folderToSearch = null;
-        switch (this.automateType) {
-            case AFD:
-                folderToSearch = Configuration.getConfiguration().getAfdFolderName();
-                break;    
-            case AFN:
-                folderToSearch = Configuration.getConfiguration().getAfnFolderName();
-                break;
-            default:
-                folderToSearch = Configuration.getConfiguration().getEp_afnFolderName();
-                break;
-        }
-        // System.out.println("------------------ automate type === "+ this.automateType + "------ foldename ==" + folderToSearch + "-----------------------------");
-        File file = new File(Configuration.getConfiguration().getSavePath() + "/" + folderToSearch+ "/" + fileName + ".json");
-        return file.exists();
-    }
 
     @Override
     public void sendMessage(Message message) {

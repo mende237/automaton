@@ -4,5 +4,6 @@
         "stack.h": "c",
         "function.h": "c",
         "cstdarg": "cpp"
-    }
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
 }

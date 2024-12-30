@@ -273,7 +273,7 @@ public class ReconnaissanceController extends Controller implements Initializabl
     public void receiveMessage(Message message) {
         System.out.println(message);
         if (message.getIdExpediteur().equals(MainController.ID)) {
-            File file = new File((String) message.getContent());
+            File file = new File((String) message.getContent().get("path"));
             Image image = new Image(file.toURI().toString());
             this.imageView.setImage(image);
         }

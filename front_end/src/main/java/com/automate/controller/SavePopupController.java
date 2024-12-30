@@ -31,12 +31,15 @@ public class SavePopupController extends Controller implements Initializable{
     @FXML
     private TextField nameField;
 
+    private String callingControllerID;
+
 
     // private Message response = null;
 
 
-    public SavePopupController(Mediator mediator) {
+    private SavePopupController(Mediator mediator, String callingControllerID) {
         super(ID, mediator);
+        this.callingControllerID = callingControllerID;
     }
 
     private static SavePopupController savePopupController;
@@ -48,16 +51,18 @@ public class SavePopupController extends Controller implements Initializable{
         
     }
 
-    public static SavePopupController getSavePopupController(Mediator mediator){
-        if(SavePopupController.savePopupController != null)
+    public static SavePopupController getSavePopupController(Mediator mediator, String callingControllerID){
+        if(SavePopupController.savePopupController != null){
+            SavePopupController.savePopupController.callingControllerID = callingControllerID;
             return SavePopupController.savePopupController;
+        }
         
-        return new SavePopupController(mediator);
+        return new SavePopupController(mediator, callingControllerID);
     }
 
     @FXML
     private void handleCancelButtonClicked(ActionEvent event) {
-        Message message = new Message(CreateAutomatonController.ID, null);
+        Message message = new Message(callingControllerID, null);
         this.sendMessage(message);
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
@@ -65,6 +70,7 @@ public class SavePopupController extends Controller implements Initializable{
 
     @FXML
     private void handleConfirmButtonClicked(ActionEvent event) {
+        System.out.println("******************* enter calling " + callingControllerID + " *********************");
         if(nameField.getText().length() > 0){
             System.out.println("******************* enter " + nameField.getText() +" *********************");
             HashMap<String , String> content = new HashMap<>();
@@ -72,7 +78,7 @@ public class SavePopupController extends Controller implements Initializable{
             content.put("name", nameField.getText());
             content.put("description", descriptionArea.getText());
 
-            Message message = new Message(CreateAutomatonController.ID, content);
+            Message message = new Message(callingControllerID, content);
             this.sendMessage(message);
             Stage stage = (Stage) btnOk.getScene().getWindow();
             stage.close();

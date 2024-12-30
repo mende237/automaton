@@ -83,6 +83,21 @@ public class AFN extends Automaton {
         this.matTrans.add(trans);
     }
 
+    public boolean isEpsiloneAFN(){
+        boolean epsiloneFound = false;
+        int i = 0;
+    
+        while (!epsiloneFound && i <= this.matTrans.size()) {
+            Transition transition = this.matTrans.get(i);
+            if(transition.getLabel().equalsIgnoreCase(this.epsilone))
+                epsiloneFound = true;
+
+            i++;
+        }
+        
+        return epsiloneFound ? true : false;
+    }
+
     // @Override
     // public void addTransitionToGraph(Transition transition) {
     //     // TODO Auto-generated method stub

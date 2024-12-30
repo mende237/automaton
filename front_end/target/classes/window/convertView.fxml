@@ -42,7 +42,7 @@
                      <children>
                         <ScrollPane fx:id="automatonResultScrollPane" fitToHeight="true" fitToWidth="true" prefViewportHeight="400.0" prefViewportWidth="400.0">
                            <content>
-                              <HBox style="-fx-background-color: white;">
+                              <HBox alignment="CENTER" style="-fx-background-color: white;">
                                  <children>
                                     <ImageView fx:id="automatonResultImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                                  </children>
@@ -58,7 +58,7 @@
                               <Insets bottom="30.0" right="10.0" />
                            </padding>
                         </VBox>
-                        <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
+                        <VBox fx:id="saveVBox" alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Button fx:id="saveButton" onAction="#handleSaveButtonClick" styleClass="save-button" text="Save" />
                            </children>

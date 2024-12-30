@@ -1,11 +1,13 @@
 package com.automate.controller;
 
+import java.util.HashMap;
+
 public class Message {
     private String idDestinataire;
     private String idExpediteur;
-    private Object content;
+    private HashMap<String, ? extends Object> content;
 
-    public Message(String idDestinataire, Object content) {
+    public Message(String idDestinataire, HashMap<String, ? extends Object> content) {
         this.idDestinataire = idDestinataire;
         this.content = content;
     }
@@ -27,11 +29,11 @@ public class Message {
         this.idExpediteur = idExpediteur;
     }
 
-    public Object getContent() {
+    public HashMap<String, ? extends Object> getContent() {
         return this.content;
     }
 
-    public void setContent(Object content) {
+    public void setContent(HashMap<String, ? extends Object> content) {
         this.content = content;
     }
 

@@ -12,9 +12,8 @@ import java.util.ResourceBundle;
 import com.automate.inputOutput.Configuration;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
+import com.automate.structure.AutomateType;
 import com.automate.structure.Automaton;
-import com.automate.controller.CreateAutomatonController.AutomateType;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -221,6 +220,7 @@ public class MainController extends Controller implements Initializable {
     private void automateVisualisation(String path, Automaton automaton,int parentIndex, int itemIndex) {
         try {
             Message message = null;
+            HashMap<String, Object> contentMessageToSend = new HashMap<>();
             switch (this.vType) {
                 case AUTOMATE_VIEW:
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomatonView.fxml"));
@@ -244,8 +244,7 @@ public class MainController extends Controller implements Initializable {
                     if(this.response == null || (this.response != null && this.response.getContent() == null))
                         return;
                     
-                   
-                    HashMap<String, Object> data = (HashMap<String, Object>) response.getContent();
+                    HashMap<String, ? extends Object> data = response.getContent();
                     Automaton newAutomaton = (Automaton) data.get("automaton");
                     AutomateType newAutomatonType = (AutomateType) data.get("type");
                     System.out.println("__________________________________________    " + newAutomatonType.name());
@@ -300,12 +299,13 @@ public class MainController extends Controller implements Initializable {
                     newAutomaton.save(newAutomatonType);
                     break;
                 case CONVERT_VIEW:
-                    message = new Message(ConvertController.getConvertController().getId(),automaton);
+                    contentMessageToSend.put("automaton", automaton);
+                    message = new Message(ConvertController.getConvertController().getId(), contentMessageToSend);
                     this.sendMessage(message);
                     break;
                 case RECONNAISSANCE_VIEW:
-                    message = new Message(ReconnaissanceController.getReconnaissanceController().getId(),
-                            path);
+                    contentMessageToSend.put("path", path);
+                    message = new Message(ReconnaissanceController.getReconnaissanceController().getId(), contentMessageToSend);
                     ReconnaissanceController.getReconnaissanceController().setAutomate(automaton);
                     this.sendMessage(message);
                     break;
@@ -381,18 +381,6 @@ public class MainController extends Controller implements Initializable {
         this.vType = viewType.CONVERT_VIEW;
         AnchorPane convertView = this.loadConvertView(Algorithm.EP_DERTIMINISATION).load();
         this.setupConvertView(convertView);
-        //ConvertController convertController = loader.getController();
-        // this.mainContainer = anchor;
-
-        // this.mainContainer.getChildren().clear();
-        // AnchorPane.setTopAnchor(anchor, 0.0);
-        // AnchorPane.setRightAnchor(anchor, 0.0);
-        // AnchorPane.setLeftAnchor(anchor, 0.0);
-        // AnchorPane.setBottomAnchor(anchor, 0.0);
-        // this.mainContainer.getChildren().setAll(anchor);
-
-        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -402,18 +390,6 @@ public class MainController extends Controller implements Initializable {
         this.vType = viewType.CONVERT_VIEW;
         AnchorPane convertView = this.loadConvertView(Algorithm.MINIMISATION_B).load();
         this.setupConvertView(convertView);
-        //ConvertController convertController = loader.getController();
-        // this.mainContainer = anchor;
-
-        // this.mainContainer.getChildren().clear();
-        // AnchorPane.setTopAnchor(anchor, 0.0);
-        // AnchorPane.setRightAnchor(anchor, 0.0);
-        // AnchorPane.setLeftAnchor(anchor, 0.0);
-        // AnchorPane.setBottomAnchor(anchor, 0.0);
-        // this.mainContainer.getChildren().setAll(anchor);
-
-        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -423,18 +399,6 @@ public class MainController extends Controller implements Initializable {
         this.vType = viewType.CONVERT_VIEW;
         AnchorPane convertView = this.loadConvertView(Algorithm.MIROIR_AFD).load();
         this.setupConvertView(convertView);
-        //ConvertController convertController = loader.getController();
-        // this.mainContainer = anchor;
-
-        // this.mainContainer.getChildren().clear();
-        // AnchorPane.setTopAnchor(anchor, 0.0);
-        // AnchorPane.setRightAnchor(anchor, 0.0);
-        // AnchorPane.setLeftAnchor(anchor, 0.0);
-        // AnchorPane.setBottomAnchor(anchor, 0.0);
-        // this.mainContainer.getChildren().setAll(anchor);
-
-        // anchor.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-        // anchor.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
         System.out.println("enterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr!");
 
     }
@@ -618,7 +582,7 @@ public class MainController extends Controller implements Initializable {
             createStage.setScene(scene);
             createStage.showAndWait();
             if(response != null && response.getContent() != null){
-                HashMap<String, Object> data = (HashMap<String, Object>) response.getContent();
+                HashMap<String, ? extends Object> data = response.getContent();
                 String saveFolderName = null;
                 Automaton automaton = (Automaton) data.get("automaton");
                 switch ((AutomateType) data.get("type")) {
@@ -659,11 +623,6 @@ public class MainController extends Controller implements Initializable {
         
     }
 
-    // @FXML
-    // public void exitApplication(ActionEvent event) {
-    // System.out.println("Stage is closing");
-    // Platform.exit();
-    // }
 
     @Override
     public void sendMessage(Message message) {
@@ -673,7 +632,34 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void receiveMessage(Message message) {
+        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
         this.response = message;
+
+        if(this.response.getContent() != null && this.response.getIdExpediteur().equalsIgnoreCase(ConvertController.ID)){
+            HashMap<String, ? extends Object> data = this.response.getContent();
+            Automaton automaton = (Automaton) data.get("automaton");
+            System.out.println(automaton);
+            // System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+            String saveFolderName = null;
+            AutomateType newAutomatonType = (AutomateType) data.get("type");
+            switch (newAutomatonType) {
+                case AFD:
+                    saveFolderName = Configuration.getConfiguration().getAfdFolderName();
+                    this.makeBranch(automaton.getName(), afd, 1);
+                    this.tabAFD.add((AFD) automaton);
+                    break;
+                case AFN:
+                    saveFolderName = Configuration.getConfiguration().getAfnFolderName();
+                    this.makeBranch(automaton.getName(), afn, 2);
+                    this.tabAFN.add((AFN) automaton);
+                    break;
+                default:
+                    saveFolderName = Configuration.getConfiguration().getEp_afnFolderName();
+                    this.makeBranch(automaton.getName(), epAfn, 2);
+                    this.tabEpAFN.add((AFN) automaton);
+                    break;
+            }
+        }
     }
 
 }

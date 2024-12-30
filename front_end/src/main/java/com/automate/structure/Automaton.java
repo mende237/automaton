@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
-import com.automate.controller.CreateAutomatonController.AutomateType;
 import com.automate.inputOutput.Configuration;
 
 import guru.nidi.graphviz.attribute.Color;

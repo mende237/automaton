@@ -1,6 +1,7 @@
 package com.automate.controller;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import com.automate.structure.StateType;
@@ -58,7 +59,9 @@ public class PopupController extends Controller implements Initializable{
     @FXML
     void handleConfirmButtonClicked(ActionEvent event) {
         StateType stateTypeSelected = this.stateTypeComboBox.getValue();
-        Message message = new Message(CreateAutomatonController.ID, stateTypeSelected);
+        HashMap<String, Object> contentMessageToSend = new HashMap<>();
+        contentMessageToSend.put("stateType", stateTypeSelected);
+        Message message = new Message(CreateAutomatonController.ID, contentMessageToSend);
         this.sendMessage(message);
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
