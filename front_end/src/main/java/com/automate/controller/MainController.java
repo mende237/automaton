@@ -659,6 +659,7 @@ public class MainController extends Controller implements Initializable {
                     this.tabEpAFN.add((AFN) automaton);
                     break;
             }
+            automaton.automatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + automaton.getName() + ".json");
         }
     }
 

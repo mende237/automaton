@@ -261,7 +261,8 @@ public class ConvertController extends Controller implements Initializable {
                     data = response.getContent();
                     if (data == null)
                         break;
-                    
+                    this.automaton.setName((String) data.get("name"));
+                    this.automaton.setDescription((String) data.get("description"));
                     System.out.println("*************************** " + data.get("name") + " $$$$$$$$$$$$$$$$");
                     System.out.println("*************************** " + data.get("description") + " $$$$$$$$");
         //             // Automaton automaton = this.makeAutomata(data.get("name"),

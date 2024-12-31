@@ -100,6 +100,11 @@ public abstract class Automaton {
     /*********************************************
      * setter
      ***********************************************/
+
+    public void setName(String name){
+        this.name = name;
+    }
+
     public void setPath(String path) {
         this.path = path;
     }
