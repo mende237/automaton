@@ -31,7 +31,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class ConvertController extends Controller implements Initializable {
     private static ConvertController convertController = null;
@@ -247,11 +246,7 @@ public class ConvertController extends Controller implements Initializable {
     private void handleSaveButtonClick(ActionEvent event) {
         try {
             System.out.println("*************************** " + ConvertController.ID + " $$$$$$$$$$$$$$$$");
-            // this.showPopupSave("", "", "");
             UtilLoader.showPopupSave("", "", "", ConvertController.ID);
-            // boolean editMode = CreateAutomatonController.automaton != null ? true :
-            System.out.println("***************************++++++++++++++++++++ " + response.getIdExpediteur() + " $$$$$$$$$$$$$$$$");
-            // false;
             if (this.response != null && this.response.getContent() != null
                     && response.getIdExpediteur().equalsIgnoreCase(SavePopupController.ID)) {
                 System.out.println("***************************-------------------" + response.getContent() + " $$$$$$$$$$$$$$$$");

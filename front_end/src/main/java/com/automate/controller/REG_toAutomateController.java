@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -21,14 +22,20 @@ import com.automate.inputOutput.Instruction;
 import com.automate.inputOutput.Messenger;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
+import com.automate.structure.AutomateType;
 import com.automate.structure.Automaton;
+import com.automate.utils.UtilFile;
+import com.automate.utils.UtilLoader;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 
 public class REG_toAutomateController extends Controller implements Initializable {
     private static final String dataFileName = "regularExpression.json";
@@ -38,11 +45,28 @@ public class REG_toAutomateController extends Controller implements Initializabl
     private Algorithm algorithmType;
 
     @FXML
-    private TextField txtExpression;
-
+    private VBox saveVBox;
 
     @FXML
-    private ImageView imageViewResult;
+    private Button saveButton;
+
+    @FXML
+    private VBox zoomResultVBox;
+
+    @FXML
+    private TextField txtExpression;
+
+    @FXML
+    private ScrollPane automatonResultScrollPane;
+
+    @FXML
+    private ImageView automatonResultImageView;
+
+    private Message response = null;
+
+    private Automaton automaton = null;
+
+
 
     private REG_toAutomateController(Mediator mediator, Algorithm algorithmType) {
         super(REG_toAutomateController.ID, mediator);
@@ -66,9 +90,18 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO Auto-generated method stub
-    }
+        this.saveVBox.setPickOnBounds(false);
 
+        this.saveButton.setOnMouseEntered(event -> {
+            this.saveVBox.setPickOnBounds(true);
+            this.zoomResultVBox.setPickOnBounds(false);
+        });
+
+        this.saveButton.setOnMouseExited(event -> {
+            this.zoomResultVBox.setPickOnBounds(true);
+            this.saveVBox.setPickOnBounds(false);
+        });
+    }
 
     @FXML
     void handleBtnConvertClicked(ActionEvent event) {
@@ -108,14 +141,14 @@ public class REG_toAutomateController extends Controller implements Initializabl
         if (messenger.isResponse() == true) {
             try {
                 Automaton automate = null;
-                if(automate instanceof AFD){
+                if (automate instanceof AFD) {
                     automate = AFD.jsonToAFD(messenger.getDataPathResponse(), false);
-                }else{
+                } else {
                     automate = AFN.jsonToAFN(messenger.getDataPathResponse(), false);
                 }
-
+                this.automaton = automate;
                 Image image = Automaton.makeImage(automate.markeGraph());
-                this.imageViewResult.setImage(image);
+                this.automatonResultImageView.setImage(image);
             } catch (FileNotFoundException | JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -126,7 +159,6 @@ public class REG_toAutomateController extends Controller implements Initializabl
         }
     }
 
-
     private void REG_toJson(String reg, String filePath) throws FileNotFoundException, IOException {
         LinkedList<String> list = new LinkedList<>();
         String temp = "";
@@ -135,26 +167,26 @@ public class REG_toAutomateController extends Controller implements Initializabl
             if (reg.charAt(i) == '+' || reg.charAt(i) == '.' || reg.charAt(i) == '*' || reg.charAt(i) == '('
                     || reg.charAt(i) == ')') {
                 wasOperator = true;
-                if(temp.length() != 0){
+                if (temp.length() != 0) {
                     list.add(temp);
                 }
                 String operator = "";
                 operator += reg.charAt(i);
                 list.add(operator);
                 temp = "";
-            }else{
+            } else {
                 wasOperator = false;
                 temp += reg.charAt(i);
             }
         }
 
-        if(wasOperator == false){
+        if (wasOperator == false) {
             list.add(temp);
         }
 
-        for (int i = 0; i < list.size() ; i++) {
-            System.out.printf("    %s   " , list.get(i));
-        }   
+        for (int i = 0; i < list.size(); i++) {
+            System.out.printf("    %s   ", list.get(i));
+        }
 
         JSONObject obj = new JSONObject();
         JSONArray Jword = new JSONArray();
@@ -173,25 +205,108 @@ public class REG_toAutomateController extends Controller implements Initializabl
         raf.close();
     }
 
+    @FXML
+    private void handleZoomInResultButtonClick(ActionEvent event) {
+        double scale = automatonResultImageView.getScaleX() * 1.1;
+        automatonResultImageView.setScaleX(scale);
+        automatonResultImageView.setScaleY(scale);
+        automatonResultScrollPane.requestLayout();
+    }
 
+    @FXML
+    private void handleSaveButtonClick(ActionEvent event) {
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        try {
+            UtilLoader.showPopupSave("", "", "", REG_toAutomateController.ID);
+            System.out.println("_____________________________________________________________________________");
+            if (this.response != null && this.response.getContent() != null
+                    && response.getIdExpediteur().equalsIgnoreCase(SavePopupController.ID)) {
+                System.out.println("***************************-------------------" + response.getContent() + " $$$$$$$$$$$$$$$$");
+                HashMap<String, ? extends Object> data = null;
+                boolean fileExist = false;
+                do {
+                    data = response.getContent();
+                    if (data == null)
+                        break;
+                    this.automaton.setName((String) data.get("name"));
+                    this.automaton.setDescription((String) data.get("description"));
+                    System.out.println("*************************** " + data.get("name") + " $$$$$$$$$$$$$$$$");
+                    System.out.println("*************************** " + data.get("description") + " $$$$$$$$");
+        //             // Automaton automaton = this.makeAutomata(data.get("name"),
+        //             // data.get("description"));
+                    AutomateType automateType = this.automaton instanceof AFD ? AutomateType.AFD
+                            : ((AFN) this.automaton).isEpsiloneAFN() ? AutomateType.E_AFN : AutomateType.AFN;
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  ");
+                    fileExist = UtilFile.isFileExist(automateType, (String) data.get("name"));
+                    System.out.println("*************************** is file exist " + fileExist + " $$$$$$$$$$$$$$$$");
+                    if (!fileExist || this.automaton != null) {
+                        System.out.println("______________________________$$$$$$$$$$$$$$$$$$$$$$$_______________________________$$$$$$$$$$$$$$$$");
+                        if (this.automaton != null) {
+                            System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+                            System.out.println();
+                            HashMap<String, Object> content = new HashMap<>();
+                            content.put("automaton", this.automaton);
+                            content.put("type", automateType);
+                            Message message = new Message(MainController.ID, content);
+                            this.sendMessage(message);
+                            // Stage stage = (Stage) saveButton.getScene().getWindow();
+                            // stage.close();
+                        }
+                        System.out.println("______________________________$$$$$$$$$$$$$$$$$$$$$$$_______________________________$$$$$$$$$$$$$$$$");
+                    } else {
+                        String errortext = "An automaton with the same name\n alrealdy exist chose another name";
+                        // this.showPopupSave(data.get("name"), data.get("description"), errortext);
+                        UtilLoader.showPopupSave((String) data.get("name"), (String) data.get("description"), errortext, ConvertController.ID);
+                    }
+                } while (fileExist);
 
-   
+                this.response = null;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // this.automaton = null;
+    }
+
+    // @FXML
+    // private void handleSaveButtonClick(ActionEvent event) {
+    //     // TODO Auto-generated method stub
+
+    // }
+
+    @FXML
+    private void addEmptyWord(ActionEvent event){
+
+    }
+
+    // @FXML
+    // private void convertToAutomata(ActionEvent event){
+
+    // }
+
+    @FXML
+    private void handleZoomOutResultButtonClick(ActionEvent event) {
+        double scale = automatonResultImageView.getScaleX() / 1.1;
+        automatonResultImageView.setScaleX(scale);
+        automatonResultImageView.setScaleY(scale);
+        automatonResultScrollPane.requestLayout();
+    }
+
     @Override
     public void sendMessage(Message message) {
-        // TODO Auto-generated method stub
-
+        message.setIdExpediteur(super.id);
+        super.mediator.transmitMessage(message);
     }
 
     @Override
     public void receiveMessage(Message message) {
-        // TODO Auto-generated method stub
-
+        this.response = message;
     }
 
-
     // public static void main(String[] args) {
-    //     REG_toAutomateController.REG_toJson("a.(a+b)*.(a+a)*");
+    // REG_toAutomateController.REG_toJson("a.(a+b)*.(a+a)*");
     // }
-
 
 }

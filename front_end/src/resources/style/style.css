@@ -126,3 +126,21 @@
 .save-button:hover {
     -fx-background-color: #3E8E41;
 }
+
+/* Style des boutons */
+.primary-button {
+    -fx-background-color: #2a9d8f;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);
+}
+
+.primary-button:hover {
+    -fx-background-color: #21867a;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #176b5d;
+}

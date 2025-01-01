@@ -109,7 +109,7 @@ public class App extends Application {
         
         //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
 
         // scene.getStylesheets().add(css);
         stage.setScene(scene);
@@ -122,7 +122,7 @@ public class App extends Application {
         // BorderPane root = loader.load();
         // //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         // Scene scene = new Scene(root);
-        // scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+        // scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
         // // scene.getStylesheets().add(css);
         // stage.setScene(scene);
         // stage.show();

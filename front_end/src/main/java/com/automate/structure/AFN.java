@@ -87,7 +87,7 @@ public class AFN extends Automaton {
         boolean epsiloneFound = false;
         int i = 0;
     
-        while (!epsiloneFound && i <= this.matTrans.size()) {
+        while (!epsiloneFound && i < this.matTrans.size()) {
             Transition transition = this.matTrans.get(i);
             if(transition.getLabel().equalsIgnoreCase(this.epsilone))
                 epsiloneFound = true;

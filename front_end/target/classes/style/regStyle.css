@@ -1,0 +1,48 @@
+/* Fichier: style.css */
+
+/* Style général pour le fond */
+.root {
+    -fx-background-color: #f0f0f0;
+}
+
+
+/* Style des zones de texte */
+.text-field, .text-area {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #2a9d8f;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #aaaaaa;
+    -fx-focus-color: #2a9d8f;
+    -fx-faint-focus-color: #d1e8e2;
+    -fx-pref-width: 100%;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #21867a;
+    -fx-background-color: transparent;
+}
+
+/* Style de l'image */
+.image-view {
+    /* -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 5); */
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+}
+
+/* Style des conteneurs */
+.hbox, .vbox {
+    -fx-spacing: 10px;
+}
+
+.grid-pane {
+    -fx-padding: 10px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+.separator {
+    -fx-border-color: #2a9d8f;
+    -fx-border-width: 0 0 2px 0;  /* Ajout d'une bordure en bas pour la séparation */
+}

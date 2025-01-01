@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-
 import com.automate.inputOutput.Configuration;
 import com.automate.structure.AFD;
 import com.automate.structure.AFN;
@@ -55,15 +54,16 @@ public class MainController extends Controller implements Initializable {
     private int nbrEpAFN;
     private TreeItem<String> root, afd, afn, epAfn;
 
-    //private String path = "/home/dimitri/Documents/beep-beep/save";
-    //private String imagePath = "/home/dimitri/Documents/beep-beep/.communication/.images";
+    // private String path = "/home/dimitri/Documents/beep-beep/save";
+    // private String imagePath =
+    // "/home/dimitri/Documents/beep-beep/.communication/.images";
     private ArrayList<AFD> tabAFD;
     private ArrayList<AFN> tabAFN;
     private ArrayList<AFN> tabEpAFN;
     private Message response;
 
     private enum viewType {
-        AUTOMATE_VIEW, CONVERT_VIEW , RECONNAISSANCE_VIEW, REG_VIEW
+        AUTOMATE_VIEW, CONVERT_VIEW, RECONNAISSANCE_VIEW, REG_VIEW
     }
 
     protected static final String ID = "mainController";
@@ -101,7 +101,8 @@ public class MainController extends Controller implements Initializable {
             // }
 
             // chargement des afn
-            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "afn"), false);
+            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "afn"),
+                    false);
             for (int i = 0; i < tempTab.size(); i++) {
                 this.tabAFN.add((AFN) tempTab.get(i));
             }
@@ -111,7 +112,8 @@ public class MainController extends Controller implements Initializable {
             // }
 
             // chargement des epAFN
-            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "ep-afn"), false);
+            tempTab = loadData(new File(Configuration.getConfiguration().getSavePath() + File.separator + "ep-afn"),
+                    false);
             for (int i = 0; i < tempTab.size(); i++) {
                 this.tabEpAFN.add((AFN) tempTab.get(i));
             }
@@ -191,7 +193,7 @@ public class MainController extends Controller implements Initializable {
                 Automaton automate = null;
                 if (parentIndex == 0) {// dans ce cas on doit afficher un afd
                     automate = this.tabAFD.get(itemIndex);
-                    pathCurrentImage += File.separator +  "afd.png";
+                    pathCurrentImage += File.separator + "afd.png";
                     // automate.makeImage(pathCurrentImage);
                     // System.out.println(pathCurrentImage);
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
@@ -207,7 +209,8 @@ public class MainController extends Controller implements Initializable {
                     System.out.println("superrrrrrrrrrrrrrrrrrrrrrrr");
                 }
                 System.out.println("chemin   " + automate.getPath());
-                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                System.out.println(
+                        "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                 this.automateVisualisation(pathCurrentImage, automate, parentIndex, itemIndex);
                 // HashMap<String, Object> data = (HashMap<String, Object>) response;
 
@@ -217,7 +220,7 @@ public class MainController extends Controller implements Initializable {
         }
     }
 
-    private void automateVisualisation(String path, Automaton automaton,int parentIndex, int itemIndex) {
+    private void automateVisualisation(String path, Automaton automaton, int parentIndex, int itemIndex) {
         try {
             Message message = null;
             HashMap<String, Object> contentMessageToSend = new HashMap<>();
@@ -225,72 +228,82 @@ public class MainController extends Controller implements Initializable {
                 case AUTOMATE_VIEW:
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomatonView.fxml"));
                     loader.setControllerFactory(c -> {
-                        return CreateAutomatonController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator() , automaton);
+                        return CreateAutomatonController
+                                .getCreateAutomataController(ConrceteMadiator.getConrceteMadiator(), automaton);
                     });
 
-                    
                     BorderPane createAutomateView = loader.load();
                     Stage createStage = new Stage();
                     // createStage.initModality(Modality.APPLICATION_MODAL);
                     Scene scene = new Scene(createAutomateView);
-                    scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+                    scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
                     // scene.getStylesheets().add(css);
                     createStage.setScene(scene);
                     createStage.showAndWait();
 
                     // message = new Message(CreateAutomatonController.ID, automaton);
                     // this.sendMessage(message);
-                    System.out.println("*************************   jhieiozjozjej  jzpoejzp zjeojzoi *******************************");
-                    if(this.response == null || (this.response != null && this.response.getContent() == null))
+                    System.out.println(
+                            "*************************   jhieiozjozjej  jzpoejzp zjeojzoi *******************************");
+                    if (this.response == null || (this.response != null && this.response.getContent() == null))
                         return;
-                    
+
                     HashMap<String, ? extends Object> data = response.getContent();
                     Automaton newAutomaton = (Automaton) data.get("automaton");
                     AutomateType newAutomatonType = (AutomateType) data.get("type");
                     System.out.println("__________________________________________    " + newAutomatonType.name());
                     switch (newAutomatonType) {
                         case AFD:
-                            if(parentIndex == 0){
+                            if (parentIndex == 0) {
                                 this.tabAFD.set(itemIndex, (AFD) newAutomaton);
-                                this.treeView.getRoot().getChildren().get(parentIndex).getChildren().get(itemIndex).setValue(newAutomaton.getName());
-                            }else{
-                                if(parentIndex == 1){
+                                this.treeView.getRoot().getChildren().get(parentIndex).getChildren().get(itemIndex)
+                                        .setValue(newAutomaton.getName());
+                            } else {
+                                if (parentIndex == 1) {
                                     // this.tabAFN.remove(itemIndex);
-                                    this.makeBranch(newAutomaton.getName(), this.treeView.getRoot().getChildren().get(0), 1);
+                                    this.makeBranch(newAutomaton.getName(),
+                                            this.treeView.getRoot().getChildren().get(0), 1);
                                     // getChildren().get(itemIndex).setValue(newAutomaton.getName());
-                                }else if(parentIndex == 2){
+                                } else if (parentIndex == 2) {
                                     // this.tabEpAFN.remove(itemIndex);
-                                    this.makeBranch(newAutomaton.getName(), this.treeView.getRoot().getChildren().get(0), 1);
+                                    this.makeBranch(newAutomaton.getName(),
+                                            this.treeView.getRoot().getChildren().get(0), 1);
                                 }
                                 tabAFD.add((AFD) newAutomaton);
                             }
                             break;
                         case AFN:
-                            if(parentIndex == 1){
+                            if (parentIndex == 1) {
                                 this.tabAFN.set(itemIndex, (AFN) newAutomaton);
-                                this.treeView.getRoot().getChildren().get(parentIndex).getChildren().get(itemIndex).setValue(newAutomaton.getName());
-                            }else{
-                                if(parentIndex == 0){
+                                this.treeView.getRoot().getChildren().get(parentIndex).getChildren().get(itemIndex)
+                                        .setValue(newAutomaton.getName());
+                            } else {
+                                if (parentIndex == 0) {
                                     // this.tabAFD.remove(itemIndex);
-                                    this.makeBranch(newAutomaton.getName(), this.treeView.getRoot().getChildren().get(1), 2);
-                                }else if(parentIndex == 2){
+                                    this.makeBranch(newAutomaton.getName(),
+                                            this.treeView.getRoot().getChildren().get(1), 2);
+                                } else if (parentIndex == 2) {
                                     // this.tabEpAFN.remove(itemIndex);
-                                    this.makeBranch(newAutomaton.getName(), this.treeView.getRoot().getChildren().get(1), 2);
+                                    this.makeBranch(newAutomaton.getName(),
+                                            this.treeView.getRoot().getChildren().get(1), 2);
                                 }
                                 tabAFN.add((AFN) newAutomaton);
                             }
                             break;
                         default:
-                            if(parentIndex >= 2){
+                            if (parentIndex >= 2) {
                                 this.tabEpAFN.set(itemIndex, (AFN) newAutomaton);
-                                this.treeView.getRoot().getChildren().get(parentIndex > 2 ? 2 : parentIndex).getChildren().get(itemIndex).setValue(newAutomaton.getName());
-                            }else{
-                                if(parentIndex == 0){
+                                this.treeView.getRoot().getChildren().get(parentIndex > 2 ? 2 : parentIndex)
+                                        .getChildren().get(itemIndex).setValue(newAutomaton.getName());
+                            } else {
+                                if (parentIndex == 0) {
                                     // this.tabAFD.remove(itemIndex);
-                                    this.makeBranch(newAutomaton.getName(), this.treeView.getRoot().getChildren().get(2), 2);
-                                }else if(parentIndex == 1){
+                                    this.makeBranch(newAutomaton.getName(),
+                                            this.treeView.getRoot().getChildren().get(2), 2);
+                                } else if (parentIndex == 1) {
                                     // this.tabAFN.remove(itemIndex);
-                                    this.makeBranch(newAutomaton.getName(), this.treeView.getRoot().getChildren().get(2), 2);                              
+                                    this.makeBranch(newAutomaton.getName(),
+                                            this.treeView.getRoot().getChildren().get(2), 2);
                                 }
                                 tabEpAFN.add((AFN) newAutomaton);
                             }
@@ -305,7 +318,8 @@ public class MainController extends Controller implements Initializable {
                     break;
                 case RECONNAISSANCE_VIEW:
                     contentMessageToSend.put("path", path);
-                    message = new Message(ReconnaissanceController.getReconnaissanceController().getId(), contentMessageToSend);
+                    message = new Message(ReconnaissanceController.getReconnaissanceController().getId(),
+                            contentMessageToSend);
                     ReconnaissanceController.getReconnaissanceController().setAutomate(automaton);
                     this.sendMessage(message);
                     break;
@@ -324,14 +338,12 @@ public class MainController extends Controller implements Initializable {
         return item.getParent().getChildren().indexOf(item);
     }
 
-
-    private void setupConvertView(AnchorPane convertView){
+    private void setupConvertView(AnchorPane convertView) {
         this.mainContainer.getChildren().clear();
         AnchorPane.setTopAnchor(convertView, 0.0);
         AnchorPane.setRightAnchor(convertView, 0.0);
         AnchorPane.setLeftAnchor(convertView, 0.0);
         AnchorPane.setBottomAnchor(convertView, 0.0);
-
 
         this.mainContainer.getChildren().setAll(convertView);
         // convertView.prefWidthProperty().bind(this.mainContainer.widthProperty());
@@ -360,7 +372,7 @@ public class MainController extends Controller implements Initializable {
         this.vType = viewType.CONVERT_VIEW;
         AnchorPane convertView = this.loadConvertView(Algorithm.COMPLEMENTAIRE).load();
         this.setupConvertView(convertView);
-        //ConvertController convertController = loader.getController();
+        // ConvertController convertController = loader.getController();
         // this.mainContainer = anchor;
 
         // this.mainContainer.getChildren().clear();
@@ -403,7 +415,7 @@ public class MainController extends Controller implements Initializable {
 
     }
 
-    private FXMLLoader loadConvertView(Algorithm algorithm){
+    private FXMLLoader loadConvertView(Algorithm algorithm) {
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/convertView.fxml"));
 
@@ -413,18 +425,19 @@ public class MainController extends Controller implements Initializable {
         return loader;
     }
 
-    @FXML
-    private void handleGlushkovView(ActionEvent event) {
+    private void loadRegToAfnView(Algorithm algorithm) {
         try {
             this.vType = viewType.REG_VIEW;
             ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/regToAfnView.fxml"));
 
             loader.setControllerFactory(c -> {
-                return REG_toAutomateController.getREG_toAutomateController(mediator, Algorithm.GLUSHKOV);
+                return REG_toAutomateController.getREG_toAutomateController(mediator, algorithm);
             });
             AnchorPane anchor = loader.load();
-            // AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
+            anchor.getStylesheets().add(getClass().getResource("/style/regStyle.css").toExternalForm());
+            // AnchorPane anchor =
+            // FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
             // this.mainContainer = root;
             this.mainContainer.getChildren().clear();
             AnchorPane.setTopAnchor(anchor, 0.0);
@@ -440,37 +453,16 @@ public class MainController extends Controller implements Initializable {
             e.printStackTrace();
             // System.out.println("eror");
         }
+    }
 
+    @FXML
+    private void handleGlushkovView(ActionEvent event) {
+        this.loadRegToAfnView(Algorithm.GLUSHKOV);
     }
 
     @FXML
     private void handleThomsonView(ActionEvent event) {
-       try {
-            this.vType = viewType.REG_VIEW;
-            ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/regToAfnView.fxml"));
-
-            loader.setControllerFactory(c -> {
-                return REG_toAutomateController.getREG_toAutomateController(mediator, Algorithm.THOMSON);
-            });
-            AnchorPane anchor = loader.load();
-            // AnchorPane anchor = FXMLLoader.load(getClass().getResource("/window/regToAfnView.fxml"));
-            // this.mainContainer = root;
-            this.mainContainer.getChildren().clear();
-            AnchorPane.setTopAnchor(anchor, 0.0);
-            AnchorPane.setRightAnchor(anchor, 0.0);
-            AnchorPane.setLeftAnchor(anchor, 0.0);
-            AnchorPane.setBottomAnchor(anchor, 0.0);
-            this.mainContainer.getChildren().setAll(anchor);
-
-            // root.prefWidthProperty().bind(this.mainContainer.prefWidthProperty());
-            // root.prefHeightProperty().bind(this.mainContainer.prefHeightProperty());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // System.out.println("eror");
-        }
-
+        this.loadRegToAfnView(Algorithm.THOMSON);
     }
 
     @FXML
@@ -481,7 +473,7 @@ public class MainController extends Controller implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/reconnaissance.fxml"));
 
             loader.setControllerFactory(c -> {
-                return ReconnaissanceController.getReconnaissanceController(mediator , Algorithm.RECONNAISSANCE_AFD);
+                return ReconnaissanceController.getReconnaissanceController(mediator, Algorithm.RECONNAISSANCE_AFD);
             });
 
             AnchorPane anchor = loader.load();
@@ -547,7 +539,7 @@ public class MainController extends Controller implements Initializable {
 
     public ArrayList<Automaton> loadData(File folder, boolean isAFD) throws FileNotFoundException {
         ArrayList<Automaton> list = new ArrayList<>();
-        System.out.println("************************************ "  + folder);
+        System.out.println("************************************ " + folder);
         for (File file : folder.listFiles()) {
             if (file.isFile()) {
                 if (isAFD == true) {
@@ -577,11 +569,11 @@ public class MainController extends Controller implements Initializable {
             Stage createStage = new Stage();
             // createStage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(createAutomateView);
-            scene.getStylesheets().add(getClass().getResource("/style/style2.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
             // scene.getStylesheets().add(css);
             createStage.setScene(scene);
             createStage.showAndWait();
-            if(response != null && response.getContent() != null){
+            if (response != null && response.getContent() != null) {
                 HashMap<String, ? extends Object> data = response.getContent();
                 String saveFolderName = null;
                 Automaton automaton = (Automaton) data.get("automaton");
@@ -605,24 +597,24 @@ public class MainController extends Controller implements Initializable {
                 System.out.println("*********** B *********************");
                 System.out.println(automaton);
                 System.out.println("************ E ********************");
-                automaton.automatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + automaton.getName() + ".json");
+                automaton.automatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/"
+                        + automaton.getName() + ".json");
                 System.out.println(data.get("type"));
-                if((AutomateType) data.get("type") == AutomateType.AFD){
+                if ((AutomateType) data.get("type") == AutomateType.AFD) {
                     System.out.println("********************* AFD *********************");
-                }else if((AutomateType) data.get("type") == AutomateType.AFN){
+                } else if ((AutomateType) data.get("type") == AutomateType.AFN) {
                     System.out.println("********************* AFN *********************");
-                }else{
+                } else {
                     System.out.println("********************* E-AFN *********************");
                 }
-            }else
+            } else
                 System.out.println("*************** nulll *******************");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-    }
 
+    }
 
     @Override
     public void sendMessage(Message message) {
@@ -632,35 +624,42 @@ public class MainController extends Controller implements Initializable {
 
     @Override
     public void receiveMessage(Message message) {
-        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+        System.out
+                .println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
         this.response = message;
 
-        if(this.response.getContent() != null && this.response.getIdExpediteur().equalsIgnoreCase(ConvertController.ID)){
-            HashMap<String, ? extends Object> data = this.response.getContent();
-            Automaton automaton = (Automaton) data.get("automaton");
-            System.out.println(automaton);
-            // System.out.println("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-            String saveFolderName = null;
-            AutomateType newAutomatonType = (AutomateType) data.get("type");
-            switch (newAutomatonType) {
-                case AFD:
-                    saveFolderName = Configuration.getConfiguration().getAfdFolderName();
-                    this.makeBranch(automaton.getName(), afd, 1);
-                    this.tabAFD.add((AFD) automaton);
-                    break;
-                case AFN:
-                    saveFolderName = Configuration.getConfiguration().getAfnFolderName();
-                    this.makeBranch(automaton.getName(), afn, 2);
-                    this.tabAFN.add((AFN) automaton);
-                    break;
-                default:
-                    saveFolderName = Configuration.getConfiguration().getEp_afnFolderName();
-                    this.makeBranch(automaton.getName(), epAfn, 2);
-                    this.tabEpAFN.add((AFN) automaton);
-                    break;
-            }
-            automaton.automatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/" + automaton.getName() + ".json");
+        if (this.response.getContent() != null
+                && (this.response.getIdExpediteur().equalsIgnoreCase(ConvertController.ID))
+                || this.response.getIdExpediteur().equalsIgnoreCase(REG_toAutomateController.ID)) {
+            this.handleReceiveAutomaton();
         }
+    }
+
+    private void handleReceiveAutomaton() {
+        HashMap<String, ? extends Object> data = this.response.getContent();
+        Automaton automaton = (Automaton) data.get("automaton");
+        System.out.println(automaton);
+        String saveFolderName = null;
+        AutomateType newAutomatonType = (AutomateType) data.get("type");
+        switch (newAutomatonType) {
+            case AFD:
+                saveFolderName = Configuration.getConfiguration().getAfdFolderName();
+                this.makeBranch(automaton.getName(), afd, 1);
+                this.tabAFD.add((AFD) automaton);
+                break;
+            case AFN:
+                saveFolderName = Configuration.getConfiguration().getAfnFolderName();
+                this.makeBranch(automaton.getName(), afn, 2);
+                this.tabAFN.add((AFN) automaton);
+                break;
+            default:
+                saveFolderName = Configuration.getConfiguration().getEp_afnFolderName();
+                this.makeBranch(automaton.getName(), epAfn, 2);
+                this.tabEpAFN.add((AFN) automaton);
+                break;
+        }
+        automaton.automatonToJson(Configuration.getConfiguration().getSavePath() + "/" + saveFolderName + "/"
+                + automaton.getName() + ".json");
     }
 
 }
