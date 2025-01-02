@@ -33,9 +33,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.control.Label;
 
 public class REG_toAutomateController extends Controller implements Initializable {
     private static final String dataFileName = "regularExpression.json";
@@ -54,7 +61,23 @@ public class REG_toAutomateController extends Controller implements Initializabl
     private VBox zoomResultVBox;
 
     @FXML
-    private TextField txtExpression;
+    private TextField txtRegularExpression;
+
+    @FXML
+    private HBox hboxExpression;
+
+    // private Label suggestionLabel;
+
+    private BoxBlur blurEffect;
+
+    @FXML
+    private HBox labelHbox;
+
+    @FXML
+    private Label lblRegularExpression;
+
+    @FXML
+    private Label lblSuggestion;
 
     @FXML
     private ScrollPane automatonResultScrollPane;
@@ -66,7 +89,7 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
     private Automaton automaton = null;
 
-
+    // private DropShadow blurEffect;
 
     private REG_toAutomateController(Mediator mediator, Algorithm algorithmType) {
         super(REG_toAutomateController.ID, mediator);
@@ -90,7 +113,9 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.lblRegularExpression.textProperty().bind(this.txtRegularExpression.textProperty());
         this.saveVBox.setPickOnBounds(false);
+        this.labelHbox.setPickOnBounds(false);
 
         this.saveButton.setOnMouseEntered(event -> {
             this.saveVBox.setPickOnBounds(true);
@@ -101,6 +126,36 @@ public class REG_toAutomateController extends Controller implements Initializabl
             this.zoomResultVBox.setPickOnBounds(true);
             this.saveVBox.setPickOnBounds(false);
         });
+
+        this.txtRegularExpression.setStyle("-fx-text-fill: transparent;");
+
+        txtRegularExpression.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                if (!newValue.endsWith("+") && !newValue.endsWith(".")) {
+                    lblSuggestion.setStyle("-fx-opacity: 0.5;");
+                    lblSuggestion.setText(".");
+                } else{
+                    lblSuggestion.setText("");
+                }
+                System.out.println("*************************************************** new value " + newValue);
+            } else {
+                lblSuggestion.setText("");
+            }
+        });
+
+        txtRegularExpression.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case TAB:
+                    String currentText = txtRegularExpression.getText();
+                    txtRegularExpression.setText(currentText + lblSuggestion.getText());
+                    txtRegularExpression.positionCaret(txtRegularExpression.getText().length()); // Move caret to the
+                    lblSuggestion.setText("");
+                    event.consume();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     @FXML
@@ -108,7 +163,7 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
         Configuration config = Configuration.getConfiguration();
         try {
-            this.REG_toJson(txtExpression.getText(), config.getDataRequestPath() + "/" + dataFileName);
+            this.REG_toJson(txtRegularExpression.getText(), config.getDataRequestPath() + "/" + dataFileName);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -221,7 +276,8 @@ public class REG_toAutomateController extends Controller implements Initializabl
             System.out.println("_____________________________________________________________________________");
             if (this.response != null && this.response.getContent() != null
                     && response.getIdExpediteur().equalsIgnoreCase(SavePopupController.ID)) {
-                System.out.println("***************************-------------------" + response.getContent() + " $$$$$$$$$$$$$$$$");
+                System.out.println(
+                        "***************************-------------------" + response.getContent() + " $$$$$$$$$$$$$$$$");
                 HashMap<String, ? extends Object> data = null;
                 boolean fileExist = false;
                 do {
@@ -232,17 +288,20 @@ public class REG_toAutomateController extends Controller implements Initializabl
                     this.automaton.setDescription((String) data.get("description"));
                     System.out.println("*************************** " + data.get("name") + " $$$$$$$$$$$$$$$$");
                     System.out.println("*************************** " + data.get("description") + " $$$$$$$$");
-        //             // Automaton automaton = this.makeAutomata(data.get("name"),
-        //             // data.get("description"));
+                    // // Automaton automaton = this.makeAutomata(data.get("name"),
+                    // // data.get("description"));
                     AutomateType automateType = this.automaton instanceof AFD ? AutomateType.AFD
                             : ((AFN) this.automaton).isEpsiloneAFN() ? AutomateType.E_AFN : AutomateType.AFN;
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  ");
+                    System.out
+                            .println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  ");
                     fileExist = UtilFile.isFileExist(automateType, (String) data.get("name"));
                     System.out.println("*************************** is file exist " + fileExist + " $$$$$$$$$$$$$$$$");
                     if (!fileExist || this.automaton != null) {
-                        System.out.println("______________________________$$$$$$$$$$$$$$$$$$$$$$$_______________________________$$$$$$$$$$$$$$$$");
+                        System.out.println(
+                                "______________________________$$$$$$$$$$$$$$$$$$$$$$$_______________________________$$$$$$$$$$$$$$$$");
                         if (this.automaton != null) {
-                            System.out.println("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+                            System.out.println(
+                                    "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
                             System.out.println();
                             HashMap<String, Object> content = new HashMap<>();
                             content.put("automaton", this.automaton);
@@ -252,11 +311,13 @@ public class REG_toAutomateController extends Controller implements Initializabl
                             // Stage stage = (Stage) saveButton.getScene().getWindow();
                             // stage.close();
                         }
-                        System.out.println("______________________________$$$$$$$$$$$$$$$$$$$$$$$_______________________________$$$$$$$$$$$$$$$$");
+                        System.out.println(
+                                "______________________________$$$$$$$$$$$$$$$$$$$$$$$_______________________________$$$$$$$$$$$$$$$$");
                     } else {
                         String errortext = "An automaton with the same name\n alrealdy exist chose another name";
                         // this.showPopupSave(data.get("name"), data.get("description"), errortext);
-                        UtilLoader.showPopupSave((String) data.get("name"), (String) data.get("description"), errortext, ConvertController.ID);
+                        UtilLoader.showPopupSave((String) data.get("name"), (String) data.get("description"), errortext,
+                                ConvertController.ID);
                     }
                 } while (fileExist);
 
@@ -272,12 +333,12 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
     // @FXML
     // private void handleSaveButtonClick(ActionEvent event) {
-    //     // TODO Auto-generated method stub
+    // // TODO Auto-generated method stub
 
     // }
 
     @FXML
-    private void addEmptyWord(ActionEvent event){
+    private void addEmptyWord(ActionEvent event) {
 
     }
 
