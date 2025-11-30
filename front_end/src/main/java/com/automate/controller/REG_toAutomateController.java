@@ -27,6 +27,9 @@ import com.automate.structure.Automaton;
 import com.automate.utils.UtilFile;
 import com.automate.utils.UtilLoader;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,6 +46,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Label;
+import javafx.util.Duration;
 
 public class REG_toAutomateController extends Controller implements Initializable {
     private static final String dataFileName = "regularExpression.json";
@@ -63,6 +67,9 @@ public class REG_toAutomateController extends Controller implements Initializabl
     @FXML
     private TextField txtRegularExpression;
 
+    // @FXML
+    // private TextField txtSuggestion;
+
     @FXML
     private HBox hboxExpression;
 
@@ -73,17 +80,23 @@ public class REG_toAutomateController extends Controller implements Initializabl
     @FXML
     private HBox labelHbox;
 
-    @FXML
-    private Label lblRegularExpression;
+    // @FXML
+    // private Label lblRegularExpression;
 
-    @FXML
-    private Label lblSuggestion;
+    // @FXML
+    // private Label lblSuggestion;
 
     @FXML
     private ScrollPane automatonResultScrollPane;
 
     @FXML
     private ImageView automatonResultImageView;
+
+    private String actualText = ""; // Stores the real user input without the proposed value
+
+    private static final int PROPOSAL_TIMEOUT = 2000; // Time for proposal (in milliseconds)
+
+    private Timeline proposalTimeline; // Timer for clearing the proposal
 
     private Message response = null;
 
@@ -113,9 +126,9 @@ public class REG_toAutomateController extends Controller implements Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.lblRegularExpression.textProperty().bind(this.txtRegularExpression.textProperty());
+        // this.lblRegularExpression.textProperty().bind(this.txtRegularExpression.textProperty());
         this.saveVBox.setPickOnBounds(false);
-        this.labelHbox.setPickOnBounds(false);
+        // this.labelHbox.setPickOnBounds(false);
 
         this.saveButton.setOnMouseEntered(event -> {
             this.saveVBox.setPickOnBounds(true);
@@ -127,35 +140,158 @@ public class REG_toAutomateController extends Controller implements Initializabl
             this.saveVBox.setPickOnBounds(false);
         });
 
-        this.txtRegularExpression.setStyle("-fx-text-fill: transparent;");
+        // this.txtRegularExpression.setStyle("-fx-text-fill: transparent;");
 
-        txtRegularExpression.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                if (!newValue.endsWith("+") && !newValue.endsWith(".")) {
-                    lblSuggestion.setStyle("-fx-opacity: 0.5;");
-                    lblSuggestion.setText(".");
-                } else{
-                    lblSuggestion.setText("");
-                }
-                System.out.println("*************************************************** new value " + newValue);
-            } else {
-                lblSuggestion.setText("");
-            }
-        });
+        // txtRegularExpression.textProperty().addListener((observable, oldValue,
+        // newValue) -> {
+        // if (!newValue.isEmpty()) {
+        // if (!newValue.endsWith("+") && !newValue.endsWith(".")) {
+        // lblSuggestion.setStyle("-fx-opacity: 0.5;");
+        // lblSuggestion.setText(".");
+        // } else {
+        // lblSuggestion.setText("");
+        // }
+        // System.out.println("*************************************************** new
+        // value " + newValue);
+        // } else {
+        // lblSuggestion.setText("");
+        // }
+        // });
 
-        txtRegularExpression.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case TAB:
-                    String currentText = txtRegularExpression.getText();
-                    txtRegularExpression.setText(currentText + lblSuggestion.getText());
-                    txtRegularExpression.positionCaret(txtRegularExpression.getText().length()); // Move caret to the
-                    lblSuggestion.setText("");
-                    event.consume();
-                    break;
-                default:
-                    break;
-            }
-        });
+        // txtRegularExpression.setOnKeyPressed(event -> {
+        // switch (event.getCode()) {
+        // case TAB:
+        // String currentText = txtRegularExpression.getText();
+        // txtRegularExpression.setText(currentText + lblSuggestion.getText());
+        // txtRegularExpression.positionCaret(txtRegularExpression.getText().length());
+        // // Move caret to the
+        // lblSuggestion.setText("");
+        // event.consume();
+        // break;
+        // default:
+        // break;
+        // }
+        // });
+
+        // this.lblSuggestion.setText("ffffffffffffffffffff");
+
+        // this.lblSuggestion.setPickOnBounds(true);
+        // SimpleBooleanProperty proposalActive = new SimpleBooleanProperty(false);
+
+        // this.txtRegularExpression.setOnMouseEntered(event -> {
+        // this.txtRegularExpression.setPickOnBounds(true);
+        // this.lblSuggestion.setPickOnBounds(false);
+        // });
+
+        // this.txtRegularExpression.setOnMouseExited(event -> {
+        // if (!proposalActive.get()) {
+        // this.txtRegularExpression.setPickOnBounds(false);
+        // this.lblSuggestion.setPickOnBounds(true);
+        // }
+        // });
+
+        // // Add a listener to track text changes and propose a "."
+        // txtRegularExpression.textProperty().addListener((observable, oldValue,
+        // newValue) -> {
+        // // Check if the input length reaches the threshold
+        // if (newValue.length() > 0 && !newValue.endsWith(".") &&
+        // !newValue.endsWith("+")
+        // && !newValue.endsWith("*")) {
+        // System.out.println("******************************************///////////////////");
+        // txtRegularExpression.setStyle("-fx-text-fill: gray; -fx-opacity: 0.6;");
+        // this.actualText = newValue; // Store the actual user input
+        // txtRegularExpression.setText(actualText + ".");
+        // txtRegularExpression.positionCaret(txtRegularExpression.getText().length());
+        // proposalActive.set(true);
+
+        // // Start the timer to clear the proposal after the timeout
+        // if (proposalTimeline != null) {
+        // proposalTimeline.stop(); // Reset the timer if it's already running
+        // }
+        // proposalTimeline = new Timeline(new
+        // KeyFrame(Duration.millis(PROPOSAL_TIMEOUT), event -> {
+        // txtRegularExpression.setStyle("-fx-text-fill: black; -fx-opacity: 1;");
+        // txtRegularExpression.setText(actualText);
+        // proposalActive.set(false);
+        // }));
+        // proposalTimeline.setCycleCount(1);
+        // proposalTimeline.play();
+        // } else if (!proposalActive.get()) {
+        // txtRegularExpression.setStyle("-fx-text-fill: black; -fx-opacity: 1;");
+        // }
+        // });
+
+        // // Handle the Tab key to accept the proposed "."
+        // txtRegularExpression.setOnKeyPressed(event -> {
+        // switch (event.getCode()) {
+        // case TAB: {
+        // String text = txtRegularExpression.getText();
+        // if (proposalActive.get()) {
+        // txtRegularExpression.setText(text + "."); // Append the proposed "."
+        // txtRegularExpression.positionCaret(txtRegularExpression.getText().length());
+        // // Move cursor to
+        // txtRegularExpression.setStyle("-fx-text-fill: black; -fx-opacity: 1;"); //
+        // Reset visual feedback
+        // proposalActive.set(false);
+        // if (proposalTimeline != null) {
+        // proposalTimeline.stop(); // Stop the timer if the proposal is accepted
+        // }
+        // }
+        // event.consume(); // Prevent default Tab behavior
+        // txtRegularExpression.requestFocus(); // Keeps the focus on the text field
+        // txtRegularExpression.positionCaret(txtRegularExpression.getText().length());
+        // // Moves the caret to
+        // // the end without
+        // // selecting text
+        // break;
+        // }
+        // default: {
+        // // if (proposalTimeline != null) {
+        // // proposalTimeline.stop(); // Stop the timer if the proposal is accepted
+        // // txtRegularExpression.setStyle("-fx-text-fill: black; -fx-opacity: 1;"); //
+        // // Reset visual feedback
+        // // }
+        // if (!proposalActive.get()) {
+        // // txtRegularExpression.setStyle("-fx-text-fill: black;"); // Reset style on
+        // // other key presses
+        // // lblSuggestion.setStyle("-fx-opacity: 0;"); // Make the suggestion label
+        // // invisible
+        // txtRegularExpression.setStyle("-fx-text-fill: black; -fx-opacity: 1;"); //
+        // Reset visual feedback
+        // }
+        // break;
+        // }
+        // }
+        // });
+    }
+
+    /**
+     * Propose a dot (".") to the user and start the timeout timer.
+     */
+    private void proposeDot(TextField regexTextField) {
+        regexTextField.setText(actualText + "."); // Visually append the proposed dot
+        regexTextField.positionCaret(regexTextField.getText().length()); // Move cursor to the end
+
+        // Start or restart the timeline for the proposal timeout
+        if (proposalTimeline != null) {
+            proposalTimeline.stop();
+        }
+        proposalTimeline = new Timeline(new KeyFrame(Duration.millis(PROPOSAL_TIMEOUT), event -> {
+            cancelProposal(regexTextField);
+        }));
+        proposalTimeline.setCycleCount(1);
+        proposalTimeline.play();
+    }
+
+    /**
+     * Cancel the dot proposal and revert to the actual text.
+     */
+    private void cancelProposal(TextField regexTextField) {
+        if (proposalTimeline != null) {
+            proposalTimeline.stop();
+        }
+        regexTextField.setText(actualText); // Revert to the actual user input
+        regexTextField.positionCaret(regexTextField.getText().length()); // Move cursor to the end
     }
 
     @FXML

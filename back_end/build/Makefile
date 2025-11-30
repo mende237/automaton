@@ -1,5 +1,5 @@
 WINDOW_CC = C:\MinGW\bin\gcc
-LINUX_CC = /usr/bin/gcc-11
+LINUX_CC = gcc
 
 WINDOW_DELETE_FILES = del
 LINUX_DELETE_FILES = rm -rf
