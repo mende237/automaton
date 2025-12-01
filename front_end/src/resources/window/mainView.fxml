@@ -194,7 +194,7 @@
                               <Button id="btnUnion" fx:id="btnUnion" mnemonicParsing="false"
                                  styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true"
+                                    <ImageView fitHeight="64.0" fitWidth="48.0" pickOnBounds="true"
                                        preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/union.png" />
