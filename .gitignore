@@ -1,5 +1,5 @@
-./.vscode/
-./back_end/.vscode/
-./front_end/.vscode/
-./front_end/target/*
+.vscode/
+back_end/.vscode/
+front_end/.vscode/
 *.o
+front_end/target/
