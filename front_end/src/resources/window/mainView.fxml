@@ -19,15 +19,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.MainController">
+<AnchorPane stylesheets="@../style/style.css" xmlns="http://javafx.com/javafx/23.0.1"
+   xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.automate.controller.MainController">
    <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
             <SplitPane fx:id="splitPane" dividerPositions="0.15">
                <items>
                   <AnchorPane minHeight="200.0" minWidth="150.0">
                      <children>
-                        <TreeView fx:id="treeView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TreeView fx:id="treeView" AnchorPane.bottomAnchor="0.0"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane fx:id="mainContainer" />
@@ -41,7 +45,8 @@
                      <menus>
                         <Menu mnemonicParsing="false" text="File">
                            <items>
-                              <MenuItem mnemonicParsing="false" onAction="#handleOpenCreateAutomateInterface" text="New Automaton" />
+                              <MenuItem mnemonicParsing="false"
+                                 onAction="#handleOpenCreateAutomateInterface" text="New Automaton" />
                               <MenuItem mnemonicParsing="false" text="Save" />
                               <MenuItem mnemonicParsing="false" text="Open" />
                               <SeparatorMenuItem mnemonicParsing="false" />
@@ -64,11 +69,14 @@
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Label>
-                              <Button id="btnDeterminisation" mnemonicParsing="false" onAction="#handleDeterminisationView" styleClass="toolbar-button">
+                              <Button id="btnDeterminisation" mnemonicParsing="false"
+                                 onAction="#handleDeterminisationView" styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="57.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
-                                          <Image url="@../icon/beepbeep%20new%20logo/AFN%20to%20AFD.png" />
+                                          <Image
+                                             url="@../icon/beepbeep%20new%20logo/AFN%20to%20AFD.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -76,11 +84,15 @@
                                     <Tooltip text="Determinize Automaton" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation" mnemonicParsing="false" onAction="#handleEpDeterminisationView" styleClass="toolbar-button">
+                              <Button id="btnEpDeterminisation" fx:id="btnEpDeterminisation"
+                                 mnemonicParsing="false" onAction="#handleEpDeterminisationView"
+                                 styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="57.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
-                                          <Image url="@../icon/beepbeep%20new%20logo/epsilone%20AFN%20to%20AFD.png" />
+                                          <Image
+                                             url="@../icon/beepbeep%20new%20logo/epsilone%20AFN%20to%20AFD.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -88,9 +100,11 @@
                                     <Tooltip text="Epsilon-Determinize Automaton" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnMinimisation" mnemonicParsing="false" onAction="#handleMinimisationView" styleClass="toolbar-button">
+                              <Button id="btnMinimisation" mnemonicParsing="false"
+                                 onAction="#handleMinimisationView" styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="57.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/minisation.png" />
                                        </image>
@@ -110,9 +124,11 @@
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Label>
-                              <Button id="btnGlushkov" fx:id="btnGlushkov" mnemonicParsing="false" onAction="#handleGlushkovView" styleClass="toolbar-button">
+                              <Button id="btnGlushkov" fx:id="btnGlushkov" mnemonicParsing="false"
+                                 onAction="#handleGlushkovView" styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="76.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/glushkov.png" />
                                        </image>
@@ -122,9 +138,11 @@
                                     <Tooltip text="Glushkov's Algorithm" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnThomson" mnemonicParsing="false" onAction="#handleThomsonView" styleClass="toolbar-button">
+                              <Button id="btnThomson" mnemonicParsing="false"
+                                 onAction="#handleThomsonView" styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="68.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/thomson.png" />
                                        </image>
@@ -144,9 +162,12 @@
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Label>
-                              <Button id="btnComplementaire" fx:id="btnComplementaire" mnemonicParsing="false" onAction="#handleComplementaireView" styleClass="toolbar-button">
+                              <Button id="btnComplementaire" fx:id="btnComplementaire"
+                                 mnemonicParsing="false" onAction="#handleComplementaireView"
+                                 styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="51.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/complement.png" />
                                        </image>
@@ -156,9 +177,11 @@
                                     <Tooltip text="Complement" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnMiroir" fx:id="btnMiroire" mnemonicParsing="false" onAction="#handleMiroirView" styleClass="toolbar-button">
+                              <Button id="btnMiroir" fx:id="btnMiroire" mnemonicParsing="false"
+                                 onAction="#handleMiroirView" styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="55.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/miror.png" />
                                        </image>
@@ -168,9 +191,11 @@
                                     <Tooltip text="Mirror" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnUnion" fx:id="btnUnion" mnemonicParsing="false" styleClass="toolbar-button">
+                              <Button id="btnUnion" fx:id="btnUnion" mnemonicParsing="false"
+                                 styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
                                           <Image url="@../icon/beepbeep%20new%20logo/union.png" />
                                        </image>
@@ -180,11 +205,14 @@
                                     <Tooltip text="Union" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnIntersection" fx:id="btnIntersection" mnemonicParsing="false" styleClass="toolbar-button">
+                              <Button id="btnIntersection" fx:id="btnIntersection"
+                                 mnemonicParsing="false" styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="79.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
-                                          <Image url="@../icon/beepbeep%20new%20logo/intersection.png" />
+                                          <Image
+                                             url="@../icon/beepbeep%20new%20logo/intersection.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -202,11 +230,15 @@
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </Label>
-                              <Button id="btnAfdReconnaissance" mnemonicParsing="false" onAction="#handleReconnaissanceAFD_View" styleClass="toolbar-button">
+                              <Button id="btnAfdReconnaissance" mnemonicParsing="false"
+                                 onAction="#handleReconnaissanceAFD_View"
+                                 styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="61.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
-                                          <Image url="@../icon/beepbeep%20new%20logo/recongnition.png" />
+                                          <Image
+                                             url="@../icon/beepbeep%20new%20logo/recongnition.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -214,11 +246,15 @@
                                     <Tooltip text="DFA Word Recognition" />
                                  </tooltip>
                               </Button>
-                              <Button id="btnAfnReconnaissance" mnemonicParsing="false" onAction="#handleReconnaissanceAFN_View" styleClass="toolbar-button">
+                              <Button id="btnAfnReconnaissance" mnemonicParsing="false"
+                                 onAction="#handleReconnaissanceAFN_View"
+                                 styleClass="toolbar-button">
                                  <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="60.0" fitWidth="48.0" pickOnBounds="true"
+                                       preserveRatio="true">
                                        <image>
-                                          <Image url="@../icon/beepbeep%20new%20logo/epsilone%20recongnition.png" />
+                                          <Image
+                                             url="@../icon/beepbeep%20new%20logo/epsilone%20recongnition.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -243,5 +279,3 @@
       </BorderPane>
    </children>
 </AnchorPane>
-
-
