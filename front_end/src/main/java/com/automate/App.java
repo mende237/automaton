@@ -36,7 +36,7 @@ public class App extends Application {
         } catch (FileNotFoundException e) {
             System.err.println("file not found");
         }
-        
+
         messenger.setSendingPath(config.getRequestPath());
         messenger.setReceptionPath(config.getResponsePath());
         App.reset();
@@ -45,9 +45,10 @@ public class App extends Application {
         // System.out.println("debut!!!!!!!!!!!!!!!!!!!!!!!!!");
         // Graph g =
         // graph("test").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT));
-        // Graph g = graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
-        //         .nodeAttr().with(Shape.CIRCLE);
-                
+        // Graph g =
+        // graph("afn").directed().graphAttr().with(Rank.dir(RankDir.LEFT_TO_RIGHT))
+        // .nodeAttr().with(Shape.CIRCLE);
+
         // g.with(node("a").with(Color.RED).link(node("b")),
         // node("b").link(to(node("c")).with(Label.of("test"))),
         // node("a").link(node("c")),
@@ -95,19 +96,22 @@ public class App extends Application {
         // System.out.println(App.class.getResource("App.class"));
         // System.out.println(App.class.getResource("test1.txt"));
         // System.out.println("traverser");
-        
-        // stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
+
+        // stage.getIcons().add(new
+        // Image(getClass().getResourceAsStream("/icon/beepbeep.png")));
         // stage.setTitle("beep-beep");
-        // // String css = this.getClass().getResource("/style/caspian.css").toExternalForm();
+        // // String css =
+        // this.getClass().getResource("/style/caspian.css").toExternalForm();
         ConrceteMadiator mediator = ConrceteMadiator.getConrceteMadiator();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView1.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/mainView.fxml"));
 
         loader.setControllerFactory(c -> {
             return new MainController(mediator);
         });
         AnchorPane root = loader.load();
-        
-        //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
+
+        // AnchorPane root =
+        // FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
 
@@ -115,12 +119,15 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
 
-        // FXMLLoader loader = new FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
+        // FXMLLoader loader = new
+        // FXMLLoader(getClass().getResource("/window/createAutomataView.fxml"));
         // loader.setControllerFactory(c -> {
-        //     return CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
+        // return
+        // CreateAutomataController.getCreateAutomataController(ConrceteMadiator.getConrceteMadiator());
         // });
         // BorderPane root = loader.load();
-        // //AnchorPane root = FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
+        // //AnchorPane root =
+        // FXMLLoader.load(getClass().getResource("ressource/window/mainView.fxml"));
         // Scene scene = new Scene(root);
         // scene.getStylesheets().add(getClass().getResource("/style/style.css").toExternalForm());
         // // scene.getStylesheets().add(css);
@@ -133,8 +140,8 @@ public class App extends Application {
         System.out.println("Stage is closing");
         App.reset();
     }
-    
-    private static void reset(){
+
+    private static void reset() {
         File file;
         file = new File(config.getRequestPath());
         file.delete();
@@ -146,25 +153,24 @@ public class App extends Application {
 
         // file = new File(config.getPathSemRequest());
         // try {
-        //     fw = new FileWriter(file);
-        //     fw.write('1');
-        //     fw.close();
+        // fw = new FileWriter(file);
+        // fw.write('1');
+        // fw.close();
         // } catch (IOException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
         // }
-        
+
         // file = new File(config.getPathSemResponse());
         // try {
-        //     fw = new FileWriter(file);
-        //     fw.write('1');
-        //     fw.close();
+        // fw = new FileWriter(file);
+        // fw.write('1');
+        // fw.close();
         // } catch (IOException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
         // }
 
     }
-
 
 }
